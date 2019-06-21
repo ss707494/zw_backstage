@@ -1,0 +1,176 @@
+
+http://rap2.taobao.org/repository/editor?id=222495
+
+（1）商品类别新增、编辑
+地址：域名/Products/UpdateCommodityType
+参数：
+Int Active //动作，1：新增，2：编辑
+String ID//类别ID,当Active为2时，需传入
+String Active //动作，1：新增，2：编辑
+String ParentID; //父级类别ID,传空字符串时为一级类别
+String F_CTNameC//中文名称
+String F_CTRemarkC//中文描述
+返回结果：
+{
+    "result": true,
+    "msg": "保存成功",
+    "data": {
+        "ID": "9e1bf7c1-e930-4ada-8bb9-3936f49b27a2"
+    }
+}
+
+（2）设置商品类别停用、恢复
+地址：域名/Products/SetCommodityTypeEnable
+参数：
+String ID//类别ID,当Active为2时，需传入
+String IsEnable //是否停用，1为恢复，0为停用
+返回结果：
+{
+    "result": true,
+    "msg": "保存成功",
+    "data": null
+}
+
+（3）查询商品类别
+地址：域名/Products/QueryCommodityType
+参数：
+String ParentID //父类别ID
+int SortType //排序方式 1：按创建时间排序，2按序号排序
+int IsAsc    //是否升序，1：升序，0降序
+返回结果：
+{
+    "result": true,
+    "msg": "查询成功",
+    "data": [
+        {
+            "F_CTID": "9e1bf7c1-e930-4ada-8bb9-3936f49b27a2",
+            "F_CTNameC": "hhhh444432322457",
+            "F_CTRemarkC": "43523423423423",
+            "F_CTNameE": null,
+            "F_CTRemarkE": null,
+            "F_CTNameEx": null,
+            "F_CTRemarkEx": null,
+            "F_CTSort": 9,
+            "F_CTIsDelete": 0,
+            "F_TID": "6D76FAE5D3E24226AAD616C0DFDF7EDB"（租户ID,暂时不用，是不变的）
+        }
+    ]
+}
+
+（4）查询商品类别的子类别（用于类别下拉框的数据获取）
+地址：域名/Products/ QueryCommodityTypeChildren
+参数：
+String ParentID //父类别ID
+返回结果：
+{
+    "result": true,
+    "msg": "查询成功",
+    "data": [
+        {
+            "F_CTID": "f54726a7-1679-47eb-a62e-42837cf6ecd4",
+            "F_CTNameC": "二级类别1"
+        },
+……
+]
+}
+
+（9）商品新增、编辑
+地址：域名/Products/UpdateCommodity
+参数：
+Int Active //动作，1：新增，2：编辑
+String ID//类别ID,当Active为2时，需传入
+String Active //动作，1：新增，2：编辑
+String F_CTNameC//中文名称
+Int F_CIsHot //是否热品，1：是，0：否
+Int F_CIsNew //是否新品，1：是，0：否
+Double Stock //库存
+Double F_CPUnitPriceIn //进货价
+Double F_CPUnitPriceOut//销售价
+Double F_CPUnitPriceOut//销售价
+Double F_CPUnitPriceMarket //市场价
+Double F_CPWeight //重量
+String F_CPCompany //单位
+返回结果：
+{
+    "result": true,
+    "msg": "保存成功",
+    "data": {
+        "ID": "9e1bf7c1-e930-4ada-8bb9-3936f49b27a2"
+    }
+}
+
+（10）批量图片操作，支持（同一业务类别）新增上传、覆盖上传
+地址：域名/Products/ UpLoadPicture
+参数：
+Int Type//类型，1：商品图片（后续可扩展其他图片类别，用于图片分类管理）
+String BussinessID//业务对像ID,当Type为1时，传入的就是商品ID
+String IDs//图片ID集合，以逗号分隔，为空则代表新增，不为空则代表覆盖
+提交文件对像集合  //文件的个数与IDs字符串用“,” Split之后的个数一置
+返回结果：
+{
+    "result": true,
+    "msg": "上传成功",
+    "data": [
+        {
+            "F_PID": "4ee7ba2b-e137-4076-a217-38adcebf1eed",
+            "F_PType": 1,
+            "F_PSort": 1,
+            "F_PWebPath": "http://localhost:57967\\images\\Commodity\\2fdb2e52-a0f2-4115-ae54-07521f911ee8\\20190621143235077.png",//前端image 的URL指向用这个字段
+            "F_PState": 1,
+            "F_PBusinessID": "2fdb2e52-a0f2-4115-ae54-07521f911ee8",
+            "F_PPhysicsPath": "D:\\张琦\\ElectronicUSA2019\\ElectronicUSA2019\\Images\\Commodity\\2fdb2e52-a0f2-4115-ae54-07521f911ee8\\20190621143235077.png",
+            "F_PDateTime": "/Date(1561098765784)/"
+        },
+      ……
+    ]
+}
+（11）查询商品
+地址：域名/Products/QueryCommodity
+参数：
+String F_CNameC// 名称
+String BussinessID//业务对像ID,当Type为1时，传入的就是商品ID
+String F_CNumber//商品编号
+String F_CTID //商品类别
+Int SortType//排序方式
+1:按产品创建/修改时间【默认倒序显示 20条记录】
+2:商品编号
+3:库存倒序【从少到多】
+int Page//页码
+int FloatPageCount//单页数据条数
+
+提交文件对像集合  //文件的个数与IDs字符串用“,” Split之后的个数一置
+返回结果：
+{
+    "result": true,
+    "msg": "查询成功",
+    "data": [
+        {
+            "ID": "672ac75f-903f-4b57-8e9d-bd0039d37d32",
+            "F_CNameC": "商品11",
+            "F_CTID": "2fdb2e52-a0f2-4115-ae54-07521f911ee8",
+            "F_CIsNew": 1,
+            "F_CIsHot": 0,
+            "Stock": 200,
+            "F_CPUnitPriceIn": 140,
+            "F_CPUnitPriceOut": 240,
+            "F_CPWeight": 5600,
+            "PhotoArray": [
+                {
+                    "F_PID": "4ee7ba2b-e137-4076-a217-38adcebf1eed",
+                    "F_PType": 1,
+                    "F_PSort": 1,
+                    "F_PWebPath": "http://localhost:57967\\images\\Commodity\\2fdb2e52-a0f2-4115-ae54-07521f911ee8\\20190621143235077.png",
+                    "F_PState": 1,
+                    "F_PBusinessID": "672ac75f-903f-4b57-8e9d-bd0039d37d32",
+                    "F_PPhysicsPath": "D:\\张琦\\ElectronicUSA2019\\ElectronicUSA2019\\Images\\Commodity\\2fdb2e52-a0f2-4115-ae54-07521f911ee8\\20190621143235077.png",
+                    "F_PDateTime": "/Date(1561098765783)/"
+                }
+            ],
+            "F_CAddDateTime": "/Date(-62135596800000)/",
+            "F_CNumber": null
+        }
+    ],
+    "maxCount": 0,
+    "page": 0,
+    "pagesize": 0
+}
