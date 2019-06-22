@@ -14,6 +14,7 @@ const _themeOption = createMuiTheme({
     primary: red,
     secondary: grey,
     type: 'light',
+    formBackground: '#F5F5F5',
   },
 })
 

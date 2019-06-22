@@ -1,7 +1,8 @@
 import React from 'react'
+import { withTheme } from '@material-ui/core/styles'
 import { S } from './style'
 
-export const CusTextField = prop => (
+export const CusTextField = withTheme(prop => (
     <S.TextFieldBox
         {...prop}
         InputLabelProps={{
@@ -9,7 +10,7 @@ export const CusTextField = prop => (
           ...prop.InputLabelProps,
         }}
     />
-)
+))
 
 export default {
   CusTextField

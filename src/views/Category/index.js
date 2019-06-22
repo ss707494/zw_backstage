@@ -9,8 +9,6 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import TableHead from "@material-ui/core/TableHead";
 import TableCell from "@material-ui/core/TableCell";
 import TableBody from "@material-ui/core/TableBody";
-import { CusTextField } from "@/component/CusTextField";
-import RcUpload from 'rc-upload'
 
 export const Category = () => {
   const [search, setSearch] = React.useState({
@@ -110,19 +108,6 @@ export const Category = () => {
                 </TableBody>
               </Table>
           }
-          <CusTextField
-              label="sad"
-          />
-          <RcUpload
-              id="contained-button-file"
-          />
-          <label htmlFor="contained-button-file">
-            <Button variant="contained"
-                    component="span"
-            >
-              Upload
-            </Button>
-          </label>
         </main>
       </S.Box>
   )
