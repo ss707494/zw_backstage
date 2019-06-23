@@ -1,25 +1,39 @@
 import React from 'react'
-import { Button, MenuItem, TableRow } from '@material-ui/core'
+import { MenuItem, TableRow } from '@material-ui/core'
 import FormHelperText from "@material-ui/core/FormHelperText";
-import { CusSelect } from '@/component/CusSelect'
-import { api } from '@/common/api'
 import { S } from './style'
-import Table from "@material-ui/core/Table";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import TableHead from "@material-ui/core/TableHead";
-import TableCell from "@material-ui/core/TableCell";
 import TableBody from "@material-ui/core/TableBody";
+import { CusSelect } from '@/component/CusSelect'
+import { Pagination, useInitState as useInitPageData } from '@/component/Pagination'
+import { EditModal, useInitState } from './EditModal'
+import { api } from '@/common/api'
+import { CusButton as Button } from '@/component/CusButton'
+import { CusTableCell as TableCell } from '@/component/CusTableCell'
 
-export const Category = () => {
+
+export const Category = ({ theme }) => {
+  const pageState = useInitPageData()
+  const editModalState = useInitState()
+  const { editClick } = editModalState
   const [search, setSearch] = React.useState({
     type: '',
     sort: '',
   })
   const [getList, listData = {}, listLoad] = api.post('/Products/QueryCommodityType')
+  const getListData = (param = {}) => getList({
+    sort: search.sort,
+    ...pageState.pageData,
+    ...param,
+  })
   React.useEffect(() => {
-    // getList()
-  }, [getList])
-  console.log(listData)
+    getList({
+      sort: search.sort,
+      ...pageState.pageData,
+    })
+  }, [getList, pageState.pageData, search.sort])
+  // console.log(props)
 
   return (
       <S.Box>
@@ -31,6 +45,7 @@ export const Category = () => {
               <Button
                   variant="contained"
                   color="inherit"
+                  onClick={editClick({})}
               >
                 新增
               </Button>
@@ -81,7 +96,7 @@ export const Category = () => {
         </header>
         <main>
           {(listLoad) ? <S.Loading><CircularProgress/></S.Loading>
-              : <Table>
+              : <S.Table theme={theme}>
                 <TableHead>
                   <TableRow>
                     {['类别序号', '中文名称', '英文名称', '产品种类']
@@ -89,26 +104,39 @@ export const Category = () => {
                           {e}
                         </TableCell>)
                     }
-                    <TableCell>操作</TableCell>
+                    <TableCell width={150}>操作</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {listData?.data?.map(e => <TableRow>
-                    <TableCell key={`TableBody${e.F_CTID}`}>{e.F_CTNameC}</TableCell>
-                    <TableCell>
+                  {listData?.data?.map(e => <TableRow
+                      key={`TableBody${e.F_CTID}`}>
+                    <TableCell>{e.F_CTNameC}</TableCell>
+                    <TableCell>{e.F_CTNameC}</TableCell>
+                    <TableCell>{e.F_CTNameC}</TableCell>
+                    <TableCell>{e.F_CTNameC}</TableCell>
+                    <S.ActionTableCell>
                       <Button
+                          onClick={editClick(e)}
                           variant="contained"
                       >编辑</Button>
                       <Button
                           variant="contained"
                       >启用</Button>
-                    </TableCell>
+                    </S.ActionTableCell>
                   </TableRow>)
                   }
                 </TableBody>
-              </Table>
+              </S.Table>
           }
+          <Pagination
+              {...pageState}
+              count={~~listData.maxCount}
+              refresh={getListData}
+          />
         </main>
+        <EditModal
+            {...editModalState}
+        />
       </S.Box>
   )
 }
