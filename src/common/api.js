@@ -1,10 +1,10 @@
-import React, { useState, useCallback } from 'react'
-export const isDev = process.env.NODE_ENV === 'development'
+import { useState, useCallback } from 'react'
+import { isDev } from '@/common/global'
 
 export const api = {}
 api.ajax = type => (url, option) => {
   const preUrl = isDev ? '/Api' : ''
-  const [data, setData] = useState()
+  const [data, setData] = useState({})
   const [error, setError] = useState()
   const [loading, setLoading] = useState(false)
   const getData = useCallback(async params => {
@@ -21,7 +21,7 @@ api.ajax = type => (url, option) => {
           setLoading(false)
         })
     setData(res?.data)
-    return res
+    return res?.data
   }, [option, preUrl, url])
   return [
     getData, data, loading, error

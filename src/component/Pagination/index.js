@@ -3,8 +3,8 @@ import { TablePagination } from '@material-ui/core'
 
 export const useInitState = () => {
   const [pageData, setPageData] = useState({
-    page: 0,
-    pagesize: 10,
+    Page: 0,
+    FloatPageCount: 10,
   })
   return {
     pageData,
@@ -29,20 +29,20 @@ export const Pagination = (
           component="div"
           rowsPerPageOptions={[5, 10, 25]}
           count={count}
-          rowsPerPage={pageData.pagesize || 10}
-          page={pageData.page || 0}
-          onChangePage={(e, page) => {
+          rowsPerPage={pageData.FloatPageCount || 10}
+          page={pageData.Page || 0}
+          onChangePage={(e, Page) => {
             setPageData({
-              page,
+              Page,
             })
-            refresh({ page })
+            refresh({ Page })
           }}
           onChangeRowsPerPage={e => {
             setPageData({
-              rowsPerPage: e.target.value
+              FloatPageCount: e.target.value
             })
             refresh({
-              rowsPerPage: e.target.value
+              FloatPageCount: e.target.value
             })
           }}
       />

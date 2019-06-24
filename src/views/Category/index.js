@@ -1,6 +1,5 @@
 import React from 'react'
 import { MenuItem, TableRow } from '@material-ui/core'
-import FormHelperText from "@material-ui/core/FormHelperText";
 import { S } from './style'
 import CircularProgress from "@material-ui/core/CircularProgress";
 import TableHead from "@material-ui/core/TableHead";
@@ -19,80 +18,121 @@ export const Category = ({ theme }) => {
   const { editClick } = editModalState
   const [search, setSearch] = React.useState({
     type: '',
-    sort: '',
+    sort: 1,
   })
   const [getList, listData = {}, listLoad] = api.post('/Products/QueryCommodityType')
+  const [getTypeOptionOne, { data: typeOptionOne = [] }] = api.post('/Products/QueryCommodityTypeChildren')
+  const [getTypeOptionTwo, { data: typeOptionTwo = [] }] = api.post('/Products/QueryCommodityTypeChildren')
+
   const getListData = (param = {}) => getList({
-    sort: search.sort,
+    ...search,
     ...pageState.pageData,
     ...param,
   })
   React.useEffect(() => {
     getList({
-      sort: search.sort,
-      ...pageState.pageData,
+      Page: 0,
+      FloatPageCount: 10,
+      ParentID: '',
+      SortType: 1,
+      IsAsc: 0,
     })
-  }, [getList, pageState.pageData, search.sort])
-  // console.log(props)
+    getTypeOptionOne()
+  }, [getList, getTypeOptionOne])
 
   return (
       <S.Box>
         <header>
-          <section>
+          <S.HeaderBox>
             <header>产品类别</header>
-            <section>进行管理</section>
+            <section>您可以进行管理</section>
             <main>
               <Button
                   variant="contained"
-                  color="inherit"
+                  color="primary"
                   onClick={editClick({})}
               >
                 新增
               </Button>
             </main>
-          </section>
-          <section>
+          </S.HeaderBox>
+          <S.HeaderBox>
             <header>类别筛选</header>
             <main>
               <CusSelect
                   onChange={(v) => {
                     setSearch({
                       ...search,
-                      type: v.target.value
+                      ParentID: v.target.value,
+                      type: v.target.value,
+                      typeTwo: ''
+                    })
+                    getTypeOptionTwo({
+                      ParentID: v.target.value
+                    })
+                    getListData({
+                      ParentID: v.target.value,
                     })
                   }}
                   value={search.type}
-                  placeholder="223344"
+                  placeholder="选择类别"
               >
-                <MenuItem
-                    key={'123'}
-                    value={'123'}
-                >123</MenuItem>
-                <MenuItem
-                    key={'1234'}
-                    value={'1234'}
-                >1234</MenuItem>
+                {typeOptionOne.map(e => (
+                    <MenuItem
+                        key={`typeOptionOne${e.F_CTID}`}
+                        value={e.F_CTID}
+                    >{e.F_CTNameC}</MenuItem>
+                ))}
               </CusSelect>
-              <FormHelperText>Placeholder</FormHelperText>
+              <CusSelect
+                  onChange={(v) => {
+                    setSearch({
+                      ...search,
+                      ParentID: v.target.value,
+                      typeTwo: v.target.value
+                    })
+                    getListData({
+                      ParentID: v.target.value,
+                    })
+                  }}
+                  value={search.typeTwo}
+                  placeholder="选择类别"
+              >
+                {typeOptionTwo.map(e => (
+                    <MenuItem
+                        key={`typeOptionTwo${e.F_CTID}`}
+                        value={e.F_CTID}
+                    >{e.F_CTNameC}</MenuItem>
+                ))}
+              </CusSelect>
             </main>
-          </section>
-          <section>
+          </S.HeaderBox>
+          <S.HeaderBox>
             <header>类别排序</header>
             <main>
               <CusSelect
                   placeholder="选择排序"
                   value={search.sort}
                   onChange={(v) => {
+                    const dealSort = sort => ({
+                      SortType: [1, 2].includes(sort) ? 1 : 2,
+                      IsAsc: [1, 3].includes(sort) ? 0 : 1
+                    })
                     setSearch({
                       ...search,
+                      ...dealSort(v.target.value),
                       sort: v.target.value
                     })
+                    getListData(dealSort(v.target.value))
                   }}
               >
-                <MenuItem value={'234'}>123</MenuItem>
+                <MenuItem value={1}>按创建时间-降序</MenuItem>
+                <MenuItem value={2}>按创建时间-升序</MenuItem>
+                <MenuItem value={3}>按序号-降序</MenuItem>
+                <MenuItem value={4}>按序号-升序</MenuItem>
               </CusSelect>
             </main>
-          </section>
+          </S.HeaderBox>
         </header>
         <main>
           {(listLoad) ? <S.Loading><CircularProgress/></S.Loading>
@@ -116,6 +156,7 @@ export const Category = ({ theme }) => {
                     <TableCell>{e.F_CTNameC}</TableCell>
                     <S.ActionTableCell>
                       <Button
+                          color="secondary"
                           onClick={editClick(e)}
                           variant="contained"
                       >编辑</Button>
@@ -136,6 +177,7 @@ export const Category = ({ theme }) => {
         </main>
         <EditModal
             {...editModalState}
+            refreshData={getListData}
         />
       </S.Box>
   )

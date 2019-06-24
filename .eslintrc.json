@@ -8,7 +8,8 @@
   ],
   "globals": {
     "axios": true,
-    "@": true
+    "@": true,
+    "ssLog": true
   },
   "rules": {
     "jsx-a11y/no-autofocus": "warn"

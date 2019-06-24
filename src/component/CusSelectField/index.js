@@ -7,6 +7,7 @@ import FormControl from "@material-ui/core/FormControl";
 
 export const CusSelectField = prop => (
     <S.Box
+        {...prop}
         as={FormControl}
     >
       <InputLabel
@@ -15,8 +16,9 @@ export const CusSelectField = prop => (
       >{prop.label}</InputLabel>
       <CusSelect
           {...prop}
+          value={prop.value || ''}
       />
-      <FormHelperText id="my-helper-text">We'll never share your email.</FormHelperText>
+      {prop.helperText && <FormHelperText {...prop} id="my-helper-text">{prop.helperText}</FormHelperText>}
     </S.Box>
 )
 

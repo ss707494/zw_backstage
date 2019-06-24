@@ -21,8 +21,10 @@ S.Table = styled(Table)`
   overflow: hidden;
   border: 1px solid rgba(224, 224, 224, 1);
   > thead {
-    background: ${({theme}) => theme.palette.grey[500]};
-    color: ${({theme}) => theme.palette.common.white};
+    background: ${({theme}) => theme.palette.grey[800]};
+    > tr > th {
+      color: ${({theme}) => theme.palette.common.white};
+    }
   }
 }
 `
@@ -36,3 +38,23 @@ S.ActionTableCell = styled(TableCell)`&&& {
   }
 
 }`
+S.HeaderBox = styled('section')`&&&{
+  display: flex;
+  flex-direction: column;
+  > header {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 15px;
+  } 
+  > section {
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+  > main {
+    > div {
+      margin-right: 8px;
+    }
+  }
+}
+`

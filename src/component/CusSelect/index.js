@@ -47,6 +47,7 @@ export const CusSelect = prop => (
         input={<BootstrapInput name={prop.name}
                                id={prop.id}/>}
         {...prop}
+        value={prop.value || ''}
     >
       {prop.placeholder &&
       <MenuItem

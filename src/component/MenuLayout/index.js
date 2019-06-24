@@ -19,8 +19,8 @@ const _themeOption = createMuiTheme({
 })
 
 const menuData = [
-  ['category'],
-  ['test'],
+  ['category', '分类管理', ''],
+  ['test', '测试页面', ''],
 ]
 
 export const MenuLayout = ({ children }) => {
@@ -41,9 +41,11 @@ export const MenuLayout = ({ children }) => {
             </Button>
           </section>
           <main>
-            <SearchInput />
+            <SearchInput/>
           </main>
           <div>
+            <img src={require('./img/cat.jpg')}
+                 alt="cat"/>
             account
           </div>
         </S.Header>
@@ -53,11 +55,15 @@ export const MenuLayout = ({ children }) => {
             elevation={2}>
           <MenuList>
             {
-              menuData.map(([e]) => <MenuItem key={`menuitem${e}`}
-                                              component={S.Link}
-                                              to={`/${e}`}>
-                {e}
-              </MenuItem>)
+              menuData.map(([path, text, icon]) =>
+                  <MenuItem key={`menuitem${path}`}
+                            component={S.Link}
+                            to={`/${path}`}>
+                    <img src={icon || require('./img/round-view_list-24px.svg')}
+                         alt=""/>
+                    {icon}
+                    {text || path}
+                  </MenuItem>)
             }
             {/*<MenuItem onClick={() => {*/}
             {/*  logout()*/}
@@ -81,4 +87,7 @@ export const MenuLayout = ({ children }) => {
   );
 }
 
-export default {}
+export default {
+  MenuLayout,
+  menuData
+}

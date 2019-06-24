@@ -41,6 +41,17 @@ S.Header = styled(Paper)`
   > main {
     margin-left: auto;
   }
+  > div {
+    margin: 0 10px;
+    display: flex;
+    align-items: center;
+    > img {
+      width: 25px;
+      height: 25px;
+      overflow: hidden;
+      border-radius: 50%;
+    }
+  }
 `
 
 S.MenuList = styled(Paper)`
