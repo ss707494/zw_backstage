@@ -186,11 +186,11 @@ export const Product = ({ theme }) => {
                     <TableCell>{e?.F_CNameC}</TableCell>
                     <TableCell width={60}>{e?.F_CNameC}</TableCell>
                     <TableCell width={60}>{e?.F_CNameC}</TableCell>
-                    <TableCell width={60}>{e?.Entry?.F_CNameC}</TableCell>
-                    <TableCell>{e?.Entry?.F_CNameC}</TableCell>
-                    <TableCell>{e.DisplayNumber}</TableCell>
-                    <TableCell>{e?.Entry?.F_CNameC}</TableCell>
-                    <TableCell>{e.DisplayNumber}</TableCell>
+                    <TableCell width={60}>{e?.F_CNameC}</TableCell>
+                    <TableCell>{e?.F_CNameC}</TableCell>
+                    <TableCell>{e?.F_CPUnitPriceIn}</TableCell>
+                    <TableCell>{e?.F_CNameC}</TableCell>
+                    <TableCell>{e?.F_CPUnitPriceIn}</TableCell>
                     <S.ActionTableCell>
                       <Button
                           color="secondary"
