@@ -6,7 +6,6 @@ http://rap2.taobao.org/repository/editor?id=222495
 参数：
 Int Active //动作，1：新增，2：编辑
 String ID//类别ID,当Active为2时，需传入
-String Active //动作，1：新增，2：编辑
 String ParentID; //父级类别ID,传空字符串时为一级类别
 String F_CTNameC//中文名称
 String F_CTRemarkC//中文描述
@@ -41,20 +40,32 @@ int IsAsc    //是否升序，1：升序，0降序
 {
     "result": true,
     "msg": "查询成功",
-    "data": [
+   "data": [
         {
-            "F_CTID": "9e1bf7c1-e930-4ada-8bb9-3936f49b27a2",
-            "F_CTNameC": "hhhh444432322457",
-            "F_CTRemarkC": "43523423423423",
-            "F_CTNameE": null,
-            "F_CTRemarkE": null,
-            "F_CTNameEx": null,
-            "F_CTRemarkEx": null,
-            "F_CTSort": 9,
-            "F_CTIsDelete": 0,
-            "F_TID": "6D76FAE5D3E24226AAD616C0DFDF7EDB"（租户ID,暂时不用，是不变的）
-        }
-    ]
+            "GradeName": "21-12-12",
+            "DisplayNumber": "一级-二级-三级",
+            "Entry": {
+                "F_CTID": "8c5d5a43-3159-406b-a1bc-5388949ad8dd",
+                "F_CTNameC": "三级类别3",
+                "F_CTRemarkC": "234234",
+                "F_CTNameE": null,
+                "F_CTRemarkE": null,
+                "F_CTNameEx": null,
+                "F_CTRemarkEx": null,
+                "F_CTSort": 3,
+                "F_CTIsDelete": 0,
+                "F_TID": "6D76FAE5D3E24226AAD616C0DFDF7EDB",
+                "F_CTParentID": "f54726a7-1679-47eb-a62e-42837cf6ecd4",
+                "F_CTNumber": "010103",
+                "F_CTIsEnable": 1,
+                "F_CTGrade": 3,
+                "F_CTAddDateTime": "/Date(1560934775657)/"
+            }
+        },        … …
+    ],
+    "maxCount": 7,
+    "page": 1,
+    "pagesize": 5
 }
 
 （4）查询商品类别的子类别（用于类别下拉框的数据获取）
@@ -68,7 +79,8 @@ String ParentID //父类别ID
     "data": [
         {
             "F_CTID": "f54726a7-1679-47eb-a62e-42837cf6ecd4",
-            "F_CTNameC": "二级类别1"
+            "F_CTNameC": "二级类别1",
+            "F_CTNumber": "120303"
         },
 ……
 ]

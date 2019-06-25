@@ -54,12 +54,14 @@ S.Header = styled(Paper)`
   }
 `
 
+const menuWidth = '160px'
+
 S.MenuList = styled(Paper)`
   &&& {
     position: relative;
     transition: all ${val.animate};
-    max-width: ${({fold}) => ~~fold ? '0' : '200px'};
-    width: 200px;
+    max-width: ${({fold}) => ~~fold ? '0' : menuWidth};
+    width: ${menuWidth};
   }
 `
 
@@ -75,7 +77,7 @@ S.FoldMenu = styled(Button)`
     position: absolute;
     top: 30vh;
     transition: left ${val.animate};
-    left: ${({fold}) => ~~fold ? '0' : '200px'};
+    left: ${({fold}) => ~~fold ? '0' : menuWidth};
     background: transparent;
     height: 85px;
     width: 25px;

@@ -10,9 +10,9 @@ import { EditModal, useInitState } from './EditModal'
 import { api } from '@/common/api'
 import { CusButton as Button } from '@/component/CusButton'
 import { CusTableCell as TableCell } from '@/component/CusTableCell'
-import { showConfirm } from "@/component/ConfirmDialog";
+import { showConfirm } from "@/component/ConfirmDialog"
 
-export const Category = ({ theme }) => {
+export const Product = ({ theme }) => {
   const pageState = useInitPageData()
   const editModalState = useInitState()
   const { editClick } = editModalState
@@ -20,9 +20,10 @@ export const Category = ({ theme }) => {
     type: '',
     sort: 1,
   })
-  const [getList, listData = {}, listLoad] = api.post('/Products/QueryCommodityType')
+  const [getList, listData = {}, listLoad] = api.post('/Products/QueryCommodity')
   const [getTypeOptionOne, { data: typeOptionOne = [] }] = api.post('/Products/QueryCommodityTypeChildren')
   const [getTypeOptionTwo, { data: typeOptionTwo = [] }] = api.post('/Products/QueryCommodityTypeChildren')
+  const [getTypeOptionThree, { data: typeOptionThree = [] }] = api.post('/Products/QueryCommodityTypeChildren')
   const [setTypeEnable] = api.post('/Products/SetCommodityTypeEnable')
 
   const getListData = (param = {}) => getList({
@@ -32,11 +33,14 @@ export const Category = ({ theme }) => {
   })
   React.useEffect(() => {
     getList({
+      BussinessID: '1',
       Page: 1,
       FloatPageCount: 10,
       ParentID: '',
       SortType: 1,
-      IsAsc: 0,
+      F_CNameC: '',
+      F_CNumber: '',
+      F_CTID: '',
     })
     getTypeOptionOne()
   }, [getList, getTypeOptionOne])
@@ -45,7 +49,7 @@ export const Category = ({ theme }) => {
       <S.Box>
         <header>
           <S.HeaderBox>
-            <header>产品类别</header>
+            <header>产品列表</header>
             <section>您可以进行管理</section>
             <main>
               <Button
@@ -134,13 +138,39 @@ export const Category = ({ theme }) => {
               </CusSelect>
             </main>
           </S.HeaderBox>
+          <S.HeaderBox>
+            <header>类别排序</header>
+            <main>
+              <CusSelect
+                  placeholder="选择排序"
+                  value={search.sort}
+                  onChange={(v) => {
+                    const dealSort = sort => ({
+                      SortType: [1, 2].includes(sort) ? 1 : 2,
+                      IsAsc: [1, 3].includes(sort) ? 0 : 1
+                    })
+                    setSearch({
+                      ...search,
+                      ...dealSort(v.target.value),
+                      sort: v.target.value
+                    })
+                    getListData(dealSort(v.target.value))
+                  }}
+              >
+                <MenuItem value={1}>按创建时间-降序</MenuItem>
+                <MenuItem value={2}>按创建时间-升序</MenuItem>
+                <MenuItem value={3}>按序号-降序</MenuItem>
+                <MenuItem value={4}>按序号-升序</MenuItem>
+              </CusSelect>
+            </main>
+          </S.HeaderBox>
         </header>
         <main>
           {(listLoad) ? <S.Loading><CircularProgress/></S.Loading>
               : <S.Table theme={theme}>
                 <TableHead>
                   <TableRow>
-                    {['类别序号', '中文名称', '英文名称', '产品种类']
+                    {['商品编号', '中文名称', '图片', '热门', '新品', '库存', '进货价格', '市场价格', '售卖价格', '重量']
                         .map(e => <TableCell key={`TableHead${e}`}>
                           {e}
                         </TableCell>)
@@ -149,11 +179,17 @@ export const Category = ({ theme }) => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {listData?.data?.map(e => <TableRow
-                      key={`TableBody${e.Entry?.F_CTID}`}>
+                  {(window.ssLog(listData))?.data?.map(e => <TableRow
+                      key={`TableBody${e?.ID}`}>
                     <TableCell>{e.GradeName}</TableCell>
-                    <TableCell>{e?.Entry?.F_CTNameC}</TableCell>
-                    <TableCell>{e?.Entry?.F_CTNameE}</TableCell>
+                    <TableCell>{e?.F_CNameC}</TableCell>
+                    <TableCell>{e?.F_CNameC}</TableCell>
+                    <TableCell width={60}>{e?.F_CNameC}</TableCell>
+                    <TableCell width={60}>{e?.F_CNameC}</TableCell>
+                    <TableCell width={60}>{e?.Entry?.F_CNameC}</TableCell>
+                    <TableCell>{e?.Entry?.F_CNameC}</TableCell>
+                    <TableCell>{e.DisplayNumber}</TableCell>
+                    <TableCell>{e?.Entry?.F_CNameC}</TableCell>
                     <TableCell>{e.DisplayNumber}</TableCell>
                     <S.ActionTableCell>
                       <Button
@@ -200,8 +236,8 @@ export const Category = ({ theme }) => {
 
 export default {
   props: {
-    path: '/category',
-    component: Category,
+    path: '/product',
+    component: Product,
   },
 }
 

@@ -20,6 +20,7 @@ const _themeOption = createMuiTheme({
 
 const menuData = [
   ['category', '分类管理', ''],
+  ['product', '产品管理', ''],
   ['test', '测试页面', ''],
 ]
 

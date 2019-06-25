@@ -3,9 +3,9 @@ import { S } from './style'
 
 export const CusButton = prop => (
     <>
-      <S.Box {...prop} disabled={!!prop.loadingsdf}>
+      <S.Box {...prop} disabled={!!prop.loading}>
         {prop.children}
-        {!!prop.loadingsdf && <S.ButtonLoading
+        {!!prop.loading && <S.ButtonLoading
             color="inherit"
             size={26}
         />}
