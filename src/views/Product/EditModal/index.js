@@ -41,7 +41,7 @@ const useLinkage = () => {
       ParentID: data.twoCode
     })
   }, [data.twoCode, getThree])
-  return [{ ...data, one, two }, setData]
+  return [{ ...data, one, two, three }, setData]
 }
 
 const dealItemToForm = item => !item?.Entry ? ({
@@ -101,6 +101,11 @@ export const EditModal = (
       }
     }) => {
   const [updateData, , updateLoading] = api.post('/Products/UpdateCommodityType')
+  const [typeNum, setTypeNum] = useState({
+    oneNum: '',
+    twoNum: '',
+    threeNum: '',
+  })
   const handleSave = async () => {
     const res = await updateData({
       ...editData,
@@ -112,6 +117,11 @@ export const EditModal = (
       setOpen(false)
     }
   }
+  React.useEffect(() => {
+    setEditData({
+      num: (typeNum.oneNum + typeNum.twoNum + typeNum.threeNum) || ''
+    })
+  }, [setEditData, typeNum])
 
   return (
       <S.Box
@@ -127,25 +137,28 @@ export const EditModal = (
                   readOnly: true,
                 }}
                 label="产品编号"
-                value={editData.F_CTNameC}
-                onChange={e => setEditData({
-                  ...editData,
-                  name: e.target.value
-                })}
+                value={editData.num}
             />
             <CusSelectField
                 label=""
                 placeholder="选择类别"
                 value={oneCode}
-                onChange={e => setLinkData(pre => ({
-                  ...pre,
-                  oneCode: e.target.value
-                }))}
+                onChange={(e, child) => {
+                  setLinkData(pre => ({
+                    ...pre,
+                    oneCode: e.target.value
+                  }))
+                  setTypeNum(pre => ({
+                    ...pre,
+                    oneNum: child.props.num,
+                  }))
+                }}
             >
               {one?.map(e => (
                   <MenuItem
                       key={`typeOptionOne${e.F_CTID}`}
-                      value={e.F_CTID}
+                      value={e?.F_CTID}
+                      num={e?.F_CTNumber}
                   >{e.F_CTNameC}</MenuItem>
               ))}
             </CusSelectField>
@@ -181,6 +194,14 @@ export const EditModal = (
                   >{e.F_CTNameC}</MenuItem>
               ))}
             </CusSelectField>
+            <CusTextField
+                label="中文名称"
+                value={editData.F_CTNameC}
+                onChange={e => setEditData({
+                  ...editData,
+                  name: e.target.value
+                })}
+            />
             <CusButton
                 loading={updateLoading ? 1 : 0}
                 color="primary"

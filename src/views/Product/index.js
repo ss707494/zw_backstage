@@ -119,7 +119,7 @@ export const Product = ({ theme }) => {
       F_CTID: typeHelpObj.res || '',
     }))
   }, [typeHelpObj.res])
-  console.log(listData)
+  // console.log(listData)
 
   return (
       <S.Box>

@@ -20,8 +20,8 @@ api.ajax = type => (url, option) => {
         .finally(() => {
           setLoading(false)
         })
-    setData(res?.data)
-    return res?.data
+    setData(res?.data || {})
+    return res?.data || {}
   }, [option, preUrl, url])
   return [
     getData, data, loading, error
