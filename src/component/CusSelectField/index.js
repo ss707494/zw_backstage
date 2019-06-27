@@ -5,7 +5,7 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
 
-export const CusSelectField = prop => (
+export const CusSelectField = ({helperText, ...prop}) => (
     <S.Box
         {...prop}
         as={FormControl}
@@ -18,7 +18,7 @@ export const CusSelectField = prop => (
           {...prop}
           value={prop.value || ''}
       />
-      {prop.helperText && <FormHelperText {...prop} id="my-helper-text">{prop.helperText}</FormHelperText>}
+      {helperText && <FormHelperText {...prop} id="my-helper-text">{helperText}</FormHelperText>}
     </S.Box>
 )
 

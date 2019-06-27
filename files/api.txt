@@ -165,6 +165,7 @@ int FloatPageCount//单页数据条数
             "Stock": 200,
             "F_CPUnitPriceIn": 140,
             "F_CPUnitPriceOut": 240,
+            "F_CPUnitPriceMarket": 240,
             "F_CPWeight": 5600,
             "PhotoArray": [
                 {

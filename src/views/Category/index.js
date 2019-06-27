@@ -155,30 +155,32 @@ export const Category = ({ theme }) => {
                     <TableCell>{e?.Entry?.F_CTNameC}</TableCell>
                     <TableCell>{e?.Entry?.F_CTNameE}</TableCell>
                     <TableCell>{e.DisplayNumber}</TableCell>
-                    <S.ActionTableCell>
-                      <Button
-                          color="secondary"
-                          onClick={editClick(e)}
-                          variant="contained"
-                      >编辑</Button>
-                      <Button
-                          color={e?.Entry?.F_CTIsEnable ? 'primary' : 'default'}
-                          variant="contained"
-                          onClick={() => {
-                            showConfirm({
-                              message: `确定${e?.Entry?.F_CTIsEnable ? '停用' : '启用'}该类别吗`,
-                              callBack: async res => {
-                                if (!res) return
-                                await setTypeEnable({
-                                  ID: e.Entry?.F_CTID,
-                                  IsEnable: e?.Entry?.F_CTIsEnable ? 0 : 1
-                                })
-                                getListData()
-                              }
-                            });
-                          }}
-                      >{e?.Entry?.F_CTIsEnable ? '停用' : '启用'}</Button>
-                    </S.ActionTableCell>
+                    <TableCell>
+                      <S.ActionTableCell>
+                        <Button
+                            color="secondary"
+                            onClick={editClick(e)}
+                            variant="contained"
+                        >编辑</Button>
+                        <Button
+                            color={e?.Entry?.F_CTIsEnable ? 'primary' : 'default'}
+                            variant="contained"
+                            onClick={() => {
+                              showConfirm({
+                                message: `确定${e?.Entry?.F_CTIsEnable ? '停用' : '启用'}该类别吗`,
+                                callBack: async res => {
+                                  if (!res) return
+                                  await setTypeEnable({
+                                    ID: e.Entry?.F_CTID,
+                                    IsEnable: e?.Entry?.F_CTIsEnable ? 0 : 1
+                                  })
+                                  getListData()
+                                }
+                              });
+                            }}
+                        >{e?.Entry?.F_CTIsEnable ? '停用' : '启用'}</Button>
+                      </S.ActionTableCell>
+                    </TableCell>
                   </TableRow>)
                   }
                 </TableBody>

@@ -1,6 +1,5 @@
 import React from 'react'
 import { MenuItem, TableRow } from '@material-ui/core'
-import { S } from './style'
 import CircularProgress from "@material-ui/core/CircularProgress";
 import TableHead from "@material-ui/core/TableHead";
 import TableBody from "@material-ui/core/TableBody";
@@ -11,19 +10,47 @@ import { api } from '@/common/api'
 import { CusButton as Button } from '@/component/CusButton'
 import { CusTableCell as TableCell } from '@/component/CusTableCell'
 import { showConfirm } from "@/component/ConfirmDialog"
+import { SearchInput } from "@/component/SearchInput";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Radio from "@material-ui/core/Radio";
+import { ImgPreview } from "@/component/ImgPreview"
+import { CheckCircleRounded, RadioButtonUncheckedTwoTone } from '@material-ui/icons'
+import { S } from './style'
+
+const KEYWORD_TYPE = {
+  num: '1',
+  name: '2'
+}
+
+const useTypeState = () => {
+
+}
 
 export const Product = ({ theme }) => {
   const pageState = useInitPageData()
   const editModalState = useInitState()
   const { editClick } = editModalState
-  const [search, setSearch] = React.useState({
-    type: '',
-    sort: 1,
+  const [keywordObj, setKeywordObj] = React.useState({
+    type: KEYWORD_TYPE.num,
+    value: '',
   })
-  const [getList, listData = {}, listLoad] = api.post('/Products/QueryCommodity')
-  const [getTypeOptionOne, { data: typeOptionOne = [] }] = api.post('/Products/QueryCommodityTypeChildren')
-  const [getTypeOptionTwo, { data: typeOptionTwo = [] }] = api.post('/Products/QueryCommodityTypeChildren')
-  const [getTypeOptionThree, { data: typeOptionThree = [] }] = api.post('/Products/QueryCommodityTypeChildren')
+  const [typeHelpObj, setTypeHelpObj] = React.useState({
+    typeOne: '',
+    typeTwo: '',
+    typeThree: '',
+  })
+  const [search, setSearch] = React.useState({
+    keywordType: KEYWORD_TYPE.num,
+    type: '',
+    SortType: 1,
+  })
+  const [openImg, setOpenImg] = React.useState(false)
+  const [previewImg, setPreviewImg] = React.useState([])
+  const [getList, listData, listLoad] = api.post('/Products/QueryCommodity')
+  const [getTypeOptionOne, { data: typeOptionOne }] = api.post('/Products/QueryCommodityTypeChildren')
+  const [getTypeOptionTwo, { data: typeOptionTwo }] = api.post('/Products/QueryCommodityTypeChildren')
+  const [getTypeOptionThree, { data: typeOptionThree }] = api.post('/Products/QueryCommodityTypeChildren')
   const [setTypeEnable] = api.post('/Products/SetCommodityTypeEnable')
 
   const getListData = (param = {}) => getList({
@@ -32,18 +59,67 @@ export const Product = ({ theme }) => {
     ...param,
   })
   React.useEffect(() => {
-    getList({
-      BussinessID: '1',
-      Page: 1,
-      FloatPageCount: 10,
-      ParentID: '',
-      SortType: 1,
-      F_CNameC: '',
-      F_CNumber: '',
-      F_CTID: '',
-    })
     getTypeOptionOne()
-  }, [getList, getTypeOptionOne])
+  }, [getTypeOptionOne])
+  React.useEffect(() => {
+    getList({
+      ...search,
+      ...pageState.pageData,
+      BussinessID: '1',
+    })
+  }, [getList, search, pageState.pageData])
+  React.useEffect(() => {
+    if (!typeHelpObj.typeOne) {
+      setTypeHelpObj(pre => ({
+        ...pre,
+        typeTwo: '',
+        res: '',
+      }))
+    } else {
+      getTypeOptionTwo({
+        ParentID: typeHelpObj.typeOne
+      })
+    }
+  }, [getTypeOptionTwo, typeHelpObj.typeOne])
+  React.useEffect(() => {
+    setTypeHelpObj(pre => ({
+      ...pre,
+      typeTwo: typeOptionTwo?.[0]?.F_CTID || '',
+    }))
+  }, [typeOptionTwo])
+  React.useEffect(() => {
+    if (!typeHelpObj.typeTwo) {
+      setTypeHelpObj(pre => ({
+        ...pre,
+        typeThree: '',
+        res: pre.typeOne,
+      }))
+    } else {
+      getTypeOptionThree({
+        ParentID: typeHelpObj.typeTwo
+      })
+    }
+  }, [getTypeOptionThree, typeHelpObj.typeTwo])
+  React.useEffect(() => {
+    setTypeHelpObj(pre => ({
+      ...pre,
+      typeThree: typeOptionThree?.[0]?.F_CTID || ''
+    }))
+  }, [typeOptionThree])
+  React.useEffect(() => {
+    setTypeHelpObj(pre => ({
+      ...pre,
+      res: typeHelpObj.typeThree || pre.typeTwo,
+    }))
+  }, [typeHelpObj.typeThree])
+  React.useEffect(() => {
+    if (!typeHelpObj.res) return
+    setSearch(pre => ({
+      ...pre,
+      F_CTID: typeHelpObj.res || '',
+    }))
+  }, [typeHelpObj.res])
+  console.log(listData)
 
   return (
       <S.Box>
@@ -62,27 +138,64 @@ export const Product = ({ theme }) => {
             </main>
           </S.HeaderBox>
           <S.HeaderBox>
-            <header>类别筛选</header>
+            <header>名称搜索</header>
             <main>
-              <CusSelect
-                  onChange={(v) => {
-                    setSearch({
-                      ...search,
-                      ParentID: v.target.value,
-                      type: v.target.value,
-                      typeTwo: ''
-                    })
-                    getTypeOptionTwo({
-                      ParentID: v.target.value
-                    })
-                    getListData({
-                      ParentID: v.target.value,
+              <SearchInput
+                  value={keywordObj.value}
+                  onChange={e => {
+                    return setKeywordObj({
+                      ...keywordObj,
+                      value: e?.target?.value
                     })
                   }}
-                  value={search.type}
+                  style_type="light"
+              />
+              <RadioGroup
+                  row
+                  value={keywordObj.type}
+                  onChange={e => setKeywordObj(pre => ({
+                    ...pre,
+                    type: e?.target?.value,
+                    value: '',
+                  }))}
+              >
+                <FormControlLabel
+                    value={KEYWORD_TYPE.num}
+                    control={<Radio/>}
+                    label="编号"
+                />
+                <FormControlLabel
+                    value={KEYWORD_TYPE.name}
+                    control={<Radio/>}
+                    label="名称"
+                />
+              </RadioGroup>
+              <Button
+                  onClick={() => setSearch({
+                    ...search,
+                    F_CNameC: keywordObj.type === KEYWORD_TYPE.name ? keywordObj.value : '',
+                    F_CNumber: keywordObj.type === KEYWORD_TYPE.num ? keywordObj.value : '',
+                  })}
+                  variant="contained"
+                  color="secondary"
+              >搜索</Button>
+            </main>
+          </S.HeaderBox>
+          <S.HeaderBox>
+            <header>类别筛选</header>
+            <S.SearchBox>
+              <CusSelect
+                  value={typeHelpObj.typeOne}
+                  onChange={(v) => {
+                    debugger
+                    setTypeHelpObj({
+                      ...typeHelpObj,
+                      typeOne: v.target.value,
+                    })
+                  }}
                   placeholder="选择类别"
               >
-                {typeOptionOne.map(e => (
+                {typeOptionOne?.map(e => (
                     <MenuItem
                         key={`typeOptionOne${e.F_CTID}`}
                         value={e.F_CTID}
@@ -90,79 +203,55 @@ export const Product = ({ theme }) => {
                 ))}
               </CusSelect>
               <CusSelect
+                  value={typeHelpObj.typeTwo}
                   onChange={(v) => {
-                    setSearch({
-                      ...search,
-                      ParentID: v.target.value,
-                      typeTwo: v.target.value
-                    })
-                    getListData({
-                      ParentID: v.target.value,
+                    setTypeHelpObj({
+                      ...typeHelpObj,
+                      typeTwo: v.target.value,
                     })
                   }}
-                  value={search.typeTwo}
                   placeholder="选择类别"
               >
-                {typeOptionTwo.map(e => (
+                {typeOptionTwo?.map(e => (
                     <MenuItem
                         key={`typeOptionTwo${e.F_CTID}`}
                         value={e.F_CTID}
                     >{e.F_CTNameC}</MenuItem>
                 ))}
               </CusSelect>
-            </main>
-          </S.HeaderBox>
-          <S.HeaderBox>
-            <header>类别排序</header>
-            <main>
+              <CusSelect
+                  onChange={(v) => {
+                    setTypeHelpObj({
+                      ...typeHelpObj,
+                      typeThree: v.target.value,
+                    })
+                  }}
+                  value={typeHelpObj.typeThree}
+                  placeholder="选择类别"
+              >
+                {typeOptionThree?.map(e => (
+                    <MenuItem
+                        key={`typeOptionThree${e.F_CTID}`}
+                        value={e.F_CTID}
+                    >{e.F_CTNameC}</MenuItem>
+                ))}
+              </CusSelect>
+              <span>类别排序</span>
               <CusSelect
                   placeholder="选择排序"
-                  value={search.sort}
+                  value={search.SortType}
                   onChange={(v) => {
-                    const dealSort = sort => ({
-                      SortType: [1, 2].includes(sort) ? 1 : 2,
-                      IsAsc: [1, 3].includes(sort) ? 0 : 1
-                    })
                     setSearch({
                       ...search,
-                      ...dealSort(v.target.value),
-                      sort: v.target.value
+                      SortType: v.target.value,
                     })
-                    getListData(dealSort(v.target.value))
                   }}
               >
-                <MenuItem value={1}>按创建时间-降序</MenuItem>
-                <MenuItem value={2}>按创建时间-升序</MenuItem>
-                <MenuItem value={3}>按序号-降序</MenuItem>
-                <MenuItem value={4}>按序号-升序</MenuItem>
+                <MenuItem value={1}>按产品创建/修改时间</MenuItem>
+                <MenuItem value={2}>商品编号</MenuItem>
+                <MenuItem value={3}>库存倒序</MenuItem>
               </CusSelect>
-            </main>
-          </S.HeaderBox>
-          <S.HeaderBox>
-            <header>类别排序</header>
-            <main>
-              <CusSelect
-                  placeholder="选择排序"
-                  value={search.sort}
-                  onChange={(v) => {
-                    const dealSort = sort => ({
-                      SortType: [1, 2].includes(sort) ? 1 : 2,
-                      IsAsc: [1, 3].includes(sort) ? 0 : 1
-                    })
-                    setSearch({
-                      ...search,
-                      ...dealSort(v.target.value),
-                      sort: v.target.value
-                    })
-                    getListData(dealSort(v.target.value))
-                  }}
-              >
-                <MenuItem value={1}>按创建时间-降序</MenuItem>
-                <MenuItem value={2}>按创建时间-升序</MenuItem>
-                <MenuItem value={3}>按序号-降序</MenuItem>
-                <MenuItem value={4}>按序号-升序</MenuItem>
-              </CusSelect>
-            </main>
+            </S.SearchBox>
           </S.HeaderBox>
         </header>
         <main>
@@ -179,42 +268,67 @@ export const Product = ({ theme }) => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {(window.ssLog(listData))?.data?.map(e => <TableRow
+                  {listData?.data?.map(e => <TableRow
                       key={`TableBody${e?.ID}`}>
                     <TableCell>{e.GradeName}</TableCell>
                     <TableCell>{e?.F_CNameC}</TableCell>
-                    <TableCell>{e?.F_CNameC}</TableCell>
-                    <TableCell width={60}>{e?.F_CNameC}</TableCell>
-                    <TableCell width={60}>{e?.F_CNameC}</TableCell>
-                    <TableCell width={60}>{e?.F_CNameC}</TableCell>
-                    <TableCell>{e?.F_CNameC}</TableCell>
+                    <TableCell>
+                      <S.ImgPreview>
+                        <img
+                            src={e?.PhotoArray?.[0]?.F_PWebPath}
+                            alt=""/>
+                        <section>
+                          <div>1/7</div>
+                          <Button
+                              onClick={() => {
+                                setOpenImg(true)
+                                setPreviewImg(e?.PhotoArray)
+                              }}
+                          >
+                            预览
+                          </Button>
+                        </section>
+                      </S.ImgPreview>
+                    </TableCell>
+                    <TableCell>
+                      {e?.F_CIsHot === 1 ? <CheckCircleRounded /> : <RadioButtonUncheckedTwoTone />}
+                    </TableCell>
+                    <TableCell>
+                      {e?.F_CIsNew === 1 ? <CheckCircleRounded /> : <RadioButtonUncheckedTwoTone />}
+                    </TableCell>
+                    <TableCell>
+                      {e?.Stock}
+                    </TableCell>
                     <TableCell>{e?.F_CPUnitPriceIn}</TableCell>
-                    <TableCell>{e?.F_CNameC}</TableCell>
+                    <TableCell>{e?.F_CPUnitPriceOut}</TableCell>
+                    <TableCell>{e?.F_CPUnitPriceMarket}</TableCell>
                     <TableCell>{e?.F_CPUnitPriceIn}</TableCell>
-                    <S.ActionTableCell>
-                      <Button
-                          color="secondary"
-                          onClick={editClick(e)}
-                          variant="contained"
-                      >编辑</Button>
-                      <Button
-                          color={e?.Entry?.F_CTIsEnable ? 'primary' : 'default'}
-                          variant="contained"
-                          onClick={() => {
-                            showConfirm({
-                              message: `确定${e?.Entry?.F_CTIsEnable ? '停用' : '启用'}该类别吗`,
-                              callBack: async res => {
-                                if (!res) return
-                                await setTypeEnable({
-                                  ID: e.Entry?.F_CTID,
-                                  IsEnable: e?.Entry?.F_CTIsEnable ? 0 : 1
-                                })
-                                getListData()
-                              }
-                            });
-                          }}
-                      >{e?.Entry?.F_CTIsEnable ? '停用' : '启用'}</Button>
-                    </S.ActionTableCell>
+                    <TableCell>
+                      <S.ActionTableCell>
+                        <Button
+                            color="secondary"
+                            onClick={editClick(e)}
+                            variant="contained"
+                        >编辑</Button>
+                        <Button
+                            color={e?.Entry?.F_CTIsEnable ? 'primary' : 'default'}
+                            variant="contained"
+                            onClick={() => {
+                              showConfirm({
+                                message: `确定${e?.Entry?.F_CTIsEnable ? '停用' : '启用'}该类别吗`,
+                                callBack: async res => {
+                                  if (!res) return
+                                  await setTypeEnable({
+                                    ID: e.Entry?.F_CTID,
+                                    IsEnable: e?.Entry?.F_CTIsEnable ? 0 : 1
+                                  })
+                                  getListData()
+                                }
+                              });
+                            }}
+                        >{e?.Entry?.F_CTIsEnable ? '停用' : '启用'}</Button>
+                      </S.ActionTableCell>
+                    </TableCell>
                   </TableRow>)
                   }
                 </TableBody>
@@ -222,13 +336,17 @@ export const Product = ({ theme }) => {
           }
           <Pagination
               {...pageState}
-              count={~~listData.maxCount}
-              refresh={getListData}
+              count={~~listData?.maxCount}
           />
         </main>
         <EditModal
             {...editModalState}
             refreshData={getListData}
+        />
+        <ImgPreview
+            open={openImg}
+            closeModal={() => setOpenImg(false)}
+            data={previewImg}
         />
       </S.Box>
   )

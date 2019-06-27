@@ -7,6 +7,8 @@ S.Box = styled(Dialog)`
 `
 
 S.Img = styled('section')`
-  width: 200px;
-  background: gray;
+  > img {
+    max-width: 80vw;
+    max-height: 60vh;
+  }
 `

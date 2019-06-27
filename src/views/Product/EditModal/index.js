@@ -12,9 +12,11 @@ const useLinkage = () => {
   const [data, setData] = useState({
     oneCode: '',
     twoCode: '',
+    threeCode: '',
   })
-  const [getOne, { data: one = [] }] = api.post('/Products/QueryCommodityTypeChildren')
-  const [getTwo, { data: two = [] }] = api.post('/Products/QueryCommodityTypeChildren')
+  const [getOne, { data: one }] = api.post('/Products/QueryCommodityTypeChildren')
+  const [getTwo, { data: two }] = api.post('/Products/QueryCommodityTypeChildren')
+  const [getThree, { data: three }] = api.post('/Products/QueryCommodityTypeChildren')
   React.useEffect(() => {
     getOne()
   }, [getOne])
@@ -22,12 +24,23 @@ const useLinkage = () => {
     if (!data.oneCode) return
     setData(pre => ({
       ...pre,
-      twoCode: ''
+      twoCode: '',
+      threeCode: ''
     }))
     getTwo({
       ParentID: data.oneCode
     })
   }, [data.oneCode, getTwo])
+  React.useEffect(() => {
+    if (!data.twoCode) return
+    setData(pre => ({
+      ...pre,
+      threeCode: ''
+    }))
+    getThree({
+      ParentID: data.twoCode
+    })
+  }, [data.twoCode, getThree])
   return [{ ...data, one, two }, setData]
 }
 
@@ -78,6 +91,7 @@ export const useInitState = () => {
 export const EditModal = (
     {
       oneCode, twoCode, one, two,
+      threeCode, three,
       setLinkData,
       open,
       setOpen,
@@ -105,19 +119,22 @@ export const EditModal = (
           onClose={() => setOpen(false)}
           maxWidth={false}
       >
-        <DialogTitle>编辑产品类别</DialogTitle>
+        <DialogTitle>新增产品</DialogTitle>
         <S.Content>
           <form>
             <CusTextField
-                label="中文名称"
+                InputProps={{
+                  readOnly: true,
+                }}
+                label="产品编号"
                 value={editData.F_CTNameC}
                 onChange={e => setEditData({
                   ...editData,
-                  name: window.ssLog(e.target.value)
+                  name: e.target.value
                 })}
             />
             <CusSelectField
-                label="产品类别"
+                label=""
                 placeholder="选择类别"
                 value={oneCode}
                 onChange={e => setLinkData(pre => ({
@@ -125,7 +142,7 @@ export const EditModal = (
                   oneCode: e.target.value
                 }))}
             >
-              {one.map(e => (
+              {one?.map(e => (
                   <MenuItem
                       key={`typeOptionOne${e.F_CTID}`}
                       value={e.F_CTID}
@@ -141,7 +158,23 @@ export const EditModal = (
                   twoCode: e.target.value
                 }))}
             >
-              {two.map(e => (
+              {two?.map(e => (
+                  <MenuItem
+                      key={`typeOptionOne${e.F_CTID}`}
+                      value={e.F_CTID}
+                  >{e.F_CTNameC}</MenuItem>
+              ))}
+            </CusSelectField>
+            <CusSelectField
+                label=""
+                placeholder="选择类别"
+                value={threeCode}
+                onChange={e => setLinkData(pre => ({
+                  ...pre,
+                  threeCode: e.target.value
+                }))}
+            >
+              {three?.map(e => (
                   <MenuItem
                       key={`typeOptionOne${e.F_CTID}`}
                       value={e.F_CTID}

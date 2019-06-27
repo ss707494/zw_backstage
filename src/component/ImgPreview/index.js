@@ -1,37 +1,28 @@
 import React from 'react'
-import Slider from 'react-slick'
-import 'slick-carousel/slick/slick.css'
-import 'slick-carousel/slick/slick-theme.css'
-import './index.css'
 import { S } from './style'
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+import { Carousel } from "react-responsive-carousel";
 
 const { Box, Img } = S
 
-export const ImgPreview = ({ open, closeModal }) => {
+export const ImgPreview = ({ open, closeModal, data = [] }) => {
 
-  const settings = {
-    dots: true,
-  }
   return (
-      <div className="container">
-        <Slider
-            {...settings}
+      <Box
+          open={open}
+          onClose={closeModal}
+      >
+        <Carousel
         >
-          <div>
-            {/* eslint-disable jsx-a11y/alt-text */}
-            <img src="http://placekitten.com/g/400/200"/>
-          </div>
-          <div>
-            <img src="http://placekitten.com/g/400/200"/>
-          </div>
-          <div>
-            <img src="http://placekitten.com/g/400/200"/>
-          </div>
-          <div>
-            <img src="http://placekitten.com/g/400/200"/>
-          </div>
-        </Slider>
-      </div>
+          {data?.map(e => <Img
+              key={`Carousel${e?.ID}`}
+          >
+            <img
+                alt=""
+                src={e?.F_PWebPath}/>
+          </Img>)}
+        </Carousel>
+      </Box>
   )
 }
 

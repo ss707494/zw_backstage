@@ -13,8 +13,8 @@ const useLinkage = () => {
     oneCode: '',
     twoCode: '',
   })
-  const [getOne, { data: one = [] }] = api.post('/Products/QueryCommodityTypeChildren')
-  const [getTwo, { data: two = [] }] = api.post('/Products/QueryCommodityTypeChildren')
+  const [getOne, { data: one }] = api.post('/Products/QueryCommodityTypeChildren')
+  const [getTwo, { data: two }] = api.post('/Products/QueryCommodityTypeChildren')
   React.useEffect(() => {
     getOne()
   }, [getOne])
@@ -113,7 +113,7 @@ export const EditModal = (
                 value={editData.F_CTNameC}
                 onChange={e => setEditData({
                   ...editData,
-                  name: window.ssLog(e.target.value)
+                  name: e.target.value
                 })}
             />
             <CusSelectField
@@ -125,7 +125,7 @@ export const EditModal = (
                   oneCode: e.target.value
                 }))}
             >
-              {one.map(e => (
+              {one?.map(e => (
                   <MenuItem
                       key={`typeOptionOne${e.F_CTID}`}
                       value={e.F_CTID}
@@ -141,7 +141,7 @@ export const EditModal = (
                   twoCode: e.target.value
                 }))}
             >
-              {two.map(e => (
+              {two?.map(e => (
                   <MenuItem
                       key={`typeOptionOne${e.F_CTID}`}
                       value={e.F_CTID}

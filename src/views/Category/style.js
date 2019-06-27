@@ -31,12 +31,14 @@ S.Table = styled(Table)`
 S.Loading = styled('section')`
   text-align: center;
 `
-S.ActionTableCell = styled(TableCell)`&&& {
+S.ActionTableCell = styled('section')`&&& {
   display: flex;
   > button {
     margin-right: 8px;
+    &:last-of-type {
+      margin-right: 0;
+    }
   }
-
 }`
 S.HeaderBox = styled('section')`&&&{
   display: flex;

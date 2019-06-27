@@ -5,7 +5,6 @@ import MenuItem from "@material-ui/core/MenuItem";
 import { CusSelectField } from "@/component/CusSelectField";
 import { ImgPreview } from "@/component/ImgPreview";
 import Button from "@material-ui/core/Button";
-import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from 'react-responsive-carousel';
 import { showMessage } from "@/component/Message";
 
@@ -57,31 +56,25 @@ export const Test = prop => {
           <div>
             {/* eslint-disable jsx-a11y/alt-text */}
           </div>
-          {/*<Carousel*/}
-          {/*    width={400}*/}
-          {/*>*/}
-          {/*  <div>*/}
-          {/*    <img src="http://placekitten.com/g/400/200"/>*/}
-          {/*  </div>*/}
-          {/*  <div>*/}
-          {/*    <img src="http://placekitten.com/g/400/200"/>*/}
-          {/*  </div>*/}
-          {/*</Carousel>*/}
-          {/*<Button*/}
-          {/*    onClick={() => setImgOpen(true)}*/}
-          {/*>openModal</Button>*/}
+          <ImgPreview
+              open={imgOpen}
+              closeModal={() => setImgOpen(false)}
+          />
+          <Button
+              onClick={() => setImgOpen(true)}
+          >openModal</Button>
         </div>
         <div>
           <Button
               onClick={() => {
-                showMessage({message: 'test', duration: 9999})
+                showMessage({ message: 'test', duration: 9999 })
               }}
           >
             showMessage
           </Button>
           <Button
               onClick={() => {
-                showMessage({message: 'test', duration: 9999, msgType: 'error'})
+                showMessage({ message: 'test', duration: 9999, msgType: 'error' })
               }}
           >
             showMessage
