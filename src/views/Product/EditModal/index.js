@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { S } from './style'
+import { S as SText } from '@/component/CusTextField/style'
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { CusTextField } from "@/component/CusTextField";
 import { CusSelectField } from "@/component/CusSelectField";
@@ -7,6 +8,11 @@ import MenuItem from "@material-ui/core/MenuItem";
 import { CusButton } from "@/component/CusButton";
 import { api } from "@/common/api";
 import { showMessage } from "@/component/Message";
+import { FormControl } from "@material-ui/core";
+import InputLabel from "@material-ui/core/InputLabel";
+import Checkbox from "@material-ui/core/Checkbox";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import { ImgUpload } from "@/component/ImgUpload";
 
 const useLinkage = () => {
   const [data, setData] = useState({
@@ -44,14 +50,8 @@ const useLinkage = () => {
   return [{ ...data, one, two, three }, setData]
 }
 
-const dealItemToForm = item => !item?.Entry ? ({
-  Active: 1,
-}) : ({
-  Active: 2,
-  ID: item?.Entry?.F_CTID || '',
-  ParentID: item?.Entry?.F_CTParentID || '',
-  F_CTNameC: item?.Entry?.F_CTNameC || '',
-  F_CTRemarkC: item?.Entry?.F_CTRemarkC || '',
+const dealItemToForm = item => ({
+  ...item
 })
 
 export const useInitState = () => {
@@ -61,9 +61,13 @@ export const useInitState = () => {
   const editClick = (item) => () => {
     const newItem = dealItemToForm(item)
     setEditData(newItem)
-    // 存在父类id
-    if (newItem.ParentID) {
-      const gradeArr = item.GradeName.split('-');
+    // 存在类型
+    if (newItem.F_CTID) {
+      const gradeArr = [
+        newItem.F_CNumber[0] + newItem.F_CNumber[1],
+        newItem.F_CNumber[2] + newItem.F_CNumber[3],
+        newItem.F_CNumber[4] + newItem.F_CNumber[5],
+      ]
       if (gradeArr.length === 3) {
         setLinkData({
           oneCode: linkageData.one.find(e => e.F_CTNumber === gradeArr[0])?.F_CTID,
@@ -118,10 +122,18 @@ export const EditModal = (
     }
   }
   React.useEffect(() => {
-    setEditData({
+    setEditData(pre => ({
+      ...pre,
       num: (typeNum.oneNum + typeNum.twoNum + typeNum.threeNum) || ''
-    })
+    }))
   }, [setEditData, typeNum])
+  const [files, setFiles] = useState({})
+  const [test, setTest] = useState(false)
+  const handleUploadChange = n => file => {
+    setFiles({
+      [n]: file
+    })
+  }
 
   return (
       <S.Box
@@ -166,10 +178,16 @@ export const EditModal = (
                 label=""
                 placeholder="选择类别"
                 value={twoCode}
-                onChange={e => setLinkData(pre => ({
-                  ...pre,
-                  twoCode: e.target.value
-                }))}
+                onChange={(e, child) => {
+                  setLinkData(pre => ({
+                    ...pre,
+                    twoCode: e.target.value
+                  }))
+                  setTypeNum(pre => ({
+                    ...pre,
+                    twoNum: child.props.num,
+                  }))
+                }}
             >
               {two?.map(e => (
                   <MenuItem
@@ -182,10 +200,16 @@ export const EditModal = (
                 label=""
                 placeholder="选择类别"
                 value={threeCode}
-                onChange={e => setLinkData(pre => ({
-                  ...pre,
-                  threeCode: e.target.value
-                }))}
+                onChange={(e, child) => {
+                  setLinkData(pre => ({
+                    ...pre,
+                    threeCode: e.target.value
+                  }))
+                  setTypeNum(pre => ({
+                    ...pre,
+                    threeNum: child.props.num,
+                  }))
+                }}
             >
               {three?.map(e => (
                   <MenuItem
@@ -196,12 +220,129 @@ export const EditModal = (
             </CusSelectField>
             <CusTextField
                 label="中文名称"
-                value={editData.F_CTNameC}
+                value={editData.F_CNameC}
                 onChange={e => setEditData({
                   ...editData,
-                  name: e.target.value
+                  F_CNameC: e.target.value
                 })}
             />
+            <SText.TextFieldBox
+                as={FormControl}
+            >
+              <InputLabel
+                  shrink
+                  htmlFor="tag"
+              >上架类型</InputLabel>
+              <FormControlLabel
+                  control={
+                    <Checkbox
+                        checked={!!editData.F_CIsNew || false}
+                        onChange={e => setEditData({
+                          ...editData,
+                          F_CIsNew: e.target.checked
+                        })}
+                    />
+                  }
+                  label="新品"
+              />
+              <FormControlLabel
+                  control={
+                    <Checkbox
+                        checked={!!editData.F_CIsHot ?? false}
+                        onChange={e => setEditData({
+                          ...editData,
+                          F_CIsHot: e.target.checked
+                        })}
+                    />
+                  }
+                  label="热门"
+              />
+            </SText.TextFieldBox>
+            <CusTextField
+                label="库存"
+                type="number"
+                value={editData.Stock}
+                onChange={e => setEditData({
+                  ...editData,
+                  Stock: e.target.value
+                })}
+            />
+            <CusTextField
+                label="进货价格"
+                type="number"
+                value={editData.F_CPUnitPriceIn}
+                onChange={e => setEditData({
+                  ...editData,
+                  F_CPUnitPriceIn: e.target.value
+                })}
+            />
+            <CusTextField
+                label="市场价格"
+                type="number"
+                value={editData.F_CPUnitPriceMarket}
+                onChange={e => setEditData({
+                  ...editData,
+                  F_CPUnitPriceMarket: e.target.value
+                })}
+            />
+            <CusTextField
+                label="售卖价格"
+                type="number"
+                value={editData.F_CPUnitPriceOut}
+                onChange={e => setEditData({
+                  ...editData,
+                  F_CPUnitPriceOut: e.target.value
+                })}
+            />
+            <S.FieldTwoBox>
+              <CusTextField
+                  label="重量"
+                  type="number"
+                  value={editData.F_CPUnitPriceMarket}
+                  onChange={e => setEditData({
+                    ...editData,
+                    F_CPUnitPriceMarket: e.target.value
+                  })}
+              />
+              <CusSelectField
+                  label="单位"
+                  value={editData.F_CPCompany}
+                  onChange={e => setEditData({
+                    ...editData,
+                    F_CPCompany: e.target.value
+                  })}
+              >
+                {[
+                  ['g', '克/g']
+                ]?.map(e => (
+                    <MenuItem
+                        key={`F_CPCompany${e[0]}`}
+                        value={e[0]}
+                    >{e[1]}</MenuItem>
+                ))}
+              </CusSelectField>
+            </S.FieldTwoBox>
+            <S.UploadFormControl
+                as={FormControl}
+            >
+              <InputLabel
+                  shrink
+                  htmlFor="imgUpload"
+              >上传图片</InputLabel>
+              <S.UploadBox>
+                <ImgUpload
+                    // initSrc={editData}
+                    onChange={handleUploadChange(1)}/>
+                <ImgUpload onChange={handleUploadChange(2)}/>
+                <ImgUpload onChange={handleUploadChange(3)}/>
+                <ImgUpload onChange={handleUploadChange(4)}/>
+                <ImgUpload onChange={handleUploadChange(5)}/>
+                <ImgUpload onChange={handleUploadChange(6)}/>
+                <ImgUpload onChange={handleUploadChange(7)}/>
+                <span>最多支持上传7张图片,每张图片大小不超过1m,文件格式仅支持PNG/JPG</span>
+              </S.UploadBox>
+            </S.UploadFormControl>
+
             <CusButton
                 loading={updateLoading ? 1 : 0}
                 color="primary"

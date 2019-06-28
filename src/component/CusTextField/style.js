@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import TextField from "@material-ui/core/TextField";
 
-const $labelWidth = '120px'
+const $labelWidth = '90px'
 export const S = {}
 S.TextFieldBox = styled(TextField)`
   &&& {
@@ -17,6 +17,7 @@ S.TextFieldBox = styled(TextField)`
       display: flex;
       align-items: center;
       width: ${$labelWidth};
+      flex-shrink: 0;
     }
     &&&&& {
       > div {

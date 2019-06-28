@@ -73,6 +73,9 @@
     "webpack-manifest-plugin": "2.0.4",
     "workbox-webpack-plugin": "4.2.0"
   },
+  "devDependencies": {
+    "@babel/plugin-proposal-nullish-coalescing-operator": "^7.4.4"
+  },
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
@@ -143,7 +146,8 @@
       "react-app"
     ],
     "plugins": [
-      "@babel/plugin-proposal-optional-chaining"
+      "@babel/plugin-proposal-optional-chaining",
+      "@babel/plugin-proposal-nullish-coalescing-operator"
     ]
   }
 }

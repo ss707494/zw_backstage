@@ -7,15 +7,40 @@ import { ImgPreview } from "@/component/ImgPreview";
 import Button from "@material-ui/core/Button";
 import { Carousel } from 'react-responsive-carousel';
 import { showMessage } from "@/component/Message";
+import Upload from 'rc-upload'
+import { Add } from '@material-ui/icons'
+import { getObjectURL } from "@/common/utils";
+import { ImgUpload } from "@/component/ImgUpload";
+
 
 export const Test = prop => {
   const [search, setSearch] = React.useState({
     type: '',
     sort: '',
   })
-  const [imgOpen, setImgOpen] = React.useState(true)
+  const [imgOpen, setImgOpen] = React.useState(false)
+  const [imgSrc, setImgSrc] = React.useState('')
   return (
       <S.Box>
+        <div>
+          rc-upload
+          <ImgUpload
+          />
+          <img
+              style={{
+                width: '300px'
+              }}
+              src={imgSrc}
+              alt=""/>
+        </div>
+        <div>
+          test file ajax
+          <Button
+              onClick={() => {
+                // axios
+              }}
+          >ajax</Button>
+        </div>
         <CusTextField
             error
             id="sldkfjsdf"
