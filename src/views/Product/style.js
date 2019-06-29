@@ -1,7 +1,5 @@
 import styled from 'styled-components'
 import { Table } from "@material-ui/core";
-import TableCell from "@material-ui/core/TableCell";
-import Radio from "@material-ui/core/Radio";
 
 export const S = {}
 S.Box = styled('div')`
@@ -76,16 +74,22 @@ S.ImgPreview = styled('section')`
     width: 80px;
     height: 60px;
   }
+  > section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-left: 10px;
+  }
 `
 S.SearchBox = styled('div')`
   display: grid;
-  grid-template-columns: 180px 220px 1fr;
+  grid-template-columns: 4fr 3fr 2fr;
   grid-gap: 12px;
   > span {
     grid-area: 2 / 1 / 2 / 3;
     justify-self: end;
     align-self: center;
   }
-  
 `
 

@@ -1,15 +1,13 @@
 import { useState, useCallback } from 'react'
-import { isDev } from '@/common/global'
 
 export const api = {}
 api.ajax = type => (url, option) => {
-  const preUrl = isDev ? '/Api' : ''
   const [data, setData] = useState({})
   const [error, setError] = useState()
   const [loading, setLoading] = useState(false)
   const getData = useCallback(async params => {
     setLoading(true)
-    const res = await axios[type](`${preUrl}${url}`, {
+    const res = await axios[type](url, {
       ...option,
       ...params
     })
@@ -22,7 +20,7 @@ api.ajax = type => (url, option) => {
         })
     setData(res?.data || {})
     return res?.data || {}
-  }, [option, preUrl, url])
+  }, [option, url])
   return [
     getData, data, loading, error
   ]

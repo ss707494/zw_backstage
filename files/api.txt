@@ -112,12 +112,12 @@ String F_CPCompany //单位
 }
 
 （10）批量图片操作，支持（同一业务类别）新增上传、覆盖上传
-地址：域名/Products/ UpLoadPicture
+地址：域名/Products/UpLoadPicture
 参数：
 Int Type//类型，1：商品图片（后续可扩展其他图片类别，用于图片分类管理）
 String BussinessID//业务对像ID,当Type为1时，传入的就是商品ID
 String IDs//图片ID集合，以逗号分隔，为空则代表新增，不为空则代表覆盖
-提交文件对像集合  //文件的个数与IDs字符串用“,” Split之后的个数一置
+FileData 提交文件对像集合  //文件的个数与IDs字符串用“,” Split之后的个数一置
 返回结果：
 {
     "result": true,

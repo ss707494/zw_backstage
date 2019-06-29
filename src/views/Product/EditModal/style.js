@@ -9,14 +9,6 @@ S.Box = styled(Dialog)`
 S.Content = styled(DialogContent)`
 &&& {
   width: 960px;
-  //> header {
-  //  display: flex;
-  //  justify-content: center;
-  //  align-items: center;
-  //  font-size: 18px;
-  //  font-weight: bold;
-  //  height: 60px;
-  //}
   > form {
     display: grid;
     grid-auto-flow: column;

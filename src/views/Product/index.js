@@ -6,6 +6,7 @@ import TableBody from "@material-ui/core/TableBody";
 import { CusSelect } from '@/component/CusSelect'
 import { Pagination, useInitState as useInitPageData } from '@/component/Pagination'
 import { EditModal, useInitState } from './EditModal'
+import { AddNumberModal, useInitState as useInitAddNumber } from './AddNumberModal'
 import { api } from '@/common/api'
 import { CusButton as Button } from '@/component/CusButton'
 import { CusTableCell as TableCell } from '@/component/CusTableCell'
@@ -17,57 +18,26 @@ import Radio from "@material-ui/core/Radio";
 import { ImgPreview } from "@/component/ImgPreview"
 import { CheckCircleRounded, RadioButtonUncheckedTwoTone } from '@material-ui/icons'
 import { S } from './style'
+import Link from "@material-ui/core/Link";
 
 const KEYWORD_TYPE = {
   num: '1',
   name: '2'
 }
 
-const useTypeState = () => {
-
-}
-
-export const Product = ({ theme }) => {
-  const pageState = useInitPageData()
-  const editModalState = useInitState()
-  const { editClick } = editModalState
-  const [keywordObj, setKeywordObj] = React.useState({
-    type: KEYWORD_TYPE.num,
-    value: '',
-  })
+const useTypeObj = () => {
   const [typeHelpObj, setTypeHelpObj] = React.useState({
     typeOne: '',
     typeTwo: '',
     typeThree: '',
   })
-  const [search, setSearch] = React.useState({
-    keywordType: KEYWORD_TYPE.num,
-    type: '',
-    SortType: 1,
-  })
-  const [openImg, setOpenImg] = React.useState(false)
-  const [previewImg, setPreviewImg] = React.useState([])
-  const [getList, listData, listLoad] = api.post('/Products/QueryCommodity')
   const [getTypeOptionOne, { data: typeOptionOne }] = api.post('/Products/QueryCommodityTypeChildren')
   const [getTypeOptionTwo, { data: typeOptionTwo }] = api.post('/Products/QueryCommodityTypeChildren')
   const [getTypeOptionThree, { data: typeOptionThree }] = api.post('/Products/QueryCommodityTypeChildren')
-  const [setTypeEnable] = api.post('/Products/SetCommodityTypeEnable')
 
-  const getListData = (param = {}) => getList({
-    ...search,
-    ...pageState.pageData,
-    ...param,
-  })
   React.useEffect(() => {
     getTypeOptionOne()
   }, [getTypeOptionOne])
-  React.useEffect(() => {
-    getList({
-      ...search,
-      ...pageState.pageData,
-      BussinessID: '1',
-    })
-  }, [getList, search, pageState.pageData])
   React.useEffect(() => {
     if (!typeHelpObj.typeOne) {
       setTypeHelpObj(pre => ({
@@ -112,6 +82,56 @@ export const Product = ({ theme }) => {
       res: typeHelpObj.typeThree || pre.typeTwo,
     }))
   }, [typeHelpObj.typeThree])
+
+  return {
+    typeHelpObj,
+    setTypeHelpObj,
+    typeOptionOne,
+    typeOptionTwo,
+    typeOptionThree
+  }
+}
+
+export const Product = ({ theme }) => {
+  const pageState = useInitPageData()
+  const editModalState = useInitState()
+  const { editClick } = editModalState
+  const addNumberModalState = useInitAddNumber()
+  const { editClick: addNumberEditClick } = addNumberModalState
+  const {
+    typeHelpObj,
+    setTypeHelpObj,
+    typeOptionOne,
+    typeOptionTwo,
+    typeOptionThree
+  } = useTypeObj()
+  const [keywordObj, setKeywordObj] = React.useState({
+    type: KEYWORD_TYPE.num,
+    value: '',
+  })
+  const [search, setSearch] = React.useState({
+    keywordType: KEYWORD_TYPE.num,
+    type: '',
+    SortType: 1,
+  })
+  const [previewImg, setPreviewImg] = React.useState({
+    open: false,
+    data: []
+  })
+  const [getList, listData, listLoad] = api.post('/Products/QueryCommodity')
+  const [setTypeEnable] = api.post('/Products/SetCommodityTypeEnable')
+  const getListData = (param = {}) => getList({
+    ...search,
+    ...pageState.pageData,
+    ...param,
+  })
+  React.useEffect(() => {
+    getList({
+      ...search,
+      ...pageState.pageData,
+      BussinessID: '1',
+    })
+  }, [getList, search, pageState.pageData])
   React.useEffect(() => {
     if (!typeHelpObj.res) return
     setSearch(pre => ({
@@ -187,7 +207,6 @@ export const Product = ({ theme }) => {
               <CusSelect
                   value={typeHelpObj.typeOne}
                   onChange={(v) => {
-                    debugger
                     setTypeHelpObj({
                       ...typeHelpObj,
                       typeOne: v.target.value,
@@ -264,37 +283,41 @@ export const Product = ({ theme }) => {
                           {e}
                         </TableCell>)
                     }
-                    <TableCell width={150}>操作</TableCell>
+                    <TableCell width={220}>操作</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {listData?.data?.map(e => <TableRow
                       key={`TableBody${e?.ID}`}>
-                    <TableCell>{e.GradeName}</TableCell>
+                    <TableCell>{e?.F_CNumber}</TableCell>
                     <TableCell>{e?.F_CNameC}</TableCell>
-                    <TableCell>
+                    <TableCell width={240}>
                       <S.ImgPreview>
                         <img
                             src={e?.PhotoArray?.[0]?.F_PWebPath}
                             alt=""/>
                         <section>
-                          <div>1/7</div>
-                          <Button
+                          <div>{e?.PhotoArray?.length}/7</div>
+                          <Link
+                              component="button"
+                              color="secondary"
                               onClick={() => {
-                                setOpenImg(true)
-                                setPreviewImg(e?.PhotoArray)
+                                setPreviewImg({
+                                  open: true,
+                                  data: e?.PhotoArray ?? []
+                                })
                               }}
                           >
                             预览
-                          </Button>
+                          </Link>
                         </section>
                       </S.ImgPreview>
                     </TableCell>
                     <TableCell>
-                      {e?.F_CIsHot === 1 ? <CheckCircleRounded /> : <RadioButtonUncheckedTwoTone />}
+                      {e?.F_CIsHot === 1 ? <CheckCircleRounded/> : <RadioButtonUncheckedTwoTone/>}
                     </TableCell>
                     <TableCell>
-                      {e?.F_CIsNew === 1 ? <CheckCircleRounded /> : <RadioButtonUncheckedTwoTone />}
+                      {e?.F_CIsNew === 1 ? <CheckCircleRounded/> : <RadioButtonUncheckedTwoTone/>}
                     </TableCell>
                     <TableCell>
                       {e?.Stock}
@@ -310,6 +333,11 @@ export const Product = ({ theme }) => {
                             onClick={editClick(e)}
                             variant="contained"
                         >编辑</Button>
+                        <Button
+                            color="secondary"
+                            onClick={addNumberEditClick(e)}
+                            variant="contained"
+                        >补货</Button>
                         <Button
                             color={e?.Entry?.F_CTIsEnable ? 'primary' : 'default'}
                             variant="contained"
@@ -343,10 +371,17 @@ export const Product = ({ theme }) => {
             {...editModalState}
             refreshData={getListData}
         />
+        <AddNumberModal
+            {...addNumberModalState}
+            refreshData={getListData}
+        />
         <ImgPreview
-            open={openImg}
-            closeModal={() => setOpenImg(false)}
-            data={previewImg}
+            open={previewImg.open ?? false}
+            closeModal={() => setPreviewImg({
+              open: false,
+              data: []
+            })}
+            data={previewImg.data ?? []}
         />
       </S.Box>
   )

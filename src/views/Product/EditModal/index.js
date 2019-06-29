@@ -13,6 +13,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import { ImgUpload } from "@/component/ImgUpload";
+import { fileUploadAjax } from "@/common/utils";
 
 const useLinkage = () => {
   const [data, setData] = useState({
@@ -51,6 +52,7 @@ const useLinkage = () => {
 }
 
 const dealItemToForm = item => ({
+  Active: item?.ID ? 2 : 1,
   ...item
 })
 
@@ -68,16 +70,16 @@ export const useInitState = () => {
         newItem.F_CNumber[2] + newItem.F_CNumber[3],
         newItem.F_CNumber[4] + newItem.F_CNumber[5],
       ]
-      if (gradeArr.length === 3) {
-        setLinkData({
-          oneCode: linkageData.one.find(e => e.F_CTNumber === gradeArr[0])?.F_CTID,
-          twoCode: newItem.ParentID,
-        })
-      } else {
-        setLinkData({
-          oneCode: newItem.ParentID,
-        })
-      }
+      // if (gradeArr.length === 3) {
+      //   setLinkData({
+      //     oneCode: linkageData.one.find(e => e.F_CTNumber === gradeArr[0])?.F_CTID,
+      //     twoCode: newItem.ParentID,
+      //   })
+      // } else {
+      //   setLinkData({
+      //     oneCode: newItem.ParentID,
+      //   })
+      // }
     }
     setOpen(true)
   }
@@ -104,18 +106,34 @@ export const EditModal = (
       refreshData = () => {
       }
     }) => {
-  const [updateData, , updateLoading] = api.post('/Products/UpdateCommodityType')
+  const [updateData, , updateLoading] = api.post('/Products/UpdateCommodity')
   const [typeNum, setTypeNum] = useState({
     oneNum: '',
     twoNum: '',
     threeNum: '',
   })
+  const dealFiles = (PhotoArray, files) =>
+      Object.keys(files).reduce((i, e) => ({
+        IDs: [
+          ...i.IDs ?? [],
+          PhotoArray?.[e]?.F_PID ?? '',
+        ],
+        file: [
+          ...i.file ?? [],
+          files[e],
+        ]
+      }), {})
   const handleSave = async () => {
-    const res = await updateData({
+    const dealFile = dealFiles(editData?.PhotoArray ?? [], files)
+    const res = await fileUploadAjax({
+      Type: 1,
+      BussinessID: editData?.ID ?? '',
+      IDs: dealFile.IDs.join(',')
+    }, dealFile.file, '/Products/UpLoadPicture')
+    const updateRes = await updateData({
       ...editData,
-      ParentID: twoCode || oneCode || ''
     })
-    if (res.result) {
+    if (res.result && updateRes.result) {
       showMessage({ message: '操作成功' })
       refreshData()
       setOpen(false)
@@ -128,9 +146,9 @@ export const EditModal = (
     }))
   }, [setEditData, typeNum])
   const [files, setFiles] = useState({})
-  const [test, setTest] = useState(false)
   const handleUploadChange = n => file => {
     setFiles({
+      ...files,
       [n]: file
     })
   }
@@ -330,15 +348,11 @@ export const EditModal = (
                   htmlFor="imgUpload"
               >上传图片</InputLabel>
               <S.UploadBox>
-                <ImgUpload
-                    // initSrc={editData}
-                    onChange={handleUploadChange(1)}/>
-                <ImgUpload onChange={handleUploadChange(2)}/>
-                <ImgUpload onChange={handleUploadChange(3)}/>
-                <ImgUpload onChange={handleUploadChange(4)}/>
-                <ImgUpload onChange={handleUploadChange(5)}/>
-                <ImgUpload onChange={handleUploadChange(6)}/>
-                <ImgUpload onChange={handleUploadChange(7)}/>
+                {[...Array(7).keys()].map(e =>
+                    <ImgUpload
+                        key={`ImgUpload${e}`}
+                        initSrc={editData?.PhotoArray?.[e]?.F_PWebPath ?? ''}
+                        onChange={handleUploadChange(e)}/>)}
                 <span>最多支持上传7张图片,每张图片大小不超过1m,文件格式仅支持PNG/JPG</span>
               </S.UploadBox>
             </S.UploadFormControl>
