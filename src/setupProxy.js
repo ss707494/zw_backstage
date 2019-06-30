@@ -5,7 +5,7 @@ module.exports = function(app) {
     target: 'http://rap2api.taobao.org/app/mock/222495',
     changeOrigin: true,
     pathRewrite: {
-      '^/Api': '/'
+      '^/Api': ''
     }
   }));
 };
