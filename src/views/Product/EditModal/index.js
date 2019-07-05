@@ -25,9 +25,6 @@ const useLinkage = () => {
   const [getTwo, { data: two }] = api.post('/Products/QueryCommodityTypeChildren')
   const [getThree, { data: three }] = api.post('/Products/QueryCommodityTypeChildren')
   React.useEffect(() => {
-    getOne()
-  }, [getOne])
-  React.useEffect(() => {
     if (!data.oneCode) return
     setData(pre => ({
       ...pre,
@@ -48,7 +45,7 @@ const useLinkage = () => {
       ParentID: data.twoCode
     })
   }, [data.twoCode, getThree])
-  return [{ ...data, one, two, three }, setData]
+  return [{ ...data, one, two, three }, setData, getOne]
 }
 
 const dealItemToForm = item => ({
@@ -57,10 +54,11 @@ const dealItemToForm = item => ({
 })
 
 export const useInitState = () => {
-  const [linkageData, setLinkData] = useLinkage()
+  const [linkageData, setLinkData, getOne] = useLinkage()
   const [open, setOpen] = useState(false)
   const [editData, setEditData] = useState({})
-  const editClick = (item) => () => {
+  const editClick = (item) => async () => {
+    const oneList = await getOne()
     const newItem = dealItemToForm(item)
     setEditData(newItem)
     // 存在类型

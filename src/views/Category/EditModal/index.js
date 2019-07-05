@@ -16,9 +16,6 @@ const useLinkage = () => {
   const [getOne, { data: one }] = api.post('/Products/QueryCommodityTypeChildren')
   const [getTwo, { data: two }] = api.post('/Products/QueryCommodityTypeChildren')
   React.useEffect(() => {
-    getOne()
-  }, [getOne])
-  React.useEffect(() => {
     if (!data.oneCode) return
     setData(pre => ({
       ...pre,
@@ -28,7 +25,7 @@ const useLinkage = () => {
       ParentID: data.oneCode
     })
   }, [data.oneCode, getTwo])
-  return [{ ...data, one, two }, setData]
+  return [{ ...data, one, two }, setData, getOne]
 }
 
 const dealItemToForm = item => !item?.Entry ? ({
@@ -42,10 +39,11 @@ const dealItemToForm = item => !item?.Entry ? ({
 })
 
 export const useInitState = () => {
-  const [linkageData, setLinkData] = useLinkage()
+  const [linkageData, setLinkData, getOne] = useLinkage()
   const [open, setOpen] = useState(false)
   const [editData, setEditData] = useState({})
-  const editClick = (item) => () => {
+  const editClick = (item) => async () => {
+    const oneList = await getOne()
     const newItem = dealItemToForm(item)
     setEditData(newItem)
     // 存在父类id
@@ -53,7 +51,7 @@ export const useInitState = () => {
       const gradeArr = item.GradeName.split('-');
       if (gradeArr.length === 3) {
         setLinkData({
-          oneCode: linkageData.one.find(e => e.F_CTNumber === gradeArr[0])?.F_CTID,
+          oneCode: oneList?.data?.find(e => e.F_CTNumber === gradeArr[0])?.F_CTID,
           twoCode: newItem.ParentID,
         })
       } else {
