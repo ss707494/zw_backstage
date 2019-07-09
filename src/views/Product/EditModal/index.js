@@ -14,6 +14,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import { ImgUpload } from "@/component/ImgUpload";
 import { fileUploadAjax } from "@/common/utils";
+import { postQueryCommodityTypeChildren } from "@/views/Category/List";
 
 const useLinkage = () => {
   const [data, setData] = useState({
@@ -21,9 +22,9 @@ const useLinkage = () => {
     twoCode: '',
     threeCode: '',
   })
-  const [getOne, { data: one }] = api.post('/Products/QueryCommodityTypeChildren')
-  const [getTwo, { data: two }] = api.post('/Products/QueryCommodityTypeChildren')
-  const [getThree, { data: three }] = api.post('/Products/QueryCommodityTypeChildren')
+  const [getOne, { data: one }] = postQueryCommodityTypeChildren()
+  const [getTwo, { data: two }] = postQueryCommodityTypeChildren()
+  const [getThree, { data: three }] = postQueryCommodityTypeChildren()
   React.useEffect(() => {
     if (!data.oneCode) return
     setData(pre => ({
@@ -45,7 +46,7 @@ const useLinkage = () => {
       ParentID: data.twoCode
     })
   }, [data.twoCode, getThree])
-  return [{ ...data, one, two, three }, setData, getOne]
+  return [{ ...data, one, two, three }, setData, { getOne, getTwo, getThree }]
 }
 
 const dealItemToForm = item => ({
@@ -54,7 +55,7 @@ const dealItemToForm = item => ({
 })
 
 export const useInitState = () => {
-  const [linkageData, setLinkData, getOne] = useLinkage()
+  const [linkageData, setLinkData, { getOne, getTwo, getThree }] = useLinkage()
   const [open, setOpen] = useState(false)
   const [editData, setEditData] = useState({})
   const editClick = (item) => async () => {
@@ -66,9 +67,28 @@ export const useInitState = () => {
     if (newItem.F_CTID) {
       const gradeArr = [
         newItem.F_CNumber[0] + newItem.F_CNumber[1],
-        newItem.F_CNumber[2] + newItem.F_CNumber[3],
-        newItem.F_CNumber[4] + newItem.F_CNumber[5],
+        newItem.F_CNumber.slice(0, 4),
+        // newItem.F_CNumber[2] + newItem.F_CNumber[3],
+        newItem.F_CNumber.slice(0, 6),
+        // newItem.F_CNumber[4] + newItem.F_CNumber[5],
       ]
+      const oneCode = oneList.find(e => e.F_CTNumber === gradeArr[0])?.F_CTID
+      const twoList = await getTwo({
+        Type: 2,
+        F_CNumber: gradeArr[0]
+      })
+      const twoCode = twoList.find(e => e.F_CTNumber === gradeArr[1])?.F_CTID
+      const threeList = await getThree({
+        Type: 2,
+        F_CNumber: gradeArr[1]
+      })
+      const threeCode = threeList.find(e => e.F_CTNumber === gradeArr[2])?.F_CTID
+      setLinkData({
+        oneCode,
+        twoCode,
+        threeCode
+      })
+
       // if (gradeArr.length === 3) {
       //   setLinkData({
       //     oneCode: linkageData.one.find(e => e.F_CTNumber === gradeArr[0])?.F_CTID,
@@ -123,16 +143,18 @@ export const EditModal = (
       }), {})
   const handleSave = async () => {
     const dealFile = dealFiles(editData?.PhotoArray ?? [], files)
-    const res = await fileUploadAjax({
-      Type: 1,
-      BussinessID: editData?.ID ?? '',
-      IDs: dealFile.IDs.join(',')
-    }, dealFile.file, '/Products/UpLoadPicture')
+    if (dealFile?.IDs) {
+      await fileUploadAjax({
+        Type: 1,
+        BussinessID: editData?.ID ?? '',
+        IDs: dealFile.IDs.join(',')
+      }, dealFile.file, '/Products/UpLoadPicture')
+    }
     const updateRes = await updateData({
       ...editData,
     })
-    if (res.result && updateRes.result) {
-      showMessage({ message: res.msg ?? '操作成功' })
+    if (updateRes.result) {
+      showMessage({ message: updateRes?.msg ?? '操作成功' })
       refreshData()
       setOpen(false)
     }

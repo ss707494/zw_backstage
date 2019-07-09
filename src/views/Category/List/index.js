@@ -12,6 +12,11 @@ import { CusButton as Button } from '@/component/CusButton'
 import { CusTableCell as TableCell } from '@/component/CusTableCell'
 import { showConfirm } from "@/component/ConfirmDialog";
 
+const defaultOption = {
+  Type: 1
+}
+
+export const postQueryCommodityTypeChildren = () => api.post('/Products/QueryCommodityTypeChildren', defaultOption)
 
 export const Category = ({ theme }) => {
   const pageState = useInitPageData()
@@ -22,8 +27,8 @@ export const Category = ({ theme }) => {
     sort: 1,
   })
   const [getList, listData = {}, listLoad] = api.post('/Products/QueryCommodityType')
-  const [getTypeOptionOne, { data: typeOptionOne = [] }] = api.post('/Products/QueryCommodityTypeChildren')
-  const [getTypeOptionTwo, { data: typeOptionTwo = [] }] = api.post('/Products/QueryCommodityTypeChildren')
+  const [getTypeOptionOne, { data: typeOptionOne = [] }] = postQueryCommodityTypeChildren()
+  const [getTypeOptionTwo, { data: typeOptionTwo = [] }] = postQueryCommodityTypeChildren()
   const [setTypeEnable] = api.post('/Products/SetCommodityTypeEnable')
 
   const getListData = (param = {}) => getList({

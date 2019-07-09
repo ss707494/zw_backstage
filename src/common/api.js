@@ -5,7 +5,7 @@ api.ajax = type => (url, option) => {
   const [data, setData] = useState({})
   const [error, setError] = useState()
   const [loading, setLoading] = useState(false)
-  const getData = useCallback(async params => {
+  const getData = useCallback(async (params) => {
     setLoading(true)
     const res = await axios[type](url, {
       ...option,

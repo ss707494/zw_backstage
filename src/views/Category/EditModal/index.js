@@ -7,14 +7,15 @@ import MenuItem from "@material-ui/core/MenuItem";
 import { CusButton } from "@/component/CusButton";
 import { api } from "@/common/api";
 import { showMessage } from "@/component/Message";
+import { postQueryCommodityTypeChildren } from "@/views/Category/List";
 
 const useLinkage = () => {
   const [data, setData] = useState({
     oneCode: '',
     twoCode: '',
   })
-  const [getOne, { data: one }] = api.post('/Products/QueryCommodityTypeChildren')
-  const [getTwo, { data: two }] = api.post('/Products/QueryCommodityTypeChildren')
+  const [getOne, { data: one }] = postQueryCommodityTypeChildren()
+  const [getTwo, { data: two }] = postQueryCommodityTypeChildren()
   React.useEffect(() => {
     if (!data.oneCode) return
     setData(pre => ({

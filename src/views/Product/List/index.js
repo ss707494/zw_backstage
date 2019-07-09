@@ -19,6 +19,7 @@ import { ImgPreview } from "@/component/ImgPreview"
 import { CheckCircleRounded, RadioButtonUncheckedTwoTone } from '@material-ui/icons'
 import { S } from './style'
 import Link from "@material-ui/core/Link";
+import { postQueryCommodityTypeChildren } from "@/views/Category/List";
 
 const KEYWORD_TYPE = {
   num: '1',
@@ -31,9 +32,9 @@ const useTypeObj = () => {
     typeTwo: '',
     typeThree: '',
   })
-  const [getTypeOptionOne, { data: typeOptionOne }] = api.post('/Products/QueryCommodityTypeChildren')
-  const [getTypeOptionTwo, { data: typeOptionTwo }] = api.post('/Products/QueryCommodityTypeChildren')
-  const [getTypeOptionThree, { data: typeOptionThree }] = api.post('/Products/QueryCommodityTypeChildren')
+  const [getTypeOptionOne, { data: typeOptionOne }] = postQueryCommodityTypeChildren()
+  const [getTypeOptionTwo, { data: typeOptionTwo }] = postQueryCommodityTypeChildren()
+  const [getTypeOptionThree, { data: typeOptionThree }] = postQueryCommodityTypeChildren()
 
   React.useEffect(() => {
     getTypeOptionOne()
