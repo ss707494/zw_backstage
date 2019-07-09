@@ -16,6 +16,6 @@ export const S = {}
 S.Snackbar = styled(Snackbar)`
   > div {
     color: ${common.white}
-    ${({msgType}) => getType(msgType)}
+    ${({msg_type}) => getType(msg_type)}
   }
 `

@@ -58,6 +58,7 @@ export const useInitState = () => {
   const [open, setOpen] = useState(false)
   const [editData, setEditData] = useState({})
   const editClick = (item) => async () => {
+    setOpen(true)
     const oneList = await getOne()
     const newItem = dealItemToForm(item)
     setEditData(newItem)
@@ -79,7 +80,6 @@ export const useInitState = () => {
       //   })
       // }
     }
-    setOpen(true)
   }
   return {
     ...linkageData,
@@ -132,7 +132,7 @@ export const EditModal = (
       ...editData,
     })
     if (res.result && updateRes.result) {
-      showMessage({ message: '操作成功' })
+      showMessage({ message: res.msg ?? '操作成功' })
       refreshData()
       setOpen(false)
     }
@@ -292,6 +292,7 @@ export const EditModal = (
                   F_CPUnitPriceIn: e.target.value
                 })}
             />
+            <span/>
             <CusTextField
                 label="市场价格"
                 type="number"
@@ -314,10 +315,10 @@ export const EditModal = (
               <CusTextField
                   label="重量"
                   type="number"
-                  value={editData.F_CPUnitPriceMarket}
+                  value={editData.F_CPWeightBODY}
                   onChange={e => setEditData({
                     ...editData,
-                    F_CPUnitPriceMarket: e.target.value
+                    F_CPWeightBODY: e.target.value
                   })}
               />
               <CusSelectField

@@ -187,3 +187,18 @@ int FloatPageCount//单页数据条数
     "page": 0,
     "pagesize": 0
 }
+
+IORI.IT:
+在这个QueryCommodityTypeChildren上面加了２个参数
+
+IORI.IT:
+type 类型，1用 ID查，2用F_CNumber查
+
+IORI.IT:
+ string ParentID = Tools.ConvertToString(this.Request.Params["ParentID"]);
+                int type = Tools.ConvertToInt32(this.Request.Params["Type"]);
+                string number = Tools.ConvertToString(this.Request.Params["F_CNumber"]);
+
+IORI.IT:
+一个是"Type",一个是“F_CNumber"
+

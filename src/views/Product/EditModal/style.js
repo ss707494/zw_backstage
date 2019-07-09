@@ -12,13 +12,13 @@ S.Content = styled(DialogContent)`
   > form {
     display: grid;
     grid-auto-flow: column;
-    grid-template-rows: repeat(9, auto);
+    grid-template-rows: repeat(9, minmax(48px, auto));
     grid-template-columns: 1fr 1fr;
     grid-column-gap: 20px;
     margin-bottom: 20px;
     
     > button {
-      grid-area: 9 / 1 / 10 / 3;
+      grid-area: 10 / 1 / 11 / 3;
     }
   }
 }
@@ -39,6 +39,6 @@ S.UploadBox = styled('main')`&{
   }
 }`
 S.UploadFormControl = styled(SText.TextFieldBox)`
-  grid-area: 4 / 2 / 9 / 3;
+  grid-area: 4 / 2 / 10 / 3;
 
 `

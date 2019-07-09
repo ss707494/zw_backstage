@@ -99,7 +99,7 @@ export const Test = prop => {
           </Button>
           <Button
               onClick={() => {
-                showMessage({ message: 'test', duration: 9999, msgType: 'error' })
+                showMessage({ message: 'test', duration: 9999, msg_type: 'error' })
               }}
           >
             showMessage

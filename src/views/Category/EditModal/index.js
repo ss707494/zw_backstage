@@ -43,6 +43,7 @@ export const useInitState = () => {
   const [open, setOpen] = useState(false)
   const [editData, setEditData] = useState({})
   const editClick = (item) => async () => {
+    setOpen(true)
     const oneList = await getOne()
     const newItem = dealItemToForm(item)
     setEditData(newItem)
@@ -60,7 +61,6 @@ export const useInitState = () => {
         })
       }
     }
-    setOpen(true)
   }
   return {
     ...linkageData,
@@ -91,7 +91,7 @@ export const EditModal = (
       ParentID: twoCode || oneCode || ''
     })
     if (res.result) {
-      showMessage({ message: '操作成功' })
+      showMessage({ message: res.msg ?? '操作成功' })
       refreshData()
       setOpen(false)
     }
@@ -111,7 +111,7 @@ export const EditModal = (
                 value={editData.F_CTNameC}
                 onChange={e => setEditData({
                   ...editData,
-                  name: e.target.value
+                  F_CTNameC: e.target.value
                 })}
             />
             <CusSelectField

@@ -7,13 +7,13 @@ export let showMessage = ({ message, open = true, duration = 1000 }) => {
 
 export const CreateMessageObj = () => {
   const [{ message = {} }, setCon] = useCustomContext()
-  showMessage = ({ message, open = true, duration = 1000, msgType }) => {
+  showMessage = ({ message, open = true, duration = 2000, msg_type }) => {
     setCon({
       message: {
         open,
         msg: message,
         duration,
-        msgType
+        msg_type
       }
     })
   }
@@ -29,7 +29,7 @@ export const CreateMessageObj = () => {
   const { open, msg } = message
 
   return <S.Snackbar
-      msgType={message.msgType}
+      msg_type={message.msg_type}
       open={open}
       message={`${msg}`}
       autoHideDuration={message.duration}
