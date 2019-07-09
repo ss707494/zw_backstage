@@ -5,6 +5,7 @@ import Button from '@material-ui/core/Button'
 import { SearchInput } from "@/component/SearchInput";
 import { KeyboardArrowLeft, KeyboardArrowRight } from "@material-ui/icons";
 import { createMuiTheme } from '@material-ui/core/styles'
+import { ChildCare } from '@material-ui/icons'
 import { red, grey } from '@material-ui/core/colors'
 import { wrapperTheme } from '@/common/theme'
 import { S } from './style'
@@ -60,9 +61,13 @@ export const MenuLayout = ({ children }) => {
                   <MenuItem key={`menuitem${path}`}
                             component={S.Link}
                             to={`/${path}`}>
-                    <img src={icon || require('./img/round-view_list-24px.svg')}
-                         alt=""/>
-                    {icon}
+                    {/*<img src={icon || require('./img/round-view_list-24px.svg')}*/}
+                    {/*     alt=""/>*/}
+                    {icon
+                        ? <img
+                            src={icon}
+                            alt=""
+                        /> : <ChildCare/>}
                     {text || path}
                   </MenuItem>)
             }
