@@ -10,7 +10,7 @@ export const useInitState = () => {
     pageData,
     setPageData: data => setPageData({
       ...pageData,
-      ...data
+      ...window.ssLog(data)
     }),
   }
 }
@@ -20,8 +20,8 @@ export const Pagination = (
       pageData,
       setPageData,
       count,
-      refresh = () => {
-      },
+      // refresh = () => {
+      // },
     }) => {
 
   return (
@@ -35,15 +35,15 @@ export const Pagination = (
             setPageData({
               Page: Page + 1,
             })
-            refresh({ Page })
+            // refresh({ Page })
           }}
           onChangeRowsPerPage={e => {
             setPageData({
               FloatPageCount: e.target.value
             })
-            refresh({
-              FloatPageCount: e.target.value
-            })
+            // refresh({
+            //   FloatPageCount: e.target.value
+            // })
           }}
       />
   )

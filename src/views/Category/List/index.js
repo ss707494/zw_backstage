@@ -43,9 +43,13 @@ export const Category = ({ theme }) => {
       ParentID: '',
       SortType: 1,
       IsAsc: 0,
+      ...search,
+      ...pageState.pageData,
     })
+  }, [getList, search, pageState.pageData])
+  React.useEffect(() => {
     getTypeOptionOne()
-  }, [getList, getTypeOptionOne])
+  }, [getTypeOptionOne])
 
   return (
       <S.Box>
