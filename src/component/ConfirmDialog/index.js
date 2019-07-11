@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import Button from "@material-ui/core/Button"
 import Dialog from "@material-ui/core/Dialog"
 import DialogTitle from "@material-ui/core/DialogTitle"
 import DialogActions from "@material-ui/core/DialogActions"
@@ -60,8 +59,6 @@ export const ConfirmDialog = () => {
           <Dialog
               open={open}
               onClose={handleClose}
-              // aria-labelledby="alert-dialog-title"
-              // aria-describedby="alert-dialog-description"
           >
             <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
             <DialogContent>
@@ -82,8 +79,10 @@ export const ConfirmDialog = () => {
                   color="primary">
                 取消
               </CusButton>
-              <Button
+              <CusButton
+                  loading={loading}
                   onClick={async () => {
+                    setLoading(1)
                     callBack && await callBack(1)
                         .finally(() => setLoading(0))
                     setLoading(0)
@@ -92,7 +91,7 @@ export const ConfirmDialog = () => {
                   color="primary"
               >
                 确定
-              </Button>
+              </CusButton>
             </DialogActions>
           </Dialog>
   )
