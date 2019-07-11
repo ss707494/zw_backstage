@@ -5,21 +5,18 @@ import MenuItem from "@material-ui/core/MenuItem";
 import { CusSelectField } from "@/component/CusSelectField";
 import { ImgPreview } from "@/component/ImgPreview";
 import Button from "@material-ui/core/Button";
-import { Carousel } from 'react-responsive-carousel';
 import { showMessage } from "@/component/Message";
-import Upload from 'rc-upload'
-import { Add } from '@material-ui/icons'
-import { getObjectURL } from "@/common/utils";
 import { ImgUpload } from "@/component/ImgUpload";
 
 
-export const Test = prop => {
+export const Test = () => {
+
   const [search, setSearch] = React.useState({
     type: '',
     sort: '',
   })
   const [imgOpen, setImgOpen] = React.useState(false)
-  const [imgSrc, setImgSrc] = React.useState('')
+  const [imgSrc, ] = React.useState('')
   return (
       <S.Box>
         <div>
@@ -43,7 +40,7 @@ export const Test = prop => {
         </div>
         <CusTextField
             error
-            id="sldkfjsdf"
+            id="e"
             label="sad"
             helperText="324"
             value={search.name || ''}

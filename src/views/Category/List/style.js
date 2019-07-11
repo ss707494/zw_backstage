@@ -1,6 +1,5 @@
 import styled from 'styled-components'
 import { Table } from "@material-ui/core";
-import TableCell from "@material-ui/core/TableCell";
 
 export const S = {}
 S.Box = styled('div')`

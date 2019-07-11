@@ -10,7 +10,7 @@ export const useInitState = () => {
     pageData,
     setPageData: data => setPageData({
       ...pageData,
-      ...window.ssLog(data)
+      ...data
     }),
   }
 }

@@ -25,7 +25,7 @@ const menuData = [
   ['test', '测试页面', ''],
 ]
 
-export const MenuLayout = ({ children }) => {
+export const MenuLayout = ({ children, location }) => {
   const [fold, setFold] = useState(0)
 
   return (
@@ -58,9 +58,11 @@ export const MenuLayout = ({ children }) => {
           <MenuList>
             {
               menuData.map(([path, text, icon]) =>
-                  <MenuItem key={`menuitem${path}`}
-                            component={S.Link}
-                            to={`/${path}`}>
+                  <MenuItem
+                      selected={location?.pathname?.includes(path)}
+                      key={`menuitem${path}`}
+                      component={S.Link}
+                      to={`/${path}`}>
                     {/*<img src={icon || require('./img/round-view_list-24px.svg')}*/}
                     {/*     alt=""/>*/}
                     {icon
