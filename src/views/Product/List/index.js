@@ -55,6 +55,9 @@ const useTypeObj = () => {
   React.useEffect(() => {
     setTypeHelpObj(pre => ({
       ...pre,
+      ...(!typeOptionTwo?.length ? {
+        res: pre.typeOne
+      } : {}),
       typeTwo: typeOptionTwo?.[0]?.F_CTID || '',
     }))
   }, [typeOptionTwo])
@@ -74,6 +77,9 @@ const useTypeObj = () => {
   React.useEffect(() => {
     setTypeHelpObj(pre => ({
       ...pre,
+      ...(!typeOptionThree?.length ? {
+        res: pre.typeTwo
+      } : {}),
       typeThree: typeOptionThree?.[0]?.F_CTID || ''
     }))
   }, [typeOptionThree])
@@ -134,7 +140,7 @@ export const Product = ({ theme }) => {
     })
   }, [getList, search, pageState.pageData])
   React.useEffect(() => {
-    if (!typeHelpObj.res) return
+    // if (!typeHelpObj.res) return
     setSearch(pre => ({
       ...pre,
       F_CTID: typeHelpObj.res || '',
@@ -213,7 +219,8 @@ export const Product = ({ theme }) => {
                       typeOne: v.target.value,
                     })
                   }}
-                  placeholder="选择类别"
+                  clear={1}
+                  placeholder="全部"
               >
                 {typeOptionOne?.map(e => (
                     <MenuItem
@@ -230,7 +237,8 @@ export const Product = ({ theme }) => {
                       typeTwo: v.target.value,
                     })
                   }}
-                  placeholder="选择类别"
+                  clear={1}
+                  placeholder="全部"
               >
                 {typeOptionTwo?.map(e => (
                     <MenuItem
@@ -247,7 +255,8 @@ export const Product = ({ theme }) => {
                     })
                   }}
                   value={typeHelpObj.typeThree}
-                  placeholder="选择类别"
+                  clear={1}
+                  placeholder="全部"
               >
                 {typeOptionThree?.map(e => (
                     <MenuItem
@@ -303,6 +312,7 @@ export const Product = ({ theme }) => {
                               component="button"
                               color="secondary"
                               onClick={() => {
+                                if (!e?.PhotoArray?.length) return
                                 setPreviewImg({
                                   open: true,
                                   data: e?.PhotoArray ?? []

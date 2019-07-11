@@ -6,10 +6,17 @@ api.ajax = type => (url, option) => {
   const [error, setError] = useState()
   const [loading, setLoading] = useState(false)
   const getData = useCallback(async (params) => {
-    setLoading(true)
-    const res = await axios[type](url, {
+    const _params = {
       ...option,
       ...params
+    }
+    const formData = new FormData()
+    Object.keys(_params).forEach(e => {
+      formData.set(e, _params[e])
+    })
+    setLoading(true)
+    const res = await axios[type](url, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
     })
         .catch(e => {
           setError(e)

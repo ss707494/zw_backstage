@@ -74,15 +74,18 @@ export const Category = ({ theme }) => {
                       type: v.target.value,
                       typeTwo: ''
                     })
-                    getTypeOptionTwo({
-                      ParentID: v.target.value
-                    })
+                    if (v?.target?.value) {
+                      getTypeOptionTwo({
+                        ParentID: v.target.value
+                      })
+                    }
                     getListData({
                       ParentID: v.target.value,
                     })
                   }}
                   value={search.type}
-                  placeholder="选择类别"
+                  clear={1}
+                  placeholder="全部"
               >
                 {typeOptionOne.map(e => (
                     <MenuItem
@@ -93,17 +96,19 @@ export const Category = ({ theme }) => {
               </CusSelect>
               <CusSelect
                   onChange={(v) => {
+                    const _value = v?.target?.value
                     setSearch({
                       ...search,
-                      ParentID: v.target.value,
-                      typeTwo: v.target.value
+                      ParentID: _value === '' ? search.type : _value,
+                      typeTwo: _value
                     })
                     getListData({
                       ParentID: v.target.value,
                     })
                   }}
                   value={search.typeTwo}
-                  placeholder="选择类别"
+                  clear={1}
+                  placeholder="全部"
               >
                 {typeOptionTwo.map(e => (
                     <MenuItem

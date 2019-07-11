@@ -27,21 +27,12 @@ const useLinkage = () => {
   const [getThree, { data: three }] = postQueryCommodityTypeChildren()
   React.useEffect(() => {
     if (!data.oneCode) return
-    setData(pre => ({
-      ...pre,
-      twoCode: '',
-      threeCode: ''
-    }))
     getTwo({
       ParentID: data.oneCode
     })
   }, [data.oneCode, getTwo])
   React.useEffect(() => {
     if (!data.twoCode) return
-    setData(pre => ({
-      ...pre,
-      threeCode: ''
-    }))
     getThree({
       ParentID: data.twoCode
     })
@@ -51,6 +42,14 @@ const useLinkage = () => {
 
 const dealItemToForm = item => ({
   Active: item?.ID ? 2 : 1,
+  F_CIsHot: 0,
+  F_CIsNew: 0,
+  F_CTNameC: '',
+  F_CPUnitPriceIn: 0,
+  F_CPUnitPriceOut: 0,
+  F_CPUnitPriceMarket: 0,
+  F_CPWeight: 0,
+  F_CPCompany: '',
   ...item
 })
 
@@ -64,7 +63,7 @@ export const useInitState = () => {
     const newItem = dealItemToForm(item)
     setEditData(newItem)
     // 存在类型
-    if (newItem.F_CTID) {
+    if (newItem.F_CTID && newItem.F_CNumber) {
       const gradeArr = [
         newItem.F_CNumber[0] + newItem.F_CNumber[1],
         newItem.F_CNumber.slice(0, 4),
@@ -143,18 +142,21 @@ export const EditModal = (
       }), {})
   const handleSave = async () => {
     const dealFile = dealFiles(editData?.PhotoArray ?? [], files)
-    if (dealFile?.IDs) {
-      await fileUploadAjax({
-        Type: 1,
-        BussinessID: editData?.ID ?? '',
-        IDs: dealFile.IDs.join(',')
-      }, dealFile.file, '/Products/UpLoadPicture')
-    }
     const updateRes = await updateData({
       ...editData,
+      F_CTID: threeCode || twoCode || oneCode || ''
     })
-    if (updateRes.result) {
+    if (updateRes?.msg) {
       showMessage({ message: updateRes?.msg ?? '操作成功' })
+    }
+    if (updateRes.result && updateRes?.data) {
+      if (dealFile?.IDs) {
+        await fileUploadAjax({
+          Type: 1,
+          BussinessID: editData?.ID || updateRes?.data?.ID,
+          IDs: dealFile.IDs.join(',')
+        }, dealFile.file, '/Products/UpLoadPicture')
+      }
       refreshData()
       setOpen(false)
     }
@@ -162,7 +164,7 @@ export const EditModal = (
   React.useEffect(() => {
     setEditData(pre => ({
       ...pre,
-      num: (typeNum.oneNum + typeNum.twoNum + typeNum.threeNum) || ''
+      num: (typeNum.threeNum || typeNum.twoNum || typeNum.oneNum) || ''
     }))
   }, [setEditData, typeNum])
   const [files, setFiles] = useState({})
@@ -176,7 +178,16 @@ export const EditModal = (
   return (
       <S.Box
           open={open}
-          onClose={() => setOpen(false)}
+          onClose={() => {
+            setLinkData({
+              oneCode: '',
+              twoCode: '',
+              threeCode: '',
+            })
+            setFiles({})
+            setOpen(false)
+            setEditData({})
+          }}
           maxWidth={false}
       >
         <DialogTitle>新增产品</DialogTitle>
@@ -196,7 +207,9 @@ export const EditModal = (
                 onChange={(e, child) => {
                   setLinkData(pre => ({
                     ...pre,
-                    oneCode: e.target.value
+                    oneCode: e.target.value,
+                    twoCode: '',
+                    threeCode: ''
                   }))
                   setTypeNum(pre => ({
                     ...pre,
@@ -219,7 +232,8 @@ export const EditModal = (
                 onChange={(e, child) => {
                   setLinkData(pre => ({
                     ...pre,
-                    twoCode: e.target.value
+                    twoCode: e.target.value,
+                    threeCode: ''
                   }))
                   setTypeNum(pre => ({
                     ...pre,
@@ -231,6 +245,7 @@ export const EditModal = (
                   <MenuItem
                       key={`typeOptionOne${e.F_CTID}`}
                       value={e.F_CTID}
+                      num={e?.F_CTNumber}
                   >{e.F_CTNameC}</MenuItem>
               ))}
             </CusSelectField>
@@ -253,6 +268,7 @@ export const EditModal = (
                   <MenuItem
                       key={`typeOptionOne${e.F_CTID}`}
                       value={e.F_CTID}
+                      num={e?.F_CTNumber}
                   >{e.F_CTNameC}</MenuItem>
               ))}
             </CusSelectField>
@@ -277,7 +293,7 @@ export const EditModal = (
                         checked={!!editData.F_CIsNew || false}
                         onChange={e => setEditData({
                           ...editData,
-                          F_CIsNew: e.target.checked
+                          F_CIsNew: e.target.checked ? 1 : 0
                         })}
                     />
                   }
@@ -289,7 +305,7 @@ export const EditModal = (
                         checked={!!editData.F_CIsHot ?? false}
                         onChange={e => setEditData({
                           ...editData,
-                          F_CIsHot: e.target.checked
+                          F_CIsHot: e.target.checked ? 1 : 0
                         })}
                     />
                   }
@@ -337,10 +353,10 @@ export const EditModal = (
               <CusTextField
                   label="重量"
                   type="number"
-                  value={editData.F_CPWeightBODY}
+                  value={editData.F_CPWeight}
                   onChange={e => setEditData({
                     ...editData,
-                    F_CPWeightBODY: e.target.value
+                    F_CPWeight: e.target.value
                   })}
               />
               <CusSelectField

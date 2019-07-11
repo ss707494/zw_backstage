@@ -52,7 +52,7 @@ export const CusSelect = prop => (
       {prop.placeholder &&
       <MenuItem
           value=""
-          disabled
+          disabled={!(prop?.clear ?? false)}
       >{prop.placeholder}</MenuItem>
       }
       {prop.children}

@@ -18,10 +18,6 @@ const useLinkage = () => {
   const [getTwo, { data: two }] = postQueryCommodityTypeChildren()
   React.useEffect(() => {
     if (!data.oneCode) return
-    setData(pre => ({
-      ...pre,
-      twoCode: ''
-    }))
     getTwo({
       ParentID: data.oneCode
     })
@@ -31,6 +27,8 @@ const useLinkage = () => {
 
 const dealItemToForm = item => !item?.Entry ? ({
   Active: 1,
+  F_CTRemarkC: '',
+  ID: '',
 }) : ({
   Active: 2,
   ID: item?.Entry?.F_CTID || '',
@@ -44,13 +42,13 @@ export const useInitState = () => {
   const [open, setOpen] = useState(false)
   const [editData, setEditData] = useState({})
   const editClick = (item) => async () => {
-    setOpen(true)
-    const oneList = await getOne()
     const newItem = dealItemToForm(item)
     setEditData(newItem)
+    setOpen(true)
+    const oneList = await getOne()
     // 存在父类id
     if (newItem.ParentID) {
-      const gradeArr = item.GradeName.split('-');
+      const gradeArr = item.DisplayNumber.split('-');
       if (gradeArr.length === 3) {
         setLinkData({
           oneCode: oneList?.data?.find(e => e.F_CTNumber === gradeArr[0])?.F_CTID,
@@ -91,7 +89,10 @@ export const EditModal = (
       ...editData,
       ParentID: twoCode || oneCode || ''
     })
-    if (res.result) {
+    if (res?.msg) {
+      showMessage({ message: res?.msg ?? '操作成功' })
+    }
+    if (res.result && res?.data) {
       showMessage({ message: res.msg ?? '操作成功' })
       refreshData()
       setOpen(false)
@@ -101,7 +102,10 @@ export const EditModal = (
   return (
       <S.Box
           open={open}
-          onClose={() => setOpen(false)}
+          onClose={() => {
+            setOpen(false)
+            setEditData({})
+          }}
           maxWidth={false}
       >
         <DialogTitle>编辑产品类别</DialogTitle>
@@ -119,10 +123,13 @@ export const EditModal = (
                 label="产品类别"
                 placeholder="选择类别"
                 value={oneCode}
-                onChange={e => setLinkData(pre => ({
-                  ...pre,
-                  oneCode: e.target.value
-                }))}
+                onChange={e => {
+                  setLinkData(pre => ({
+                    ...pre,
+                    oneCode: e.target.value,
+                    twoCode: ''
+                  }))
+                }}
             >
               {one?.map(e => (
                   <MenuItem
