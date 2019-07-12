@@ -84,6 +84,15 @@ export const EditModal = (
       }
     }) => {
   const [updateData, , updateLoading] = api.post('/Products/UpdateCommodityType')
+
+  const handleClose = () => {
+    setOpen(false)
+    setEditData({})
+    setLinkData({
+      oneCode: '',
+      twoCode: '',
+    })
+  }
   const handleSave = async () => {
     const res = await updateData({
       ...editData,
@@ -95,17 +104,14 @@ export const EditModal = (
     if (res.result && res?.data) {
       showMessage({ message: res.msg ?? '操作成功' })
       refreshData()
-      setOpen(false)
+      handleClose()
     }
   }
 
   return (
       <S.Box
           open={open}
-          onClose={() => {
-            setOpen(false)
-            setEditData({})
-          }}
+          onClose={handleClose}
           maxWidth={false}
       >
         <DialogTitle>编辑产品类别</DialogTitle>

@@ -50,6 +50,7 @@ const dealItemToForm = item => ({
   F_CPUnitPriceMarket: 0,
   F_CPWeight: 0,
   F_CPCompany: '',
+  Brand: '',
   ...item
 })
 
@@ -71,17 +72,17 @@ export const useInitState = () => {
         newItem.F_CNumber.slice(0, 6),
         // newItem.F_CNumber[4] + newItem.F_CNumber[5],
       ]
-      const oneCode = oneList.find(e => e.F_CTNumber === gradeArr[0])?.F_CTID
+      const oneCode = oneList?.data?.find(e => e.F_CTNumber === gradeArr[0])?.F_CTID
       const twoList = await getTwo({
         Type: 2,
         F_CNumber: gradeArr[0]
       })
-      const twoCode = twoList.find(e => e.F_CTNumber === gradeArr[1])?.F_CTID
+      const twoCode = twoList?.data?.find(e => e.F_CTNumber === gradeArr[1])?.F_CTID
       const threeList = await getThree({
         Type: 2,
         F_CNumber: gradeArr[1]
       })
-      const threeCode = threeList.find(e => e.F_CTNumber === gradeArr[2])?.F_CTID
+      const threeCode = threeList?.data?.find(e => e.F_CTNumber === gradeArr[2])?.F_CTID
       setLinkData({
         oneCode,
         twoCode,
@@ -140,6 +141,16 @@ export const EditModal = (
           files[e],
         ]
       }), {})
+  const handleClose = () => {
+    setLinkData({
+      oneCode: '',
+      twoCode: '',
+      threeCode: '',
+    })
+    setFiles({})
+    setOpen(false)
+    setEditData({})
+  }
   const handleSave = async () => {
     const dealFile = dealFiles(editData?.PhotoArray ?? [], files)
     const updateRes = await updateData({
@@ -158,7 +169,7 @@ export const EditModal = (
         }, dealFile.file, '/Products/UpLoadPicture')
       }
       refreshData()
-      setOpen(false)
+      handleClose()
     }
   }
   React.useEffect(() => {
@@ -178,16 +189,7 @@ export const EditModal = (
   return (
       <S.Box
           open={open}
-          onClose={() => {
-            setLinkData({
-              oneCode: '',
-              twoCode: '',
-              threeCode: '',
-            })
-            setFiles({})
-            setOpen(false)
-            setEditData({})
-          }}
+          onClose={handleClose}
           maxWidth={false}
       >
         <DialogTitle>新增产品</DialogTitle>
@@ -330,7 +332,14 @@ export const EditModal = (
                   F_CPUnitPriceIn: e.target.value
                 })}
             />
-            <span/>
+            <CusTextField
+                label="品牌名称"
+                value={editData.Brand}
+                onChange={e => setEditData({
+                  ...editData,
+                  Brand: e.target.value
+                })}
+            />
             <CusTextField
                 label="市场价格"
                 type="number"
