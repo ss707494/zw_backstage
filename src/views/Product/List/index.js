@@ -126,7 +126,7 @@ export const Product = ({ theme }) => {
     data: []
   })
   const [getList, listData, listLoad] = api.post('/Products/QueryCommodity')
-  const [setTypeEnable] = api.post('/Products/SetCommodityTypeEnable')
+  const [setTypeEnable] = api.post('/Products/SetCommodityEnable')
   const getListData = (param = {}) => getList({
     ...search,
     ...pageState.pageData,
@@ -337,7 +337,7 @@ export const Product = ({ theme }) => {
                     <TableCell>{e?.F_CPUnitPriceIn}</TableCell>
                     <TableCell>{e?.F_CPUnitPriceOut}</TableCell>
                     <TableCell>{e?.F_CPUnitPriceMarket}</TableCell>
-                    <TableCell>{e?.F_CPUnitPriceIn}</TableCell>
+                    <TableCell>{e?.F_CPWeight}</TableCell>
                     <TableCell>
                       <S.ActionTableCell>
                         <Button
@@ -355,12 +355,12 @@ export const Product = ({ theme }) => {
                             variant="contained"
                             onClick={() => {
                               showConfirm({
-                                message: `确定${e?.Entry?.F_CTIsEnable ? '停用' : '启用'}该类别吗`,
+                                message: `确定${e?.Entry?.F_CTIsEnable ? '停用' : '启用'}该商品吗`,
                                 callBack: async res => {
                                   if (!res) return
                                   await setTypeEnable({
-                                    ID: e.Entry?.F_CTID,
-                                    IsEnable: e?.Entry?.F_CTIsEnable ? 0 : 1
+                                    ID: e?.ID,
+                                    IsEnable: e?.F_CIsEnable ? 0 : 1
                                   })
                                   getListData()
                                 }

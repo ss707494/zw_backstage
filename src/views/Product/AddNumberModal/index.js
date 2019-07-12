@@ -7,7 +7,7 @@ import { api } from "@/common/api";
 import { showMessage } from "@/component/Message";
 
 const dealItemToForm = item => ({
-  ...item
+  ID: item.ID,
 })
 
 export const useInitState = () => {
@@ -36,22 +36,26 @@ export const AddNumberModal = (
       refreshData = () => {
       }
     }) => {
-  const [updateData, , updateLoading] = api.post('/Products/UpdateCommodityType')
+  const [updateData, , updateLoading] = api.post('/Products/StockPurchase')
+  const handleClose = () => {
+    setEditData({})
+    setOpen(false)
+  }
   const handleSave = async () => {
     const res = await updateData({
       ...editData,
     })
     if (res.result) {
-      showMessage({ message: '操作成功' })
+      showMessage({ message: res?.msg ?? '操作成功' })
       refreshData()
-      setOpen(false)
+      handleClose()
     }
   }
 
   return (
       <S.Box
           open={open}
-          onClose={() => setOpen(false)}
+          onClose={handleClose}
           maxWidth={false}
       >
         <DialogTitle>补货</DialogTitle>
@@ -59,18 +63,18 @@ export const AddNumberModal = (
           <form>
             <CusTextField
                 label="补货数量"
-                value={editData.F_CTNameC}
+                value={editData.Count}
                 onChange={e => setEditData({
                   ...editData,
-                  name: e.target.value
+                  Count: e.target.value
                 })}
             />
             <CusTextField
                 label="价格"
-                value={editData.F_CTNameC}
+                value={editData.F_CPUnitPriceIn}
                 onChange={e => setEditData({
                   ...editData,
-                  name: e.target.value
+                  F_CPUnitPriceIn: e.target.value
                 })}
             />
             <CusButton

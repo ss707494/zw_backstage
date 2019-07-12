@@ -202,3 +202,37 @@ IORI.IT:
 IORI.IT:
 一个是"Type",一个是“F_CNumber"
 
+
+  [HttpPost]
+        public JsonResult SetCommodityEnable()
+        {
+            try
+            {
+                string ID = this.Request.Params["ID"];
+                int isEnable = Convert.ToInt32(this.Request.Params["IsEnable"]);
+                var type = m_db.CommodityBase.Find(ID);
+
+                if (type == null)
+                {
+                    return Json(new AjaxResult { result = false, msg = "设置失败,商品ID不存在", data = null });
+                }
+                type.F_CIsEnbale = isEnable;
+                m_db.Entry(type).State = EntityState.Modified;
+                m_db.SaveChanges();
+
+                return Json(new AjaxResult { result = true, msg = "设置成功", data = null });
+            }
+            catch (Exception ex)
+            {
+                return Json(new AjaxResult { result = false, msg = "服务器异常," + ex.Message, data = null });
+            }
+        }
+
+          [HttpPost]
+                public JsonResult StockPurchase()
+                {
+                    try
+                    {
+                        string ID = this.Request.Params["ID"];
+                        decimal count = Tools.ConvertToDecimal(this.Request.Params["Count"]);
+                        decimal F_CPUnitPriceIn = Tools.ConvertToDecimal(this.Request.Params["F_CPUnitPriceIn"]);
