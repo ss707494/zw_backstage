@@ -51,6 +51,7 @@ const dealItemToForm = item => ({
   F_CPWeight: 0,
   F_CPCompany: '',
   Brand: '',
+  num: item?.F_CNumber?.slice(0, 6) ?? '',
   ...item
 })
 
@@ -334,10 +335,10 @@ export const EditModal = (
             />
             <CusTextField
                 label="品牌名称"
-                value={editData.Brand}
+                value={editData.F_CPBrand}
                 onChange={e => setEditData({
                   ...editData,
-                  Brand: e.target.value
+                  F_CPBrand: e.target.value
                 })}
             />
             <CusTextField
