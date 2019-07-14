@@ -75,12 +75,12 @@ export const useInitState = () => {
       const oneCode = oneList?.data?.find(e => e.F_CTNumber === gradeArr[0])?.F_CTID
       const twoList = await getTwo({
         Type: 2,
-        F_CNumber: gradeArr[0]
+        F_CTNumber: gradeArr[0]
       })
       const twoCode = twoList?.data?.find(e => e.F_CTNumber === gradeArr[1])?.F_CTID
       const threeList = await getThree({
         Type: 2,
-        F_CNumber: gradeArr[1]
+        F_CTNumber: gradeArr[1]
       })
       const threeCode = threeList?.data?.find(e => e.F_CTNumber === gradeArr[2])?.F_CTID
       setLinkData({
