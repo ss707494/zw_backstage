@@ -69,7 +69,7 @@ int IsAsc    //是否升序，1：升序，0降序
 }
 
 （4）查询商品类别的子类别（用于类别下拉框的数据获取）
-地址：域名/Products/ QueryCommodityTypeChildren
+地址：域名/Products/QueryCommodityTypeChildren
 参数：
 String ParentID //父类别ID
 返回结果：
