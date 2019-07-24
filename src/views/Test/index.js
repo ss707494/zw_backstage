@@ -109,7 +109,7 @@ export const Test = () => {
 
 export default {
   props: {
-    path: '/test',
+    path: process.env.REACT_APP_PRE_ROUTE + '/test',
     component: Test,
   },
 }

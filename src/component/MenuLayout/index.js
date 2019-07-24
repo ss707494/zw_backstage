@@ -19,10 +19,11 @@ const _themeOption = createMuiTheme({
   },
 })
 
+const reactAppPreRoute = process.env.REACT_APP_PRE_ROUTE;
 const menuData = [
-  ['category', '分类管理', ''],
-  ['product', '产品管理', ''],
-  ['test', '测试页面', ''],
+  [`${reactAppPreRoute}/category`, '分类管理', ''],
+  [`${reactAppPreRoute}/product`, '产品管理', ''],
+  [`${reactAppPreRoute}/test`, '测试页面', ''],
 ]
 
 export const MenuLayout = ({ children, location }) => {
@@ -62,7 +63,7 @@ export const MenuLayout = ({ children, location }) => {
                       selected={location?.pathname?.includes(path)}
                       key={`menuitem${path}`}
                       component={S.Link}
-                      to={`/${path}`}>
+                      to={`${path}`}>
                     {/*<img src={icon || require('./img/round-view_list-24px.svg')}*/}
                     {/*     alt=""/>*/}
                     {icon

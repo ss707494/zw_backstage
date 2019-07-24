@@ -13,13 +13,13 @@ export const Home = () => {
 export default [{
   props: {
     exact: true,
-    from: '/',
-    to: '/category',
+    from: process.env.REACT_APP_PRE_ROUTE + '/',
+    to: process.env.REACT_APP_PRE_ROUTE + '/category',
   },
   Type: Redirect
 }, {
   props: {
-    path: '/home',
+    path: process.env.REACT_APP_PRE_ROUTE + '/home',
     component: Home,
   }
 }]
