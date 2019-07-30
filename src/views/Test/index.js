@@ -16,11 +16,31 @@ export const Test = () => {
     sort: '',
   })
   const [imgOpen, setImgOpen] = React.useState(false)
-  const [imgSrc, ] = React.useState('')
+  const [imgSrc,] = React.useState('')
   return (
       <S.Box>
         <div>
           rc-upload
+          <span>span</span>
+          <Button>
+            testJsx
+          </Button>
+          { /*language=SCSS*/}
+          <style jsx>{`
+            button {
+              background: red;
+            }
+            div {
+              background: #61dafb;
+              > span {
+                font-size: 20px;
+                color: aquamarine;
+              }
+            }
+            span {
+            }
+          `}
+          </style>
           <ImgUpload
           />
           <img

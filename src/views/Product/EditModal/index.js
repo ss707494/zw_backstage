@@ -156,6 +156,7 @@ export const EditModal = (
     const dealFile = dealFiles(editData?.PhotoArray ?? [], files)
     const updateRes = await updateData({
       ...editData,
+      Brand: editData.F_CPBrand,
       F_CTID: threeCode || twoCode || oneCode || ''
     })
     if (updateRes?.msg) {
@@ -165,7 +166,7 @@ export const EditModal = (
       if (dealFile?.IDs) {
         await fileUploadAjax({
           Type: 1,
-          BussinessID: editData?.ID || updateRes?.data?.ID,
+          BussinessID: updateRes?.data?.F_CNumber,
           IDs: dealFile.IDs.join(',')
         }, dealFile.file, '/Products/UpLoadPicture')
       }
