@@ -14,7 +14,7 @@ const _themeOption = createMuiTheme({
     type: 'light',
   },
 })
-export let showConfirm = ({ message, title, open, callBack }) => {
+export let showConfirm = ({ message, title, open, callBack, oneButton }) => {
 }
 
 export const ConfirmDialog = () => {
@@ -53,7 +53,7 @@ export const ConfirmDialog = () => {
       }
     })
   }
-  const { message, title, open, callBack } = context.confirm || {}
+  const { message, title, open, callBack, oneButton } = context.confirm || {}
   return wrapperTheme(_themeOption)(
       !context.confirm ? <div/> :
           <Dialog
@@ -77,21 +77,24 @@ export const ConfirmDialog = () => {
                     handleClose()
                   }}
                   color="primary">
-                取消
+                {oneButton ? '关闭': '取消'}
               </CusButton>
-              <CusButton
-                  loading={loading}
-                  onClick={async () => {
-                    setLoading(1)
-                    callBack && await callBack(1)
-                        .finally(() => setLoading(0))
-                    setLoading(0)
-                    handleClose()
-                  }}
-                  color="primary"
-              >
-                确定
-              </CusButton>
+              {
+                !oneButton &&
+                <CusButton
+                    loading={loading}
+                    onClick={async () => {
+                      setLoading(1)
+                      callBack && await callBack(1)
+                          .finally(() => setLoading(0))
+                      setLoading(0)
+                      handleClose()
+                    }}
+                    color="primary"
+                >
+                  确定
+                </CusButton>
+              }
             </DialogActions>
           </Dialog>
   )

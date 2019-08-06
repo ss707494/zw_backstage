@@ -127,6 +127,8 @@ export const Product = ({ theme }) => {
   })
   const [getList, listData, listLoad] = api.post('/Products/QueryCommodity')
   const [setTypeEnable] = api.post('/Products/SetCommodityEnable')
+  const [exportCommodity] = api.post('/Products/ExportCommodity')
+  const [importCommodity] = api.post('/Products/ImportCommodity')
   const getListData = (param = {}) => getList({
     ...search,
     ...pageState.pageData,
@@ -163,6 +165,44 @@ export const Product = ({ theme }) => {
               >
                 新增
               </Button>
+              <Button
+                  variant="contained"
+                  color="default"
+                  onClick={async () => {
+                    const res = await importCommodity()
+                    if (res?.msg) {
+                      showConfirm({
+                        oneButton: true,
+                        message: `${res.msg}`,
+                        callBack: async () => {}
+                      })
+                    }
+                  }}
+              >
+                导入
+              </Button>
+              <Button
+                  variant="contained"
+                  color="default"
+                  onClick={async () => {
+                    const res = await exportCommodity()
+                    if (res?.msg) {
+                      showConfirm({
+                        oneButton: true,
+                        message: `${res.msg}`,
+                        callBack: async () => {}
+                      })
+                    }
+                  }}
+              >
+                导出
+              </Button>
+              { /*language=SCSS*/}
+              <style jsx>{`
+                main>:global(button) {
+                  margin-right: 5px;
+                }
+              `}</style>
             </main>
           </S.HeaderBox>
           <S.HeaderBox>
