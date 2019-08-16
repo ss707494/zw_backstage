@@ -197,12 +197,6 @@ export const Product = ({ theme }) => {
               >
                 导出
               </Button>
-              { /*language=SCSS*/}
-              <style jsx>{`
-                main>:global(button) {
-                  margin-right: 5px;
-                }
-              `}</style>
             </main>
           </S.HeaderBox>
           <S.HeaderBox>

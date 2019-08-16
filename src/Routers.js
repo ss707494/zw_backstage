@@ -6,10 +6,12 @@ import { routes } from '@/views'
 import { CreateMessageObj } from '@/component/Message'
 import { ConfirmDialog } from '@/component/ConfirmDialog'
 import { wrapperTheme } from '@/common/theme'
+import { wrapperApollo } from "@/common/apolloCLient";
 
 export default () => {
   return [
     WrapperContext,
+    wrapperApollo,
     wrapperTheme(),
   ].reduce((i, e) => e(i), (
       <>

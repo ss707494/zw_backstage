@@ -25,22 +25,6 @@ export const Test = () => {
           <Button>
             testJsx
           </Button>
-          { /*language=SCSS*/}
-          <style jsx>{`
-            button {
-              background: red;
-            }
-            div {
-              background: #61dafb;
-              > span {
-                font-size: 20px;
-                color: aquamarine;
-              }
-            }
-            span {
-            }
-          `}
-          </style>
           <ImgUpload
           />
           <img

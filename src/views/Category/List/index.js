@@ -11,6 +11,8 @@ import { api } from '@/common/api'
 import { CusButton as Button } from '@/component/CusButton'
 import { CusTableCell as TableCell } from '@/component/CusTableCell'
 import { showConfirm } from "@/component/ConfirmDialog";
+import { useQuery } from "@apollo/react-hooks";
+import { gql } from "apollo-boost";
 
 const defaultOption = {
   Type: 1
@@ -26,6 +28,21 @@ export const Category = ({ theme }) => {
     type: '',
     sort: 1,
   })
+  const { loading, error, data: { category_list } } = useQuery(gql`
+      query ($data: CategoryInput){
+          category_list(CategoryInput: $data) {
+              id
+              name
+          }
+      }
+  `, {
+    variables: {
+      data: {
+        parent_id: ''
+      }
+    }
+  })
+  console.log(category_list)
   const [getList, listData = {}, listLoad] = api.post('/Products/QueryCommodityType')
   const [getTypeOptionOne, { data: typeOptionOne = [] }] = postQueryCommodityTypeChildren()
   const [getTypeOptionTwo, { data: typeOptionTwo = [] }] = postQueryCommodityTypeChildren()

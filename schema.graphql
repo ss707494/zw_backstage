@@ -1,0 +1,101 @@
+# This file was generated based on ".graphqlconfig". Do not edit manually.
+
+schema {
+    query: Query
+    mutation: Mutation
+}
+
+type Category {
+    createTime: Date
+    create_time: Date
+    fullParentId: String
+    full_parent_id: String
+    id: String
+    isDelete: Boolean
+    is_delete: Boolean
+    is_enable: Boolean
+    name: String
+    parentId: String
+    parent_id: String
+    remark: String
+    sort: Int
+    updateTime: Date
+    update_time: Date
+}
+
+type Mutation {
+    addCategory(Category: CategoryInput): result
+    changePassword(data: ChangePassword!): String
+    deleteOneUser(id: String!): String
+    importAllUser(data: String!): String
+    updateUser(data: UserInput!): User
+    updateUserAuth(auth: String!, id: String!): String
+}
+
+type Query {
+    allDataUser: String
+    allUser(data: UserInput): [User]
+    categoryTotal(CategoryInput: CategoryInput): Int
+    category_list(CategoryInput: CategoryInput): [Category]
+    getPassCode(pass: String!): String
+    oneUser(id: String!): User
+    totalUser(data: UserInput): Int
+    user: [User]
+}
+
+type User {
+    auth: String
+    id: String
+    message: String
+    name: String
+}
+
+type result {
+    category: Category
+    flag: Int
+    msg: String
+}
+
+input CategoryInput {
+    createTime: Date
+    create_time: Date
+    fullParentId: String
+    full_parent_id: String
+    id: String
+    isDelete: Boolean
+    is_delete: Boolean
+    is_enable: Boolean
+    name: String
+    page: Int
+    parentId: String
+    parent_id: String
+    remark: String
+    rowsPerPage: Int
+    sort: Int
+    updateTime: Date
+    update_time: Date
+}
+
+input ChangePassword {
+    id: String
+    newPass: String
+    verification: String
+}
+
+input UserInput {
+    auth: String
+    id: String
+    message: String
+    name: String
+    page: Int
+    rowsPerPage: Int
+    sortData: UserSortInput
+}
+
+input UserSortInput {
+    code: Int
+}
+
+
+"Date custom scalar type"
+scalar Date
