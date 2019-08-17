@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { Query } from 'react-apollo'
 import { client } from '@/common/apolloCLient'
 
@@ -13,58 +13,83 @@ export const WrapperQuery = (query, variables) => child => (
     </Query>
 )
 
-export const useQueryGraphql = (query, variables, option) => {
-  const [data, setData] = useState({})
-  const [error, setError] = useState()
-  const [loading, setLoading] = useState(false)
-  const getData = async (param) => {
-    setLoading(true)
-    const { data } = await client.query({
-      query,
-      variables: {
-        ...variables,
-        ...param,
-      },
-      fetchPolicy: 'network-only',
-      ...option,
-    }).catch(e => {
-      setError(e)
-      return e
-    }).finally(() => {
-      setLoading(false)
-    })
-    data && setData(data)
-    return data
-  }
-  return [
-    getData, data, loading, error
-  ]
-}
+// export const useQueryGraphql = (query, variables, option) => {
+//   const [data, setData] = useState({})
+//   const [error, setError] = useState()
+//   const [loading, setLoading] = useState(false)
+//   const getData = async (param) => {
+//     setLoading(true)
+//     const { data } = await client.query({
+//       query,
+//       variables: {
+//         ...variables,
+//         ...param,
+//       },
+//       fetchPolicy: 'network-only',
+//       ...option,
+//     }).catch(e => {
+//       setError(e)
+//       return e
+//     }).finally(() => {
+//       setLoading(false)
+//     })
+//     data && setData(data)
+//     return data
+//   }
+//   return [
+//     getData, data, loading, error
+//   ]
+// }
 
-export const useMutationGraphql = (mutation, variables, option) => {
+export const useMutationGraphql = (mutation, option) => {
   const [res, setRes] = useState()
   const [error, setError] = useState()
   const [loading, setLoading] = useState(false)
-  const mutate = async (param) => {
+  const mutate = useCallback(async (param) => {
     setLoading(true)
     const { data } = await client.mutate({
       mutation,
       variables: {
-        ...variables,
         ...param,
       },
       ...option,
     }).catch(e => {
       setError(e)
-      return e
+      throw e
     }).finally(() => {
       setLoading(false)
     })
     setRes(data)
     return data
-  }
+  }, [mutation, option])
   return [
     mutate, res, loading, error
+  ]
+}
+
+export const useQueryGraphql = (query, options) => {
+  const [res, setRes] = useState()
+  const [error, setError] = useState()
+  const [loading, setLoading] = useState(false)
+  const getData = useCallback(async (params) => {
+    setLoading(true)
+    const { data } = await client.query({
+      query,
+      variables: {
+        ...params
+      },
+      ...options,
+    }).catch(e => {
+      setError(e)
+      throw e
+    }).finally(() => {
+      setLoading(false)
+    })
+    setRes(data)
+    return data
+  }, [options, query])
+  return [
+      getData, res ?? {}, loading, error
   ]
 }
 

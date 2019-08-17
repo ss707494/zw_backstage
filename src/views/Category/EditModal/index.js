@@ -5,36 +5,40 @@ import { CusTextField } from "@/component/CusTextField";
 import { CusSelectField } from "@/component/CusSelectField";
 import MenuItem from "@material-ui/core/MenuItem";
 import { CusButton } from "@/component/CusButton";
-import { api } from "@/common/api";
 import { showMessage } from "@/component/Message";
-import { postQueryCommodityTypeChildren } from "@/views/Category/List";
+import { categoryGraphql } from "@/views/Category/List";
+import { useMutationGraphql, useQueryGraphql } from "@/component/ApolloQuery";
+import { gql } from "apollo-boost";
 
 const useLinkage = () => {
   const [data, setData] = useState({
     oneCode: '',
     twoCode: '',
   })
-  const [getOne, { data: one }] = postQueryCommodityTypeChildren()
-  const [getTwo, { data: two }] = postQueryCommodityTypeChildren()
+  const [getOne, { category_list: one = [] }] = useQueryGraphql(categoryGraphql.getCategoryList)
+  const [getTwo, { category_list: two = [] }] = useQueryGraphql(categoryGraphql.getCategoryList)
+
+  // const [getOne, { data: one }] = postQueryCommodityTypeChildren()
+  // const [getTwo, { data: two }] = postQueryCommodityTypeChildren()
   React.useEffect(() => {
     if (!data.oneCode) return
     getTwo({
-      ParentID: data.oneCode
+      parent_id: data.oneCode
     })
   }, [data.oneCode, getTwo])
   return [{ ...data, one, two }, setData, getOne]
 }
 
 const dealItemToForm = item => !item?.Entry ? ({
-  Active: 1,
-  F_CTRemarkC: '',
-  ID: '',
+  // Active: 1,
+  // F_CTRemarkC: '',
+  // ID: '',
 }) : ({
-  Active: 2,
-  ID: item?.Entry?.F_CTID || '',
-  ParentID: item?.Entry?.F_CTParentID || '',
-  F_CTNameC: item?.Entry?.F_CTNameC || '',
-  F_CTRemarkC: item?.Entry?.F_CTRemarkC || '',
+  // Active: 2,
+  // ID: item?.Entry?.id || '',
+  // parent_id: item?.Entry?.F_CTParentID || '',
+  // F_CTNameC: item?.Entry?.F_CTNameC || '',
+  // F_CTRemarkC: item?.Entry?.F_CTRemarkC || '',
 })
 
 export const useInitState = () => {
@@ -45,18 +49,20 @@ export const useInitState = () => {
     const newItem = dealItemToForm(item)
     setEditData(newItem)
     setOpen(true)
-    const oneList = await getOne()
+    const { data: oneList } = await getOne({
+      parent_id: ''
+    })
     // 存在父类id
-    if (newItem.ParentID) {
+    if (newItem.parent_id) {
       const gradeArr = item.DisplayNumber.split('-');
       if (gradeArr.length === 3) {
         setLinkData({
-          oneCode: oneList?.data?.find(e => e.F_CTNumber === gradeArr[0])?.F_CTID,
-          twoCode: newItem.ParentID,
+          oneCode: oneList?.data?.find(e => e.F_CTNumber === gradeArr[0])?.id,
+          twoCode: newItem.parent_id,
         })
       } else {
         setLinkData({
-          oneCode: newItem.ParentID,
+          oneCode: newItem.parent_id,
         })
       }
     }
@@ -83,7 +89,18 @@ export const EditModal = (
       refreshData = () => {
       }
     }) => {
-  const [updateData, , updateLoading] = api.post('/Products/UpdateCommodityType')
+  const [updateData, , updateLoading] = useMutationGraphql(gql`
+      mutation ($data: CategoryInput){
+          addCategory(Category: $data) {
+              flag
+              msg
+              category {
+                  id
+                  name
+              }
+          }
+      }
+  `)
 
   const handleClose = () => {
     setOpen(false)
@@ -94,15 +111,27 @@ export const EditModal = (
     })
   }
   const handleSave = async () => {
-    const res = await updateData({
-      ...editData,
-      ParentID: twoCode || oneCode || ''
+    const parent_id = twoCode || oneCode || ''
+    const full_parent_id = [
+            ...twoCode ? two.find(e => e.id === twoCode).full_parent_id.split(',')
+                : oneCode ? one.find(e => e.id === oneCode).full_parent_id.split(',')
+                    : [],
+      parent_id
+    ].join(',')
+    const {
+      addCategory: {
+        flag,
+        msg,
+      }
+    } = await updateData({
+      data: {
+        ...editData,
+        parent_id,
+        full_parent_id,
+      }
     })
-    if (res?.msg) {
-      showMessage({ message: res?.msg ?? '操作成功' })
-    }
-    if (res.result && res?.data) {
-      showMessage({ message: res.msg ?? '操作成功' })
+    if (flag) {
+      showMessage({ message: msg || '操作成功' })
       refreshData()
       handleClose()
     }
@@ -119,10 +148,10 @@ export const EditModal = (
           <form>
             <CusTextField
                 label="中文名称"
-                value={editData.F_CTNameC}
+                value={editData.name}
                 onChange={e => setEditData({
                   ...editData,
-                  F_CTNameC: e.target.value
+                  name: e.target.value
                 })}
             />
             <CusSelectField
@@ -139,9 +168,9 @@ export const EditModal = (
             >
               {one?.map(e => (
                   <MenuItem
-                      key={`typeOptionOne${e.F_CTID}`}
-                      value={e.F_CTID}
-                  >{e.F_CTNameC}</MenuItem>
+                      key={`typeOptionOne${e.id}`}
+                      value={e.id}
+                  >{e.name}</MenuItem>
               ))}
             </CusSelectField>
             <CusSelectField
@@ -155,9 +184,9 @@ export const EditModal = (
             >
               {two?.map(e => (
                   <MenuItem
-                      key={`typeOptionOne${e.F_CTID}`}
-                      value={e.F_CTID}
-                  >{e.F_CTNameC}</MenuItem>
+                      key={`typeOptionOne${e.id}`}
+                      value={e.id}
+                  >{e.name}</MenuItem>
               ))}
             </CusSelectField>
             <CusButton

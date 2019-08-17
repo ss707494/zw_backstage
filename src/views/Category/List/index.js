@@ -11,11 +11,35 @@ import { api } from '@/common/api'
 import { CusButton as Button } from '@/component/CusButton'
 import { CusTableCell as TableCell } from '@/component/CusTableCell'
 import { showConfirm } from "@/component/ConfirmDialog";
-import { useQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
+import { useQueryGraphql } from "@/component/ApolloQuery";
 
 const defaultOption = {
   Type: 1
+}
+
+export const categoryGraphql = {
+  getCategoryList: gql`
+      query (
+          $parent_id: String,
+          $rows_per_page: Int,
+          $page: Int,
+          $full_parent_id: String
+      ){
+          category_list(CategoryInput: {
+              parent_id: $parent_id
+              full_parent_id: $full_parent_id
+              rows_per_page: $rows_per_page
+              page: $page
+          }) {
+              id
+              name
+              parent_id
+              number
+              full_parent_id
+          }
+      }
+  `
 }
 
 export const postQueryCommodityTypeChildren = () => api.post('/Products/QueryCommodityTypeChildren', defaultOption)
@@ -28,44 +52,35 @@ export const Category = ({ theme }) => {
     type: '',
     sort: 1,
   })
-  const { loading, error, data: { category_list } } = useQuery(gql`
-      query ($data: CategoryInput){
-          category_list(CategoryInput: $data) {
-              id
-              name
-          }
-      }
-  `, {
-    variables: {
-      data: {
-        parent_id: ''
-      }
-    }
-  })
-  console.log(category_list)
-  const [getList, listData = {}, listLoad] = api.post('/Products/QueryCommodityType')
-  const [getTypeOptionOne, { data: typeOptionOne = [] }] = postQueryCommodityTypeChildren()
-  const [getTypeOptionTwo, { data: typeOptionTwo = [] }] = postQueryCommodityTypeChildren()
+  const [getTypeOptionOne, { category_list: typeOptionOne = [] }] = useQueryGraphql(categoryGraphql.getCategoryList)
+
+  const [getList, { category_list: listData = [] }, listLoad] = useQueryGraphql(categoryGraphql.getCategoryList)
+  const [getTypeOptionTwo, { category_list: typeOptionTwo = [] }] = useQueryGraphql(categoryGraphql.getCategoryList)
   const [setTypeEnable] = api.post('/Products/SetCommodityTypeEnable')
 
-  const getListData = (param = {}) => getList({
-    ...search,
-    ...pageState.pageData,
-    ...param,
-  })
-  React.useEffect(() => {
-    getList({
-      Page: 1,
-      FloatPageCount: 10,
-      ParentID: '',
-      SortType: 1,
-      IsAsc: 0,
+  const getListData = (param = {}) => {
+    console.log({
       ...search,
       ...pageState.pageData,
+      ...param,
     })
-  }, [getList, search, pageState.pageData])
+
+    return getList({
+      ...search,
+      ...pageState.pageData,
+      ...param,
+    });
+  }
   React.useEffect(() => {
-    getTypeOptionOne()
+    getList({
+      page: 0,
+      rows_per_page: 10,
+    })
+  }, [getList])
+  React.useEffect(() => {
+    getTypeOptionOne({
+      parent_id: ''
+    })
   }, [getTypeOptionOne])
 
   return (
@@ -91,28 +106,28 @@ export const Category = ({ theme }) => {
                   onChange={(v) => {
                     setSearch({
                       ...search,
-                      ParentID: v.target.value,
+                      full_parent_id: v.target.value,
                       type: v.target.value,
                       typeTwo: ''
                     })
                     if (v?.target?.value) {
                       getTypeOptionTwo({
-                        ParentID: v.target.value
+                        parent_id: v.target.value,
                       })
                     }
                     getListData({
-                      ParentID: v.target.value,
+                      full_parent_id: v.target.value,
                     })
                   }}
                   value={search.type}
                   clear={1}
                   placeholder="全部"
               >
-                {typeOptionOne.map(e => (
+                {typeOptionOne?.map(e => (
                     <MenuItem
-                        key={`typeOptionOne${e.F_CTID}`}
-                        value={e.F_CTID}
-                    >{e.F_CTNameC}</MenuItem>
+                        key={`typeOptionOne${e.id}`}
+                        value={e.id}
+                    >{e.name}</MenuItem>
                 ))}
               </CusSelect>
               <CusSelect
@@ -120,11 +135,11 @@ export const Category = ({ theme }) => {
                     const _value = v?.target?.value
                     setSearch({
                       ...search,
-                      ParentID: _value === '' ? search.type : _value,
+                      full_parent_id: _value === '' ? search.type : _value,
                       typeTwo: _value
                     })
                     getListData({
-                      ParentID: v.target.value,
+                      full_parent_id: v.target.value,
                     })
                   }}
                   value={search.typeTwo}
@@ -133,9 +148,9 @@ export const Category = ({ theme }) => {
               >
                 {typeOptionTwo.map(e => (
                     <MenuItem
-                        key={`typeOptionTwo${e.F_CTID}`}
-                        value={e.F_CTID}
-                    >{e.F_CTNameC}</MenuItem>
+                        key={`typeOptionTwo${e.id}`}
+                        value={e.id}
+                    >{e.name}</MenuItem>
                 ))}
               </CusSelect>
             </main>
@@ -181,12 +196,12 @@ export const Category = ({ theme }) => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {listData?.data?.map(e => <TableRow
-                      key={`TableBody${e.Entry?.F_CTID}`}>
-                    <TableCell>{e.GradeName}</TableCell>
-                    <TableCell>{e?.Entry?.F_CTNameC}</TableCell>
-                    <TableCell>{e?.Entry?.F_CTNameE}</TableCell>
-                    <TableCell>{e.DisplayNumber}</TableCell>
+                  {listData?.map(e => <TableRow
+                      key={`TableBody${e?.id}`}>
+                    <TableCell>{e?.number}</TableCell>
+                    <TableCell>{e?.name}</TableCell>
+                    <TableCell>{e?.name}</TableCell>
+                    <TableCell>{e?.name}</TableCell>
                     <TableCell>
                       <S.ActionTableCell>
                         <Button

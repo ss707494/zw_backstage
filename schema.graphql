@@ -6,20 +6,16 @@ schema {
 }
 
 type Category {
-    createTime: Date
     create_time: Date
-    fullParentId: String
     full_parent_id: String
     id: String
-    isDelete: Boolean
     is_delete: Boolean
     is_enable: Boolean
     name: String
-    parentId: String
+    number: Int
     parent_id: String
     remark: String
     sort: Int
-    updateTime: Date
     update_time: Date
 }
 
@@ -57,22 +53,17 @@ type result {
 }
 
 input CategoryInput {
-    createTime: Date
     create_time: Date
-    fullParentId: String
     full_parent_id: String
     id: String
-    isDelete: Boolean
     is_delete: Boolean
     is_enable: Boolean
     name: String
     page: Int
-    parentId: String
     parent_id: String
     remark: String
-    rowsPerPage: Int
+    rows_per_page: Int
     sort: Int
-    updateTime: Date
     update_time: Date
 }
 
