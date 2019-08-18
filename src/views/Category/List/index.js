@@ -18,6 +18,20 @@ const defaultOption = {
   Type: 1
 }
 
+const dealSort = sort => {
+  const _sortHelp = {
+    1: ['create_time desc'],
+    2: ['create_time asc'],
+    3: ['number desc'],
+    4: ['number asc'],
+  }
+  return ({
+    // SortType: [1, 2].includes(sort) ? 1 : 2,
+    // IsAsc: [1, 3].includes(sort) ? 0 : 1,
+    sort_type: [..._sortHelp[sort], 'id'].join(',')
+  });
+}
+
 export const categoryGraphql = {
   getCategoryList: gql`
       query (
@@ -25,19 +39,30 @@ export const categoryGraphql = {
           $rows_per_page: Int,
           $page: Int,
           $full_parent_id: String
+          $sort_type: String
       ){
           category_list(CategoryInput: {
               parent_id: $parent_id
               full_parent_id: $full_parent_id
               rows_per_page: $rows_per_page
               page: $page
+              sort_type: $sort_type
           }) {
               id
               name
               parent_id
               number
               full_parent_id
+              create_time
+              c2_name
+              c2_id
+              c3_name
+              c3_id
           }
+          category_total(CategoryInput: {
+              parent_id: $parent_id
+              full_parent_id: $full_parent_id
+          })
       }
   `
 }
@@ -54,18 +79,13 @@ export const Category = ({ theme }) => {
   })
   const [getTypeOptionOne, { category_list: typeOptionOne = [] }] = useQueryGraphql(categoryGraphql.getCategoryList)
 
-  const [getList, { category_list: listData = [] }, listLoad] = useQueryGraphql(categoryGraphql.getCategoryList)
+  const [getList, { category_list: listData = [], category_total: total }, listLoad] = useQueryGraphql(categoryGraphql.getCategoryList)
   const [getTypeOptionTwo, { category_list: typeOptionTwo = [] }] = useQueryGraphql(categoryGraphql.getCategoryList)
   const [setTypeEnable] = api.post('/Products/SetCommodityTypeEnable')
 
   const getListData = (param = {}) => {
-    console.log({
-      ...search,
-      ...pageState.pageData,
-      ...param,
-    })
-
     return getList({
+      ...dealSort(1),
       ...search,
       ...pageState.pageData,
       ...param,
@@ -73,6 +93,7 @@ export const Category = ({ theme }) => {
   }
   React.useEffect(() => {
     getList({
+      ...dealSort(1),
       page: 0,
       rows_per_page: 10,
     })
@@ -162,10 +183,6 @@ export const Category = ({ theme }) => {
                   placeholder="选择排序"
                   value={search.sort}
                   onChange={(v) => {
-                    const dealSort = sort => ({
-                      SortType: [1, 2].includes(sort) ? 1 : 2,
-                      IsAsc: [1, 3].includes(sort) ? 0 : 1
-                    })
                     setSearch({
                       ...search,
                       ...dealSort(v.target.value),
@@ -201,7 +218,7 @@ export const Category = ({ theme }) => {
                     <TableCell>{e?.number}</TableCell>
                     <TableCell>{e?.name}</TableCell>
                     <TableCell>{e?.name}</TableCell>
-                    <TableCell>{e?.name}</TableCell>
+                    <TableCell>{e?.c2_name ?? ''}{e?.c3_name ? `-${e?.c3_name}` : ''}</TableCell>
                     <TableCell>
                       <S.ActionTableCell>
                         <Button
@@ -235,7 +252,7 @@ export const Category = ({ theme }) => {
           }
           <Pagination
               {...pageState}
-              count={~~listData.maxCount}
+              count={~~total}
               refresh={getListData}
           />
         </main>

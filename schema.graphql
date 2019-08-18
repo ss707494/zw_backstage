@@ -5,7 +5,17 @@ schema {
     mutation: Mutation
 }
 
+interface listSearch {
+    page: Int
+    rows_per_page: Int
+    sort_type: String
+}
+
 type Category {
+    c2_id: String
+    c2_name: String
+    c3_id: String
+    c3_name: String
     create_time: Date
     full_parent_id: String
     id: String
@@ -24,6 +34,7 @@ type Mutation {
     changePassword(data: ChangePassword!): String
     deleteOneUser(id: String!): String
     importAllUser(data: String!): String
+    save_category(Category: CategoryInput): result
     updateUser(data: UserInput!): User
     updateUserAuth(auth: String!, id: String!): String
 }
@@ -31,8 +42,8 @@ type Mutation {
 type Query {
     allDataUser: String
     allUser(data: UserInput): [User]
-    categoryTotal(CategoryInput: CategoryInput): Int
     category_list(CategoryInput: CategoryInput): [Category]
+    category_total(CategoryInput: CategoryInput): Int
     getPassCode(pass: String!): String
     oneUser(id: String!): User
     totalUser(data: UserInput): Int
@@ -59,11 +70,13 @@ input CategoryInput {
     is_delete: Boolean
     is_enable: Boolean
     name: String
+    number: Int
     page: Int
     parent_id: String
     remark: String
     rows_per_page: Int
     sort: Int
+    sort_type: String
     update_time: Date
 }
 

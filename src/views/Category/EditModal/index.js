@@ -29,16 +29,11 @@ const useLinkage = () => {
   return [{ ...data, one, two }, setData, getOne]
 }
 
-const dealItemToForm = item => !item?.Entry ? ({
+const dealItemToForm = item => ({
+  ...item
   // Active: 1,
   // F_CTRemarkC: '',
   // ID: '',
-}) : ({
-  // Active: 2,
-  // ID: item?.Entry?.id || '',
-  // parent_id: item?.Entry?.F_CTParentID || '',
-  // F_CTNameC: item?.Entry?.F_CTNameC || '',
-  // F_CTRemarkC: item?.Entry?.F_CTRemarkC || '',
 })
 
 export const useInitState = () => {
@@ -49,23 +44,30 @@ export const useInitState = () => {
     const newItem = dealItemToForm(item)
     setEditData(newItem)
     setOpen(true)
-    const { data: oneList } = await getOne({
+    await getOne({
       parent_id: ''
     })
-    // 存在父类id
-    if (newItem.parent_id) {
-      const gradeArr = item.DisplayNumber.split('-');
-      if (gradeArr.length === 3) {
-        setLinkData({
-          oneCode: oneList?.data?.find(e => e.F_CTNumber === gradeArr[0])?.id,
-          twoCode: newItem.parent_id,
-        })
-      } else {
-        setLinkData({
-          oneCode: newItem.parent_id,
-        })
-      }
+    if (newItem?.c3_id) {
+      setLinkData({
+        oneCode: newItem.c3_id,
+        twoCode: newItem.c2_id,
+      })
+    } else {
+      setLinkData({
+        oneCode: newItem.c2_id
+      })
     }
+    // 存在父类id
+    // if (newItem.full_parent_id) {
+    //   console.log(oneList)
+    //   const gradeArr = newItem.full_parent_id.split(',');
+    //   if (gradeArr.length === 3) {
+    //   } else {
+    //     setLinkData({
+    //       oneCode: newItem.parent_id,
+    //     })
+    //   }
+    // }
   }
   return {
     ...linkageData,
@@ -91,7 +93,7 @@ export const EditModal = (
     }) => {
   const [updateData, , updateLoading] = useMutationGraphql(gql`
       mutation ($data: CategoryInput){
-          addCategory(Category: $data) {
+          save_category(Category: $data) {
               flag
               msg
               category {
@@ -112,14 +114,8 @@ export const EditModal = (
   }
   const handleSave = async () => {
     const parent_id = twoCode || oneCode || ''
-    const full_parent_id = [
-            ...twoCode ? two.find(e => e.id === twoCode).full_parent_id.split(',')
-                : oneCode ? one.find(e => e.id === oneCode).full_parent_id.split(',')
-                    : [],
-      parent_id
-    ].join(',')
     const {
-      addCategory: {
+      save_category: {
         flag,
         msg,
       }
@@ -127,7 +123,7 @@ export const EditModal = (
       data: {
         ...editData,
         parent_id,
-        full_parent_id,
+        // full_parent_id,
       }
     })
     if (flag) {
@@ -143,7 +139,7 @@ export const EditModal = (
           onClose={handleClose}
           maxWidth={false}
       >
-        <DialogTitle>编辑产品类别</DialogTitle>
+        <DialogTitle>编辑产品类别{editData.id}</DialogTitle>
         <S.Content>
           <form>
             <CusTextField
@@ -170,6 +166,7 @@ export const EditModal = (
                   <MenuItem
                       key={`typeOptionOne${e.id}`}
                       value={e.id}
+                      disabled={e.id === editData.id}
                   >{e.name}</MenuItem>
               ))}
             </CusSelectField>
@@ -186,6 +183,7 @@ export const EditModal = (
                   <MenuItem
                       key={`typeOptionOne${e.id}`}
                       value={e.id}
+                      disabled={e.id === editData.id}
                   >{e.name}</MenuItem>
               ))}
             </CusSelectField>
