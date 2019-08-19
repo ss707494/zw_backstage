@@ -19,10 +19,15 @@ type Category {
     create_time: Date
     full_parent_id: String
     id: String
+    img_url: String
     is_delete: Boolean
     is_enable: Boolean
     name: String
     number: Int
+    p2_id: String
+    p2_name: String
+    p3_id: String
+    p3_name: String
     parent_id: String
     remark: String
     sort: Int
@@ -30,7 +35,6 @@ type Category {
 }
 
 type Mutation {
-    addCategory(Category: CategoryInput): result
     changePassword(data: ChangePassword!): String
     deleteOneUser(id: String!): String
     importAllUser(data: String!): String

@@ -9,6 +9,10 @@ import { showMessage } from "@/component/Message";
 import { categoryGraphql } from "@/views/Category/List";
 import { useMutationGraphql, useQueryGraphql } from "@/component/ApolloQuery";
 import { gql } from "apollo-boost";
+import { FormControl } from "@material-ui/core";
+import InputLabel from "@material-ui/core/InputLabel";
+import { ImgUpload } from "@/component/ImgUpload";
+import { fileUploadAjax } from "@/common/utils";
 
 const useLinkage = () => {
   const [data, setData] = useState({
@@ -47,14 +51,14 @@ export const useInitState = () => {
     await getOne({
       parent_id: ''
     })
-    if (newItem?.c3_id) {
+    if (newItem?.p3_id) {
       setLinkData({
-        oneCode: newItem.c3_id,
-        twoCode: newItem.c2_id,
+        oneCode: newItem.p3_id,
+        twoCode: newItem.p2_id,
       })
     } else {
       setLinkData({
-        oneCode: newItem.c2_id
+        oneCode: newItem.p2_id
       })
     }
     // 存在父类id
@@ -91,6 +95,13 @@ export const EditModal = (
       refreshData = () => {
       }
     }) => {
+  const [imgFile, setImgFile] = useState()
+
+  const handleUploadChange = file => {
+    setImgFile(file)
+  }
+  console.log(imgFile)
+
   const [updateData, , updateLoading] = useMutationGraphql(gql`
       mutation ($data: CategoryInput){
           save_category(Category: $data) {
@@ -105,6 +116,7 @@ export const EditModal = (
   `)
 
   const handleClose = () => {
+    setImgFile(null)
     setOpen(false)
     setEditData({})
     setLinkData({
@@ -113,6 +125,15 @@ export const EditModal = (
     })
   }
   const handleSave = async () => {
+    if ((oneCode && editData.c3_id) || (twoCode && editData.c2_id)) {
+      showMessage({ message: '无法添加,分类层级不可超过3级' })
+      return
+    }
+    let img_url
+    if (imgFile) {
+      const uploadRes = await fileUploadAjax({},[imgFile], '/api/fileUpload')
+      img_url = uploadRes?.data?.files?.[0]?.url ?? ''
+    }
     const parent_id = twoCode || oneCode || ''
     const {
       save_category: {
@@ -121,8 +142,10 @@ export const EditModal = (
       }
     } = await updateData({
       data: {
-        ...editData,
+        id: editData?.id,
+        name: editData?.name,
         parent_id,
+        img_url,
         // full_parent_id,
       }
     })
@@ -139,7 +162,7 @@ export const EditModal = (
           onClose={handleClose}
           maxWidth={false}
       >
-        <DialogTitle>编辑产品类别{editData.id}</DialogTitle>
+        <DialogTitle>编辑产品类别</DialogTitle>
         <S.Content>
           <form>
             <CusTextField
@@ -150,6 +173,17 @@ export const EditModal = (
                   name: e.target.value
                 })}
             />
+            <S.UploadFormControl
+                as={FormControl}
+            >
+              <InputLabel
+                  shrink
+                  htmlFor="imgUpload"
+              >上传图片</InputLabel>
+              <ImgUpload
+                  initSrc={editData?.img_url ?? ''}
+                  onChange={handleUploadChange}/>
+            </S.UploadFormControl>
             <CusSelectField
                 label="产品类别"
                 placeholder="选择类别"

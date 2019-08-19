@@ -58,6 +58,11 @@ export const categoryGraphql = {
               c2_id
               c3_name
               c3_id
+              p2_name
+              p2_id
+              p3_name
+              p3_id
+              img_url
           }
           category_total(CategoryInput: {
               parent_id: $parent_id
@@ -218,7 +223,7 @@ export const Category = ({ theme }) => {
                     <TableCell>{e?.number}</TableCell>
                     <TableCell>{e?.name}</TableCell>
                     <TableCell>{e?.name}</TableCell>
-                    <TableCell>{e?.c2_name ?? ''}{e?.c3_name ? `-${e?.c3_name}` : ''}</TableCell>
+                    <TableCell>{e?.p2_name ?? ''}{e?.p3_name ? `-${e?.p3_name}` : ''}</TableCell>
                     <TableCell>
                       <S.ActionTableCell>
                         <Button

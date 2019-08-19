@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 import { Dialog } from "@material-ui/core";
 import DialogContent from "@material-ui/core/DialogContent";
+import { S as SText } from '@/component/CusTextField/style'
 
 export const S = {}
 S.Box = styled(Dialog)`
@@ -21,3 +22,5 @@ S.Content = styled(DialogContent)`
   }
 }
 `
+
+S.UploadFormControl = SText.TextFieldBox
