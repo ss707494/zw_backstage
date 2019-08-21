@@ -14,7 +14,9 @@ import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import { ImgUpload } from "@/component/ImgUpload";
 import { fileUploadAjax } from "@/common/utils";
-import { postQueryCommodityTypeChildren } from "@/views/Category/List";
+import { categoryGraphql } from "@/views/Category/List";
+import { useQueryGraphql } from "@/component/ApolloQuery";
+import { getCategoryOrigin } from "@/views/Product/List/productGraphql";
 
 const useLinkage = () => {
   const [data, setData] = useState({
@@ -22,36 +24,28 @@ const useLinkage = () => {
     twoCode: '',
     threeCode: '',
   })
-  const [getOne, { data: one }] = postQueryCommodityTypeChildren()
-  const [getTwo, { data: two }] = postQueryCommodityTypeChildren()
-  const [getThree, { data: three }] = postQueryCommodityTypeChildren()
+  const [getOne, { category_list: one = [] }] = useQueryGraphql(categoryGraphql.getCategoryList)
+  const [getTwo, { category_list: two = [] }] = useQueryGraphql(categoryGraphql.getCategoryList)
+  const [getThree, { category_list: three = [] }] = useQueryGraphql(categoryGraphql.getCategoryList)
+  // const [getOne, { data: one }] = postQueryCommodityTypeChildren()
+  // const [getTwo, { data: two }] = postQueryCommodityTypeChildren()
+  // const [getThree, { data: three }] = postQueryCommodityTypeChildren()
   React.useEffect(() => {
     if (!data.oneCode) return
     getTwo({
-      ParentID: data.oneCode
+      parent_id: data.oneCode
     })
   }, [data.oneCode, getTwo])
   React.useEffect(() => {
     if (!data.twoCode) return
     getThree({
-      ParentID: data.twoCode
+      parent_id: data.twoCode
     })
   }, [data.twoCode, getThree])
   return [{ ...data, one, two, three }, setData, { getOne, getTwo, getThree }]
 }
 
 const dealItemToForm = item => ({
-  Active: item?.ID ? 2 : 1,
-  F_CIsHot: 0,
-  F_CIsNew: 0,
-  F_CTNameC: '',
-  F_CPUnitPriceIn: 0,
-  F_CPUnitPriceOut: 0,
-  F_CPUnitPriceMarket: 0,
-  F_CPWeight: 0,
-  F_CPCompany: '',
-  Brand: '',
-  num: item?.F_CNumber?.slice(0, 6) ?? '',
   ...item
 })
 
@@ -59,7 +53,11 @@ export const useInitState = () => {
   const [linkageData, setLinkData, { getOne, getTwo, getThree }] = useLinkage()
   const [open, setOpen] = useState(false)
   const [editData, setEditData] = useState({})
+  const [getOrigin] = useQueryGraphql(getCategoryOrigin)
   const editClick = (item) => async () => {
+    if (item.id) {
+      await getOrigin({id: item.category_id})
+    }
     setOpen(true)
     const oneList = await getOne()
     const newItem = dealItemToForm(item)
@@ -156,8 +154,6 @@ export const EditModal = (
     const dealFile = dealFiles(editData?.PhotoArray ?? [], files)
     const updateRes = await updateData({
       ...editData,
-      Brand: editData.F_CPBrand,
-      F_CTID: threeCode || twoCode || oneCode || ''
     })
     if (updateRes?.msg) {
       showMessage({ message: updateRes?.msg ?? '操作成功' })

@@ -39,17 +39,48 @@ type Mutation {
     deleteOneUser(id: String!): String
     importAllUser(data: String!): String
     save_category(Category: CategoryInput): result
+    save_product(ProductInput: ProductInput): result
     updateUser(data: UserInput!): User
     updateUserAuth(auth: String!, id: String!): String
+}
+
+type Product {
+    brand: String
+    category_id: String
+    create_time: Date
+    id: String
+    imgs: [ProductImg]
+    is_delete: Boolean
+    is_hot: Int
+    is_new: Int
+    name: String
+    number: Int
+    price_in: Float
+    price_market: Float
+    price_out: Float
+    remark: String
+    stock: Float
+    unit: String
+    update_time: Date
+    weight: Float
+}
+
+type ProductImg {
+    id: String
+    number: Int
+    url: String
 }
 
 type Query {
     allDataUser: String
     allUser(data: UserInput): [User]
     category_list(CategoryInput: CategoryInput): [Category]
+    category_origin(id: String): Category
     category_total(CategoryInput: CategoryInput): Int
     getPassCode(pass: String!): String
     oneUser(id: String!): User
+    product_list(ListInput: ProductInput): [Product]
+    product_total(ListInput: ProductInput): Int
     totalUser(data: UserInput): Int
     user: [User]
 }
@@ -65,12 +96,14 @@ type result {
     category: Category
     flag: Int
     msg: String
+    product: Product
 }
 
 input CategoryInput {
     create_time: Date
     full_parent_id: String
     id: String
+    img_url: String
     is_delete: Boolean
     is_enable: Boolean
     name: String
@@ -88,6 +121,37 @@ input ChangePassword {
     id: String
     newPass: String
     verification: String
+}
+
+input ProductImgInput {
+    id: String
+    number: Int
+    url: String
+}
+
+input ProductInput {
+    brand: String
+    category_id: String
+    create_time: Date
+    id: String
+    imgs: [ProductImgInput]
+    is_delete: Boolean
+    is_hot: Int
+    is_new: Int
+    name: String
+    number: Int
+    page: Int
+    price_in: Float
+    price_market: Float
+    price_out: Float
+    remark: String
+    rows_per_page: Int
+    sort: Int
+    sort_type: String
+    stock: Float
+    unit: String
+    update_time: Date
+    weight: Float
 }
 
 input UserInput {

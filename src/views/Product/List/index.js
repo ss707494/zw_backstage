@@ -19,7 +19,10 @@ import { ImgPreview } from "@/component/ImgPreview"
 import { CheckCircleRounded, RadioButtonUncheckedTwoTone } from '@material-ui/icons'
 import { S } from './style'
 import Link from "@material-ui/core/Link";
-import { postQueryCommodityTypeChildren } from "@/views/Category/List";
+import { categoryGraphql } from "@/views/Category/List";
+import { useQueryGraphql } from "@/component/ApolloQuery";
+import { productGraphql } from "@/views/Product/List/productGraphql";
+import { pick } from "lodash";
 
 const KEYWORD_TYPE = {
   num: '1',
@@ -32,12 +35,17 @@ const useTypeObj = () => {
     typeTwo: '',
     typeThree: '',
   })
-  const [getTypeOptionOne, { data: typeOptionOne }] = postQueryCommodityTypeChildren()
-  const [getTypeOptionTwo, { data: typeOptionTwo }] = postQueryCommodityTypeChildren()
-  const [getTypeOptionThree, { data: typeOptionThree }] = postQueryCommodityTypeChildren()
+  const [getTypeOptionOne, { category_list: typeOptionOne = [] }] = useQueryGraphql(categoryGraphql.getCategoryList)
+  const [getTypeOptionTwo, { category_list: typeOptionTwo = [] }] = useQueryGraphql(categoryGraphql.getCategoryList)
+  const [getTypeOptionThree, { category_list: typeOptionThree = [] }] = useQueryGraphql(categoryGraphql.getCategoryList)
+  // const [getTypeOptionOne, { data: typeOptionOne }] = postQueryCommodityTypeChildren()
+  // const [getTypeOptionTwo, { data: typeOptionTwo }] = postQueryCommodityTypeChildren()
+  // const [getTypeOptionThree, { data: typeOptionThree }] = postQueryCommodityTypeChildren()
 
   React.useEffect(() => {
-    getTypeOptionOne()
+    getTypeOptionOne({
+      parent_id: ''
+    })
   }, [getTypeOptionOne])
   React.useEffect(() => {
     if (!typeHelpObj.typeOne) {
@@ -48,7 +56,8 @@ const useTypeObj = () => {
       }))
     } else {
       getTypeOptionTwo({
-        ParentID: typeHelpObj.typeOne
+        parent_id: typeHelpObj.typeOne,
+        // ParentID: typeHelpObj.typeOne
       })
     }
   }, [getTypeOptionTwo, typeHelpObj.typeOne])
@@ -58,7 +67,7 @@ const useTypeObj = () => {
       ...(!typeOptionTwo?.length ? {
         res: pre.typeOne
       } : {}),
-      typeTwo: typeOptionTwo?.[0]?.F_CTID || '',
+      typeTwo: typeOptionTwo?.[0]?.id || '',
     }))
   }, [typeOptionTwo])
   React.useEffect(() => {
@@ -70,7 +79,7 @@ const useTypeObj = () => {
       }))
     } else {
       getTypeOptionThree({
-        ParentID: typeHelpObj.typeTwo
+        parent_id: typeHelpObj.typeTwo
       })
     }
   }, [getTypeOptionThree, typeHelpObj.typeTwo])
@@ -80,7 +89,7 @@ const useTypeObj = () => {
       ...(!typeOptionThree?.length ? {
         res: pre.typeTwo
       } : {}),
-      typeThree: typeOptionThree?.[0]?.F_CTID || ''
+      typeThree: typeOptionThree?.[0]?.id || ''
     }))
   }, [typeOptionThree])
   React.useEffect(() => {
@@ -125,28 +134,31 @@ export const Product = ({ theme }) => {
     open: false,
     data: []
   })
-  const [getList, listData, listLoad] = api.post('/Products/QueryCommodity')
+  const [getList, { product_list: listData = [] }, listLoad] = useQueryGraphql(productGraphql.getList)
   const [setTypeEnable] = api.post('/Products/SetCommodityEnable')
   const [exportCommodity] = api.post('/Products/ExportCommodity')
   const [importCommodity] = api.post('/Products/ImportCommodity')
   const getListData = (param = {}) => getList({
-    ...search,
-    ...pageState.pageData,
-    ...param,
-    BussinessID: '1',
+    data: {
+      ...search,
+      ...pageState.pageData,
+      ...param,
+      BussinessID: '1',
+    }
   })
   React.useEffect(() => {
     getList({
-      ...search,
-      ...pageState.pageData,
-      BussinessID: '1',
+      data: {
+        ...pick(search, ['category_id']),
+        ...pageState.pageData,
+      }
     })
   }, [getList, search, pageState.pageData])
   React.useEffect(() => {
     // if (!typeHelpObj.res) return
     setSearch(pre => ({
       ...pre,
-      F_CTID: typeHelpObj.res || '',
+      category_id: typeHelpObj.res || '',
     }))
   }, [typeHelpObj.res])
   // console.log(listData)
@@ -174,7 +186,8 @@ export const Product = ({ theme }) => {
                       showConfirm({
                         oneButton: true,
                         message: `${res.msg}`,
-                        callBack: async () => {}
+                        callBack: async () => {
+                        }
                       })
                     }
                   }}
@@ -190,7 +203,8 @@ export const Product = ({ theme }) => {
                       showConfirm({
                         oneButton: true,
                         message: `${res.msg}`,
-                        callBack: async () => {}
+                        callBack: async () => {
+                        }
                       })
                     }
                   }}
@@ -259,9 +273,9 @@ export const Product = ({ theme }) => {
               >
                 {typeOptionOne?.map(e => (
                     <MenuItem
-                        key={`typeOptionOne${e.F_CTID}`}
-                        value={e.F_CTID}
-                    >{e.F_CTNameC}</MenuItem>
+                        key={`typeOptionOne${e.id}`}
+                        value={e.id}
+                    >{e.name}</MenuItem>
                 ))}
               </CusSelect>
               <CusSelect
@@ -277,9 +291,9 @@ export const Product = ({ theme }) => {
               >
                 {typeOptionTwo?.map(e => (
                     <MenuItem
-                        key={`typeOptionTwo${e.F_CTID}`}
-                        value={e.F_CTID}
-                    >{e.F_CTNameC}</MenuItem>
+                        key={`typeOptionTwo${e.id}`}
+                        value={e.id}
+                    >{e.name}</MenuItem>
                 ))}
               </CusSelect>
               <CusSelect
@@ -295,9 +309,9 @@ export const Product = ({ theme }) => {
               >
                 {typeOptionThree?.map(e => (
                     <MenuItem
-                        key={`typeOptionThree${e.F_CTID}`}
-                        value={e.F_CTID}
-                    >{e.F_CTNameC}</MenuItem>
+                        key={`typeOptionThree${e.id}`}
+                        value={e.id}
+                    >{e.name}</MenuItem>
                 ))}
               </CusSelect>
               <span>类别排序</span>
@@ -332,25 +346,25 @@ export const Product = ({ theme }) => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {listData?.data?.map(e => <TableRow
-                      key={`TableBody${e?.ID}`}>
-                    <TableCell>{e?.F_CNumber}</TableCell>
-                    <TableCell>{e?.F_CNameC}</TableCell>
+                  {listData?.map(e => <TableRow
+                      key={`TableBody${e?.id}`}>
+                    <TableCell>{e?.number}</TableCell>
+                    <TableCell>{e?.name}</TableCell>
                     <TableCell width={240}>
                       <S.ImgPreview>
                         <img
-                            src={e?.PhotoArray?.[0]?.F_PWebPath}
+                            src={e?.imgs?.[0]?.url}
                             alt=""/>
                         <section>
-                          <div>{e?.PhotoArray?.length}/7</div>
+                          <div>{e?.imgs?.length}/7</div>
                           <Link
                               component="button"
                               color="secondary"
                               onClick={() => {
-                                if (!e?.PhotoArray?.length) return
+                                if (!e?.imgs?.length) return
                                 setPreviewImg({
                                   open: true,
-                                  data: e?.PhotoArray ?? []
+                                  data: e?.imgs ?? []
                                 })
                               }}
                           >
@@ -360,18 +374,18 @@ export const Product = ({ theme }) => {
                       </S.ImgPreview>
                     </TableCell>
                     <TableCell>
-                      {e?.F_CIsHot === 1 ? <CheckCircleRounded/> : <RadioButtonUncheckedTwoTone/>}
+                      {e?.is_hot === 1 ? <CheckCircleRounded/> : <RadioButtonUncheckedTwoTone/>}
                     </TableCell>
                     <TableCell>
-                      {e?.F_CIsNew === 1 ? <CheckCircleRounded/> : <RadioButtonUncheckedTwoTone/>}
+                      {e?.is_new === 1 ? <CheckCircleRounded/> : <RadioButtonUncheckedTwoTone/>}
                     </TableCell>
                     <TableCell>
-                      {e?.Stock}
+                      {e?.stock}
                     </TableCell>
-                    <TableCell>{e?.F_CPUnitPriceIn}</TableCell>
-                    <TableCell>{e?.F_CPUnitPriceOut}</TableCell>
-                    <TableCell>{e?.F_CPUnitPriceMarket}</TableCell>
-                    <TableCell>{e?.F_CPWeight}</TableCell>
+                    <TableCell>{e?.price_in}</TableCell>
+                    <TableCell>{e?.price_out}</TableCell>
+                    <TableCell>{e?.price_market}</TableCell>
+                    <TableCell>{e?.weight}</TableCell>
                     <TableCell>
                       <S.ActionTableCell>
                         <Button
