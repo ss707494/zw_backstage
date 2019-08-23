@@ -4,19 +4,35 @@ export const productGraphql = {
   getList: gql`
     query ($data: ProductInput) {
         product_list(ListInput: $data) {
-            id name number is_hot is_new stock price_in
-            price_market price_out weight unit
-            category_id
+            id name number is_hot is_new stock price_in is_enable
+            price_market price_out weight unit brand category_id
+            c1_id c1_number c2_id c2_name c3_id c3_name
+            c2_number c3_number
             imgs { id url number }
         }
     }
   `,
 }
+
 export const getCategoryOrigin = gql`
     query ($id: String) {
         category_origin(id: $id) {
-            id c2_id c2_name c3_id c3_name
+            id number c2_id c2_name c3_id c3_name
+            c2_number c3_number
         }
     }
 `
+
+export const save_product = gql`
+    mutation ($data: ProductInput) {
+        save_product(ProductInput: $data) {
+            msg
+            flag
+            product {
+                id
+            }
+        }
+    }
+`
+
 

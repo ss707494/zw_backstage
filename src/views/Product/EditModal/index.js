@@ -6,7 +6,6 @@ import { CusTextField } from "@/component/CusTextField";
 import { CusSelectField } from "@/component/CusSelectField";
 import MenuItem from "@material-ui/core/MenuItem";
 import { CusButton } from "@/component/CusButton";
-import { api } from "@/common/api";
 import { showMessage } from "@/component/Message";
 import { FormControl } from "@material-ui/core";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -15,8 +14,9 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import { ImgUpload } from "@/component/ImgUpload";
 import { fileUploadAjax } from "@/common/utils";
 import { categoryGraphql } from "@/views/Category/List";
-import { useQueryGraphql } from "@/component/ApolloQuery";
-import { getCategoryOrigin } from "@/views/Product/List/productGraphql";
+import { useMutationGraphql, useQueryGraphql } from "@/component/ApolloQuery";
+import { save_product } from "@/views/Product/List/productGraphql";
+import { pick } from "lodash";
 
 const useLinkage = () => {
   const [data, setData] = useState({
@@ -45,59 +45,38 @@ const useLinkage = () => {
   return [{ ...data, one, two, three }, setData, { getOne, getTwo, getThree }]
 }
 
-const dealItemToForm = item => ({
-  ...item
-})
+const dealItemToForm = item => item
 
 export const useInitState = () => {
   const [linkageData, setLinkData, { getOne, getTwo, getThree }] = useLinkage()
   const [open, setOpen] = useState(false)
   const [editData, setEditData] = useState({})
-  const [getOrigin] = useQueryGraphql(getCategoryOrigin)
   const editClick = (item) => async () => {
-    if (item.id) {
-      await getOrigin({id: item.category_id})
-    }
     setOpen(true)
-    const oneList = await getOne()
+    await getOne({
+      parent_id: ''
+    })
     const newItem = dealItemToForm(item)
-    setEditData(newItem)
     // 存在类型
-    if (newItem.F_CTID && newItem.F_CNumber) {
-      const gradeArr = [
-        newItem.F_CNumber[0] + newItem.F_CNumber[1],
-        newItem.F_CNumber.slice(0, 4),
-        // newItem.F_CNumber[2] + newItem.F_CNumber[3],
-        newItem.F_CNumber.slice(0, 6),
-        // newItem.F_CNumber[4] + newItem.F_CNumber[5],
-      ]
-      const oneCode = oneList?.data?.find(e => e.F_CTNumber === gradeArr[0])?.F_CTID
-      const twoList = await getTwo({
-        Type: 2,
-        F_CTNumber: gradeArr[0]
+    if (item.category_id) {
+      // const { category_origin: { c1_id, c1_number, c2_id, c3_id, c2_number, c3_number } } = await getOrigin({ id: item.category_id })
+      await getTwo({
+        parent_id: item.c3_id
       })
-      const twoCode = twoList?.data?.find(e => e.F_CTNumber === gradeArr[1])?.F_CTID
-      const threeList = await getThree({
-        Type: 2,
-        F_CTNumber: gradeArr[1]
+      await getThree({
+        parent_id: item.c2_id
       })
-      const threeCode = threeList?.data?.find(e => e.F_CTNumber === gradeArr[2])?.F_CTID
+      setEditData({
+        ...newItem,
+        num: (`${item.c3_number}-${item.c2_number}-${item.c1_number}-${item.number ?? ''}`)
+      })
       setLinkData({
-        oneCode,
-        twoCode,
-        threeCode
+        oneCode: item.c3_id,
+        twoCode: item.c2_id,
+        threeCode: item.c1_id
       })
-
-      // if (gradeArr.length === 3) {
-      //   setLinkData({
-      //     oneCode: linkageData.one.find(e => e.F_CTNumber === gradeArr[0])?.F_CTID,
-      //     twoCode: newItem.ParentID,
-      //   })
-      // } else {
-      //   setLinkData({
-      //     oneCode: newItem.ParentID,
-      //   })
-      // }
+    } else {
+      setEditData(newItem)
     }
   }
   return {
@@ -123,23 +102,12 @@ export const EditModal = (
       refreshData = () => {
       }
     }) => {
-  const [updateData, , updateLoading] = api.post('/Products/UpdateCommodity')
+  const [updateData, , updateLoading] = useMutationGraphql(save_product)
   const [typeNum, setTypeNum] = useState({
     oneNum: '',
     twoNum: '',
     threeNum: '',
   })
-  const dealFiles = (PhotoArray, files) =>
-      Object.keys(files).reduce((i, e) => ({
-        IDs: [
-          ...i.IDs ?? [],
-          PhotoArray?.[e]?.F_PID ?? '',
-        ],
-        file: [
-          ...i.file ?? [],
-          files[e],
-        ]
-      }), {})
   const handleClose = () => {
     setLinkData({
       oneCode: '',
@@ -151,31 +119,48 @@ export const EditModal = (
     setEditData({})
   }
   const handleSave = async () => {
-    const dealFile = dealFiles(editData?.PhotoArray ?? [], files)
-    const updateRes = await updateData({
-      ...editData,
-    })
-    if (updateRes?.msg) {
-      showMessage({ message: updateRes?.msg ?? '操作成功' })
+    const filesKey = Object.keys(files);
+    let imgs
+    if (filesKey.length) {
+      const uploadRes = await fileUploadAjax({}, filesKey.map(e => files[e]), '/api/fileUpload')
+      imgs = uploadRes?.data?.files?.map((e, i) => ({
+        number: ~~filesKey[i],
+        url: e?.url,
+        name: e?.originalName
+      })) ?? []
     }
-    if (updateRes.result && updateRes?.data) {
-      if (dealFile?.IDs) {
-        await fileUploadAjax({
-          Type: 1,
-          BussinessID: updateRes?.data?.F_CNumber,
-          IDs: dealFile.IDs.join(',')
-        }, dealFile.file, '/Products/UpLoadPicture')
+    // const dealFile = dealFiles(editData?.PhotoArray ?? [], files)
+    const { save_product } = await updateData({
+      data: {
+        ...pick(editData, [
+          'id', 'name', 'remark', 'is_hot', 'is_new', 'stock', 'unit',
+          'weight', 'price_in', 'price_out', 'price_market', 'brand',
+        ]),
+        category_id: threeCode,
+        imgs
       }
-      refreshData()
+    })
+    if (save_product.flag) {
+      showMessage({ message: save_product?.msg || '操作成功' })
       handleClose()
+      refreshData()
     }
   }
   React.useEffect(() => {
+    setTypeNum({
+      oneNum: editData.c3_number ?? '',
+      twoNum: editData.c2_number ?? '',
+      threeNum: editData.c1_number ?? '',
+    })
+  }, [editData.c1_number, editData.c2_number, editData.c3_number])
+  React.useEffect(() => {
+    if (!typeNum.oneNum && !typeNum.twoNum && !typeNum.threeNum) return
+
     setEditData(pre => ({
       ...pre,
-      num: (typeNum.threeNum || typeNum.twoNum || typeNum.oneNum) || ''
+      num: `${typeNum.oneNum}-${typeNum.twoNum}-${typeNum.threeNum}-${editData.number ?? ''}` || ''
     }))
-  }, [setEditData, typeNum])
+  }, [editData.number, setEditData, typeNum])
   const [files, setFiles] = useState({})
   const handleUploadChange = n => file => {
     setFiles({
@@ -219,10 +204,10 @@ export const EditModal = (
             >
               {one?.map(e => (
                   <MenuItem
-                      key={`typeOptionOne${e.F_CTID}`}
-                      value={e?.F_CTID}
-                      num={e?.F_CTNumber}
-                  >{e.F_CTNameC}</MenuItem>
+                      key={`typeOptionOne${e.id}`}
+                      value={e?.id}
+                      num={e?.number}
+                  >{e.name}</MenuItem>
               ))}
             </CusSelectField>
             <CusSelectField
@@ -243,10 +228,10 @@ export const EditModal = (
             >
               {two?.map(e => (
                   <MenuItem
-                      key={`typeOptionOne${e.F_CTID}`}
-                      value={e.F_CTID}
-                      num={e?.F_CTNumber}
-                  >{e.F_CTNameC}</MenuItem>
+                      key={`typeOptionOne${e.id}`}
+                      value={e.id}
+                      num={e?.number}
+                  >{e.name}</MenuItem>
               ))}
             </CusSelectField>
             <CusSelectField
@@ -266,18 +251,18 @@ export const EditModal = (
             >
               {three?.map(e => (
                   <MenuItem
-                      key={`typeOptionOne${e.F_CTID}`}
-                      value={e.F_CTID}
-                      num={e?.F_CTNumber}
-                  >{e.F_CTNameC}</MenuItem>
+                      key={`typeOptionOne${e.id}`}
+                      value={e.id}
+                      num={e?.number}
+                  >{e.name}</MenuItem>
               ))}
             </CusSelectField>
             <CusTextField
                 label="中文名称"
-                value={editData.F_CNameC}
+                value={editData.name}
                 onChange={e => setEditData({
                   ...editData,
-                  F_CNameC: e.target.value
+                  name: e.target.value
                 })}
             />
             <SText.TextFieldBox
@@ -290,10 +275,10 @@ export const EditModal = (
               <FormControlLabel
                   control={
                     <Checkbox
-                        checked={!!editData.F_CIsNew || false}
+                        checked={!!editData.is_new || false}
                         onChange={e => setEditData({
                           ...editData,
-                          F_CIsNew: e.target.checked ? 1 : 0
+                          is_new: e.target.checked ? 1 : 0
                         })}
                     />
                   }
@@ -302,10 +287,10 @@ export const EditModal = (
               <FormControlLabel
                   control={
                     <Checkbox
-                        checked={!!editData.F_CIsHot ?? false}
+                        checked={!!editData.is_hot ?? false}
                         onChange={e => setEditData({
                           ...editData,
-                          F_CIsHot: e.target.checked ? 1 : 0
+                          is_hot: e.target.checked ? 1 : 0
                         })}
                     />
                   }
@@ -315,70 +300,70 @@ export const EditModal = (
             <CusTextField
                 label="库存"
                 type="number"
-                value={editData.Stock}
+                value={editData.stock}
                 onChange={e => setEditData({
                   ...editData,
-                  Stock: e.target.value
+                  stock: parseFloat(e.target.value)
                 })}
             />
             <CusTextField
                 label="进货价格"
                 type="number"
-                value={editData.F_CPUnitPriceIn}
+                value={editData.price_in}
                 onChange={e => setEditData({
                   ...editData,
-                  F_CPUnitPriceIn: e.target.value
+                  price_in: parseFloat(e.target.value)
                 })}
             />
             <CusTextField
                 label="品牌名称"
-                value={editData.F_CPBrand}
+                value={editData.brand}
                 onChange={e => setEditData({
                   ...editData,
-                  F_CPBrand: e.target.value
+                  brand: e.target.value
                 })}
             />
             <CusTextField
                 label="市场价格"
                 type="number"
-                value={editData.F_CPUnitPriceMarket}
+                value={editData.price_market}
                 onChange={e => setEditData({
                   ...editData,
-                  F_CPUnitPriceMarket: e.target.value
+                  price_market: parseFloat(e.target.value)
                 })}
             />
             <CusTextField
                 label="售卖价格"
                 type="number"
-                value={editData.F_CPUnitPriceOut}
+                value={editData.price_out}
                 onChange={e => setEditData({
                   ...editData,
-                  F_CPUnitPriceOut: e.target.value
+                  price_out: parseFloat(e.target.value)
                 })}
             />
             <S.FieldTwoBox>
               <CusTextField
                   label="重量"
                   type="number"
-                  value={editData.F_CPWeight}
+                  value={editData.weight}
                   onChange={e => setEditData({
                     ...editData,
-                    F_CPWeight: e.target.value
+                    weight: parseFloat(e.target.value)
                   })}
               />
               <CusSelectField
                   label="单位"
-                  value={editData.F_CPCompany}
+                  value={editData.unit}
                   onChange={e => setEditData({
                     ...editData,
-                    F_CPCompany: e.target.value
+                    unit: e.target.value
                   })}
               >
                 {[
                   ['g', '克/g']
                 ]?.map(e => (
                     <MenuItem
-                        key={`F_CPCompany${e[0]}`}
+                        key={`unit${e[0]}`}
                         value={e[0]}
                     >{e[1]}</MenuItem>
                 ))}
@@ -392,11 +377,10 @@ export const EditModal = (
                   htmlFor="imgUpload"
               >上传图片</InputLabel>
               <S.UploadBox>
-                {[...Array(7).keys()].map(e =>
-                    <ImgUpload
-                        key={`ImgUpload${e}`}
-                        initSrc={editData?.PhotoArray?.[e]?.F_PWebPath ?? ''}
-                        onChange={handleUploadChange(e)}/>)}
+                {[...Array(7).keys()].map(e => <ImgUpload
+                    key={`ImgUpload${e}`}
+                    initSrc={editData?.imgs && editData?.imgs?.find(e1 => e1.number === ~~e)?.url ?? ''}
+                    onChange={handleUploadChange(e)}/>)}
                 <span>最多支持上传7张图片,每张图片大小不超过1m,文件格式仅支持PNG/JPG</span>
               </S.UploadBox>
             </S.UploadFormControl>

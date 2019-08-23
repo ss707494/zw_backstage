@@ -7,16 +7,12 @@ import TableBody from "@material-ui/core/TableBody";
 import { CusSelect } from '@/component/CusSelect'
 import { Pagination, useInitState as useInitPageData } from '@/component/Pagination'
 import { EditModal, useInitState } from '../EditModal'
-import { api } from '@/common/api'
 import { CusButton as Button } from '@/component/CusButton'
 import { CusTableCell as TableCell } from '@/component/CusTableCell'
 import { showConfirm } from "@/component/ConfirmDialog";
 import { gql } from "apollo-boost";
-import { useQueryGraphql } from "@/component/ApolloQuery";
-
-const defaultOption = {
-  Type: 1
-}
+import { useMutationGraphql, useQueryGraphql } from "@/component/ApolloQuery";
+import { save_category } from "@/views/Category/category.graphql";
 
 const dealSort = sort => {
   const _sortHelp = {
@@ -63,6 +59,7 @@ export const categoryGraphql = {
               p3_name
               p3_id
               img_url
+              is_enable
           }
           category_total(CategoryInput: {
               parent_id: $parent_id
@@ -72,9 +69,8 @@ export const categoryGraphql = {
   `
 }
 
-export const postQueryCommodityTypeChildren = () => api.post('/Products/QueryCommodityTypeChildren', defaultOption)
-
 export const Category = ({ theme }) => {
+  console.log('test loop')
   const pageState = useInitPageData()
   const editModalState = useInitState()
   const { editClick } = editModalState
@@ -86,7 +82,7 @@ export const Category = ({ theme }) => {
 
   const [getList, { category_list: listData = [], category_total: total }, listLoad] = useQueryGraphql(categoryGraphql.getCategoryList)
   const [getTypeOptionTwo, { category_list: typeOptionTwo = [] }] = useQueryGraphql(categoryGraphql.getCategoryList)
-  const [setTypeEnable] = api.post('/Products/SetCommodityTypeEnable')
+  const [setTypeEnable] = useMutationGraphql(save_category)
 
   const getListData = (param = {}) => {
     return getList({
@@ -232,22 +228,24 @@ export const Category = ({ theme }) => {
                             variant="contained"
                         >编辑</Button>
                         <Button
-                            color={e?.Entry?.F_CTIsEnable ? 'primary' : 'default'}
+                            color={e?.is_enable ? 'primary' : 'default'}
                             variant="contained"
                             onClick={() => {
                               showConfirm({
-                                message: `确定${e?.Entry?.F_CTIsEnable ? '停用' : '启用'}该类别吗`,
+                                message: `确定${e?.is_enable ? '停用' : '启用'}该类别吗`,
                                 callBack: async res => {
                                   if (!res) return
                                   await setTypeEnable({
-                                    ID: e.Entry?.F_CTID,
-                                    IsEnable: e?.Entry?.F_CTIsEnable ? 0 : 1
+                                    data: {
+                                      id: e.id,
+                                      is_enable: e?.is_enable ? 0 : 1
+                                    },
                                   })
                                   getListData()
                                 }
                               });
                             }}
-                        >{e?.Entry?.F_CTIsEnable ? '停用' : '启用'}</Button>
+                        >{e?.is_enable ? '停用' : '启用'}</Button>
                       </S.ActionTableCell>
                     </TableCell>
                   </TableRow>)

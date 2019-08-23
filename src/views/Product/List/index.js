@@ -20,9 +20,8 @@ import { CheckCircleRounded, RadioButtonUncheckedTwoTone } from '@material-ui/ic
 import { S } from './style'
 import Link from "@material-ui/core/Link";
 import { categoryGraphql } from "@/views/Category/List";
-import { useQueryGraphql } from "@/component/ApolloQuery";
-import { productGraphql } from "@/views/Product/List/productGraphql";
-import { pick } from "lodash";
+import { useMutationGraphql, useQueryGraphql } from "@/component/ApolloQuery";
+import { productGraphql, save_product } from "@/views/Product/List/productGraphql";
 
 const KEYWORD_TYPE = {
   num: '1',
@@ -35,9 +34,9 @@ const useTypeObj = () => {
     typeTwo: '',
     typeThree: '',
   })
-  const [getTypeOptionOne, { category_list: typeOptionOne = [] }] = useQueryGraphql(categoryGraphql.getCategoryList)
-  const [getTypeOptionTwo, { category_list: typeOptionTwo = [] }] = useQueryGraphql(categoryGraphql.getCategoryList)
-  const [getTypeOptionThree, { category_list: typeOptionThree = [] }] = useQueryGraphql(categoryGraphql.getCategoryList)
+  const [getTypeOptionOne, { category_list: typeOptionOne }] = useQueryGraphql(categoryGraphql.getCategoryList)
+  const [getTypeOptionTwo, { category_list: typeOptionTwo }] = useQueryGraphql(categoryGraphql.getCategoryList)
+  const [getTypeOptionThree, { category_list: typeOptionThree }] = useQueryGraphql(categoryGraphql.getCategoryList)
   // const [getTypeOptionOne, { data: typeOptionOne }] = postQueryCommodityTypeChildren()
   // const [getTypeOptionTwo, { data: typeOptionTwo }] = postQueryCommodityTypeChildren()
   // const [getTypeOptionThree, { data: typeOptionThree }] = postQueryCommodityTypeChildren()
@@ -126,30 +125,32 @@ export const Product = ({ theme }) => {
     value: '',
   })
   const [search, setSearch] = React.useState({
-    keywordType: KEYWORD_TYPE.num,
-    type: '',
-    SortType: 1,
+    sort_type: '',
   })
   const [previewImg, setPreviewImg] = React.useState({
     open: false,
     data: []
   })
-  const [getList, { product_list: listData = [] }, listLoad] = useQueryGraphql(productGraphql.getList)
-  const [setTypeEnable] = api.post('/Products/SetCommodityEnable')
+  const [getList, { product_list }, listLoad] = useQueryGraphql(productGraphql.getList)
+  const listData = product_list?.length ? product_list : []
+
+  const [updateData] = useMutationGraphql(save_product)
+
   const [exportCommodity] = api.post('/Products/ExportCommodity')
   const [importCommodity] = api.post('/Products/ImportCommodity')
   const getListData = (param = {}) => getList({
     data: {
       ...search,
       ...pageState.pageData,
+      category_id: search?.category_id ? search?.category_id : null,
       ...param,
-      BussinessID: '1',
     }
   })
   React.useEffect(() => {
     getList({
       data: {
-        ...pick(search, ['category_id']),
+        ...search,
+        category_id: search?.category_id ? search?.category_id : null,
         ...pageState.pageData,
       }
     })
@@ -249,8 +250,8 @@ export const Product = ({ theme }) => {
               <Button
                   onClick={() => setSearch({
                     ...search,
-                    F_CNameC: keywordObj.type === KEYWORD_TYPE.name ? keywordObj.value : '',
-                    F_CNumber: keywordObj.type === KEYWORD_TYPE.num ? keywordObj.value : '',
+                    name: keywordObj.type === KEYWORD_TYPE.name ? keywordObj.value : null,
+                    number: keywordObj.type === KEYWORD_TYPE.num ? parseInt(keywordObj.value) : null,
                   })}
                   variant="contained"
                   color="secondary"
@@ -315,20 +316,31 @@ export const Product = ({ theme }) => {
                 ))}
               </CusSelect>
               <span>类别排序</span>
-              <CusSelect
-                  placeholder="选择排序"
-                  value={search.SortType}
-                  onChange={(v) => {
-                    setSearch({
-                      ...search,
-                      SortType: v.target.value,
-                    })
-                  }}
-              >
-                <MenuItem value={1}>按产品创建/修改时间</MenuItem>
-                <MenuItem value={2}>商品编号</MenuItem>
-                <MenuItem value={3}>库存倒序</MenuItem>
-              </CusSelect>
+              {
+                (() => {
+                  const _order = [
+                    ['create_time desc', '按产品创建/修改时间'],
+                    ['number asc', '商品编号'],
+                    ['stock desc', '库存倒序'],
+                  ];
+                  return <CusSelect
+                      placeholder="选择排序"
+                      value={search.sort_type}
+                      onChange={(v) => {
+                        setSearch({
+                          ...search,
+                          sort_type: v.target.value,
+                        })
+                      }}
+                  >
+                    {
+                      _order.map(e => <MenuItem
+                          key={`sort_type${e[0]}`}
+                          value={e[0]}>{e[1]}</MenuItem>)
+                    }
+                  </CusSelect>;
+                })()
+              }
             </S.SearchBox>
           </S.HeaderBox>
         </header>
@@ -399,22 +411,24 @@ export const Product = ({ theme }) => {
                             variant="contained"
                         >补货</Button>
                         <Button
-                            color={e?.Entry?.F_CTIsEnable ? 'primary' : 'default'}
+                            color={e?.is_enable ? 'primary' : 'default'}
                             variant="contained"
                             onClick={() => {
                               showConfirm({
-                                message: `确定${e?.Entry?.F_CTIsEnable ? '停用' : '启用'}该商品吗`,
+                                message: `确定${e?.is_enable ? '停用' : '启用'}该商品吗`,
                                 callBack: async res => {
                                   if (!res) return
-                                  await setTypeEnable({
-                                    ID: e?.ID,
-                                    IsEnable: e?.F_CIsEnable ? 0 : 1
+                                  await updateData({
+                                    data: {
+                                      id: e?.id,
+                                      is_enable: e?.is_enable ? 0 : 1
+                                    }
                                   })
                                   getListData()
                                 }
                               });
                             }}
-                        >{e?.Entry?.F_CTIsEnable ? '停用' : '启用'}</Button>
+                        >{e?.is_enable ? '停用' : '启用'}</Button>
                       </S.ActionTableCell>
                     </TableCell>
                   </TableRow>)

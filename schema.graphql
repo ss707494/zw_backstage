@@ -14,14 +14,16 @@ interface listSearch {
 type Category {
     c2_id: String
     c2_name: String
+    c2_number: String
     c3_id: String
     c3_name: String
+    c3_number: String
     create_time: Date
     full_parent_id: String
     id: String
     img_url: String
     is_delete: Boolean
-    is_enable: Boolean
+    is_enable: Int
     name: String
     number: Int
     p2_id: String
@@ -46,11 +48,21 @@ type Mutation {
 
 type Product {
     brand: String
+    c1_id: String
+    c1_name: String
+    c1_number: String
+    c2_id: String
+    c2_name: String
+    c2_number: String
+    c3_id: String
+    c3_name: String
+    c3_number: String
     category_id: String
     create_time: Date
     id: String
     imgs: [ProductImg]
     is_delete: Boolean
+    is_enable: Int
     is_hot: Int
     is_new: Int
     name: String
@@ -67,7 +79,9 @@ type Product {
 
 type ProductImg {
     id: String
+    name: String
     number: Int
+    product_id: String
     url: String
 }
 
@@ -105,7 +119,7 @@ input CategoryInput {
     id: String
     img_url: String
     is_delete: Boolean
-    is_enable: Boolean
+    is_enable: Int
     name: String
     number: Int
     page: Int
@@ -125,6 +139,7 @@ input ChangePassword {
 
 input ProductImgInput {
     id: String
+    name: String
     number: Int
     url: String
 }
@@ -136,6 +151,7 @@ input ProductInput {
     id: String
     imgs: [ProductImgInput]
     is_delete: Boolean
+    is_enable: Int
     is_hot: Int
     is_new: Int
     name: String

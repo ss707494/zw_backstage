@@ -15,11 +15,11 @@ export const ImgPreview = ({ open, closeModal, data = [] }) => {
         <Carousel
         >
           {data?.map(e => <Img
-              key={`Carousel${e?.ID}`}
+              key={`Carousel${e?.id}`}
           >
             <img
                 alt=""
-                src={e?.F_PWebPath}/>
+                src={e?.url}/>
           </Img>)}
         </Carousel>
       </Box>

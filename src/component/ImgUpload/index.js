@@ -11,6 +11,11 @@ export const ImgUpload = (
     }) => {
 
   const [imgSrc, setImgSrc] = React.useState(initSrc)
+  React.useEffect(() => {
+    if (initSrc) {
+      setImgSrc(initSrc)
+    }
+  }, [initSrc])
   return (
       <S.ImgUpload>
         <Upload

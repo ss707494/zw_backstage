@@ -1,7 +1,7 @@
 import React from 'react'
 import ApolloClient from 'apollo-boost'
 import { ApolloProvider } from '@apollo/react-hooks'
-import { getToken, setToken } from '@/common/token'
+import { getToken } from '@/common/token'
 import history from '@/common/history'
 import { showMessage } from '@/component/Message'
 
@@ -26,15 +26,15 @@ export const wrapperApollo = (el) => {
       }
     }));
   }
-
-  const response = (res, operation) => {
-    const { response: { headers } } = operation.getContext();
-    if (headers.has('refreshtoken')) {
-      const { token, refreshtoken } = JSON.parse(headers.get('refreshtoken'))
-      setToken(token)
-      setToken(refreshtoken, 'refreshtoken')
-    }
-  }
+  //
+  // const response = (res, operation) => {
+  //   const { response: { headers } } = operation.getContext();
+  //   if (headers.has('refreshtoken')) {
+  //     const { token, refreshtoken } = JSON.parse(headers.get('refreshtoken'))
+  //     setToken(token)
+  //     setToken(refreshtoken, 'refreshtoken')
+  //   }
+  // }
 
   const onError = ({ graphQLErrors, networkError }) => {
     if (graphQLErrors) {
@@ -60,7 +60,7 @@ export const wrapperApollo = (el) => {
     uri: "/api",
     request,
     onError,
-    response,
+    // response,
     // link: createHttpLink({ uri: "/sdfsf" }),
   });
 
@@ -72,6 +72,5 @@ export const wrapperApollo = (el) => {
 }
 
 export default {
-  client,
   wrapperApollo,
 }

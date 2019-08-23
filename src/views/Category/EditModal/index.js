@@ -8,11 +8,11 @@ import { CusButton } from "@/component/CusButton";
 import { showMessage } from "@/component/Message";
 import { categoryGraphql } from "@/views/Category/List";
 import { useMutationGraphql, useQueryGraphql } from "@/component/ApolloQuery";
-import { gql } from "apollo-boost";
 import { FormControl } from "@material-ui/core";
 import InputLabel from "@material-ui/core/InputLabel";
 import { ImgUpload } from "@/component/ImgUpload";
 import { fileUploadAjax } from "@/common/utils";
+import { save_category } from "@/views/Category/category.graphql";
 
 const useLinkage = () => {
   const [data, setData] = useState({
@@ -100,20 +100,9 @@ export const EditModal = (
   const handleUploadChange = file => {
     setImgFile(file)
   }
-  console.log(imgFile)
+  // console.log(imgFile)
 
-  const [updateData, , updateLoading] = useMutationGraphql(gql`
-      mutation ($data: CategoryInput){
-          save_category(Category: $data) {
-              flag
-              msg
-              category {
-                  id
-                  name
-              }
-          }
-      }
-  `)
+  const [updateData, , updateLoading] = useMutationGraphql(save_category)
 
   const handleClose = () => {
     setImgFile(null)

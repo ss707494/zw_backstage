@@ -7,7 +7,8 @@ import { api } from "@/common/api";
 import { showMessage } from "@/component/Message";
 
 const dealItemToForm = item => ({
-  ID: item.ID,
+  id: item.id,
+  stock: item.stock,
 })
 
 export const useInitState = () => {
@@ -63,10 +64,10 @@ export const AddNumberModal = (
           <form>
             <CusTextField
                 label="补货数量"
-                value={editData.Count}
+                value={editData.stock}
                 onChange={e => setEditData({
                   ...editData,
-                  Count: e.target.value
+                  stock: parseFloat(e.target.value)
                 })}
             />
             <CusTextField
