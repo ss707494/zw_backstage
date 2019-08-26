@@ -131,7 +131,7 @@ export const Product = ({ theme }) => {
     open: false,
     data: []
   })
-  const [getList, { product_list }, listLoad] = useQueryGraphql(productGraphql.getList)
+  const [getList, { product_list, product_total }, listLoad] = useQueryGraphql(productGraphql.getList)
   const listData = product_list?.length ? product_list : []
 
   const [updateData] = useMutationGraphql(save_product)
@@ -438,7 +438,7 @@ export const Product = ({ theme }) => {
           }
           <Pagination
               {...pageState}
-              count={~~listData?.maxCount}
+              count={~~product_total}
           />
         </main>
         <EditModal

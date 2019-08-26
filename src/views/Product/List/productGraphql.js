@@ -10,6 +10,7 @@ export const productGraphql = {
             c2_number c3_number
             imgs { id url number }
         }
+        product_total(ListInput: $data)
     }
   `,
 }
