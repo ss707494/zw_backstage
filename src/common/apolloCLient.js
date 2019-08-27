@@ -1,7 +1,7 @@
 import React from 'react'
 import ApolloClient from 'apollo-boost'
 import { ApolloProvider } from '@apollo/react-hooks'
-import { getToken } from '@/common/token'
+import { getToken, setToken } from '@/common/token'
 import history from '@/common/history'
 import { showMessage } from '@/component/Message'
 
@@ -21,20 +21,12 @@ export const wrapperApollo = (el) => {
     operation.setContext(({ headers = {} }) => ({
       headers: {
         ...headers,
-        Authorization: getToken(),
+        // 后台万能权限
+        Authorization: getToken() || 'universal_token_ss',
         refreshtoken: getToken('refreshtoken'),
       }
     }));
   }
-  //
-  // const response = (res, operation) => {
-  //   const { response: { headers } } = operation.getContext();
-  //   if (headers.has('refreshtoken')) {
-  //     const { token, refreshtoken } = JSON.parse(headers.get('refreshtoken'))
-  //     setToken(token)
-  //     setToken(refreshtoken, 'refreshtoken')
-  //   }
-  // }
 
   const onError = ({ graphQLErrors, networkError }) => {
     if (graphQLErrors) {
@@ -49,8 +41,27 @@ export const wrapperApollo = (el) => {
     if (networkError) {
       console.log(`[Network error]: ${networkError.bodyText}`);
       if (networkError.statusCode === 401) {
-        showMessage({ message: '请重新登录' })
-        history.push('/login')
+        if (networkError.bodyText.includes('first') && getToken('refreshtoken')) {
+          axios.post('/api/getTokenRefresh', {
+            refreshtoken: getToken('refreshtoken')
+          }).then(res => {
+            if (res.data?.token) {
+              setToken(res.data.token)
+              setToken(res.data.refreshtoken, 'refreshtoken')
+              window.location.reload()
+            } else {
+              showMessage({ message: '请重新登录' })
+              history.push('/login')
+            }
+          }).catch(err => {
+            console.log(err)
+            showMessage({ message: '请重新登录' })
+            history.push('/login')
+          })
+        } else {
+          showMessage({ message: '请重新登录' })
+          history.push('/login')
+        }
       }
     }
   }

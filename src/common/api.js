@@ -10,13 +10,13 @@ api.ajax = type => (url, option) => {
       ...option,
       ...params
     }
-    const formData = new FormData()
-    Object.keys(_params).forEach(e => {
-      formData.set(e, _params[e])
-    })
-    setLoading(true)
-    const res = await axios[type](url, formData, {
-      headers: { 'Content-Type': 'multipart/form-data' }
+    // const formData = new FormData()
+    // Object.keys(_params).forEach(e => {
+    //   formData.set(e, _params[e])
+    // })
+    // setLoading(true)
+    const res = await axios[type](url, _params, {
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' }
     })
         .catch(e => {
           setError(e)
