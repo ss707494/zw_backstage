@@ -70,7 +70,6 @@ export const categoryGraphql = {
 }
 
 export const Category = ({ theme }) => {
-  console.log('test loop')
   const pageState = useInitPageData()
   const editModalState = useInitState()
   const { editClick } = editModalState

@@ -22,7 +22,7 @@ export const wrapperApollo = (el) => {
       headers: {
         ...headers,
         // 后台万能权限
-        Authorization: getToken() || 'universal_token_ss',
+        Authorization: getToken(),
         refreshtoken: getToken('refreshtoken'),
       }
     }));
@@ -31,7 +31,7 @@ export const wrapperApollo = (el) => {
   const onError = ({ graphQLErrors, networkError }) => {
     if (graphQLErrors) {
       graphQLErrors.forEach(({ message, locations, path }) => {
-        console.log(
+        ssLog(
             `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
         )
         showMessage({ message })
@@ -39,9 +39,10 @@ export const wrapperApollo = (el) => {
     }
 
     if (networkError) {
-      console.log(`[Network error]: ${networkError.bodyText}`);
+      const errMsg = networkError.bodyText ?? networkError.result.error ?? ''
+      ssLog(`[Network error]: ${errMsg}`);
       if (networkError.statusCode === 401) {
-        if (networkError.bodyText.includes('first') && getToken('refreshtoken')) {
+        if (errMsg.includes('first') && getToken('refreshtoken')) {
           axios.post('/api/getTokenRefresh', {
             refreshtoken: getToken('refreshtoken')
           }).then(res => {
@@ -54,7 +55,7 @@ export const wrapperApollo = (el) => {
               history.push('/login')
             }
           }).catch(err => {
-            console.log(err)
+            ssLog(err)
             showMessage({ message: '请重新登录' })
             history.push('/login')
           })
