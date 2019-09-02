@@ -1,3 +1,5 @@
+import { getToken } from "@/common/token";
+
 export const getObjectURL = file => {
   return  window?.createObjectURL?.(file)
       ?? window?.URL?.createObjectURL?.(file)
@@ -17,6 +19,9 @@ export const fileUploadAjax = (data, files, url, option) => {
     })
   }
   return axios.post(url, formData, {
+    headers: {
+      authorization: getToken(),
+    },
     ...option
   })
 }
