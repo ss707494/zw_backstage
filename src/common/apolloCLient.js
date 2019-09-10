@@ -49,6 +49,8 @@ export const wrapperApollo = (el) => {
             if (res.data?.token) {
               setToken(res.data.token)
               setToken(res.data.refreshtoken, 'refreshtoken')
+
+              showMessage({ message: '登录超时,刷新登录信息' })
               window.location.reload()
             } else {
               showMessage({ message: '请重新登录' })
