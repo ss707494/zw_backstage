@@ -11,6 +11,23 @@ interface listSearch {
     sort_type: String
 }
 
+type Address {
+    address: String
+    city: String
+    contact_information: String
+    contact_user_name: String
+    create_time: String
+    district: String
+    id: String
+    is_default: Int
+    is_delete: Int
+    name: String
+    province: String
+    update_time: Date
+    user_id: String
+    zip: String
+}
+
 type Category {
     c2_id: String
     c2_name: String
@@ -22,7 +39,7 @@ type Category {
     full_parent_id: String
     id: String
     img_url: String
-    is_delete: Boolean
+    is_delete: Int
     is_enable: Int
     name: String
     number: Int
@@ -37,13 +54,62 @@ type Category {
 }
 
 type Mutation {
+    addToShopCart(ShopCartInput: ShopCartInput): result
     changePassword(data: ChangePassword!): String
     deleteOneUser(id: String!): String
     importAllUser(data: String!): String
+    remove_all_shop_cart(ids: [String!]!): result
+    remove_shop_cart(id: String!): result
+    save_address(editAddressInput: EditAddressInput): result
     save_category(Category: CategoryInput): result
+    save_order(saveOrderInput: SaveOrderInput): result
+    save_pay_card(editPayCardInput: EditPayCardInput): result
     save_product(ProductInput: ProductInput): result
+    save_shop_cart(SaveShopCartInput: SaveShopCartInput): result
+    set_default_address(defaultId: String!): result
+    set_default_pay_card(defaultId: String!): result
     updateUser(data: UserInput!): User
     updateUserAuth(auth: String!, id: String!): String
+    update_password(changePasswordInput: ChangePasswordInput!): result
+    update_user_info(updateUserInfo: UpdateUserInfoInput): result
+}
+
+type Order {
+    actually_paid: Float
+    address: Address
+    address_id: String
+    coupon_discount: Float
+    create_time: Date
+    id: String
+    is_delete: Int
+    name: String
+    number: String
+    payment_method: PayCard
+    payment_method_card_id: String
+    product: [Product]
+    sale_tax: Float
+    state: Int
+    subtotal: Float
+    transportation_costs: Float
+    update_time: Date
+    vip_discount: Float
+}
+
+type PayCard {
+    address_detail: String
+    city: String
+    code: String
+    contact: String
+    create_time: String
+    id: String
+    is_default: Int
+    is_delete: Int
+    name: String
+    number: String
+    update_time: Date
+    user_id: String
+    user_name: String
+    zip_code: String
 }
 
 type Product {
@@ -59,18 +125,23 @@ type Product {
     c3_number: String
     category_id: String
     create_time: Date
+    group_amount: Int
+    group_precision: Int
     id: String
     imgs: [ProductImg]
-    is_delete: Boolean
+    is_delete: Int
     is_enable: Int
+    is_group: Int
     is_hot: Int
     is_new: Int
     name: String
     number: Int
+    oneImgUrl: String
     price_in: Float
     price_market: Float
     price_out: Float
     remark: String
+    sort: Int
     stock: Float
     unit: String
     update_time: Date
@@ -86,6 +157,7 @@ type ProductImg {
 }
 
 type Query {
+    address_list(addressInput: AddressInput): [Address]
     allDataUser: String
     allUser(data: UserInput): [User]
     category_list(CategoryInput: CategoryInput): [Category]
@@ -93,24 +165,80 @@ type Query {
     category_total(CategoryInput: CategoryInput): Int
     getPassCode(pass: String!): String
     oneUser(id: String!): User
+    order_detail(id: String!): Order
+    order_list(id: String): [Order]
+    pay_card_list(payCardInput: PayCardInput): [PayCard]
     product_list(ListInput: ProductInput): [Product]
     product_total(ListInput: ProductInput): Int
+    shop_cart_list(ShopCartInput: ShopCartInput): [ShopCart]
+    test: String
     totalUser(data: UserInput): Int
     user: [User]
+    user_coin: UserCoin
+    user_info: User
+}
+
+type ShopCart {
+    create_time: Date
+    id: String
+    is_next: Int
+    name: String
+    number: Int
+    product: Product
+    product_id: String
+    update_time: Date
 }
 
 type User {
-    auth: String
+    create_time: Date
+    email: String
     id: String
-    message: String
     name: String
+    phone: String
+    type: String
+    update_time: Date
+    user_name: String
+}
+
+type UserCoin {
+    card_number: Int
+    current_mouth_icons: Float
+    next_mouth_icons: Float
 }
 
 type result {
+    address: Address
     category: Category
     flag: Int
     msg: String
+    order: Order
+    payCard: PayCard
     product: Product
+    shopCart: ShopCart
+    token: token
+    user: User
+}
+
+type token {
+    refreshtoken: String
+    token: String
+}
+
+input AddressInput {
+    address: String
+    city: String
+    contact_information: String
+    contact_user_name: String
+    create_time: String
+    district: String
+    id: String
+    is_default: Int
+    is_delete: Int
+    name: String
+    province: String
+    update_time: Date
+    user_id: String
+    zip: String
 }
 
 input CategoryInput {
@@ -122,6 +250,7 @@ input CategoryInput {
     is_enable: Int
     name: String
     number: Int
+    origin_category_id: String
     page: Int
     parent_id: String
     remark: String
@@ -129,12 +258,91 @@ input CategoryInput {
     sort: Int
     sort_type: String
     update_time: Date
+    user_id: String
 }
 
 input ChangePassword {
     id: String
     newPass: String
     verification: String
+}
+
+input ChangePasswordInput {
+    confirmation_password: String
+    new_password: String!
+    old_password: String!
+}
+
+input EditAddressInput {
+    address: String
+    city: String
+    contact_information: String
+    contact_user_name: String
+    create_time: String
+    district: String
+    id: String
+    is_default: Int
+    is_delete: Int
+    name: String
+    province: String
+    update_time: Date
+    user_id: String
+    zip: String
+}
+
+input EditPayCardInput {
+    address_detail: String
+    city: String
+    code: String
+    contact: String
+    create_time: String
+    id: String
+    is_default: Int
+    is_delete: Int
+    name: String
+    number: String
+    update_time: Date
+    user_id: String
+    user_name: String
+    zip_code: String
+}
+
+input OrderProductInput {
+    count: Float
+    create_time: Date
+    id: String
+    is_delete: Int
+    name: String
+    order_id: String
+    product_id: String
+    update_time: Date
+}
+
+input OrderUser {
+    create_time: Date
+    id: String
+    is_delete: Int
+    name: String
+    order_id: String
+    update_time: Date
+    user_id: String
+}
+
+input PayCardInput {
+    address_detail: String
+    city: String
+    code: String
+    contact: String
+    create_time: String
+    id: String
+    is_default: Int
+    is_delete: Int
+    name: String
+    number: String
+    update_time: Date
+    user_id: String
+    user_name: String
+    zip_code: String
 }
 
 input ProductImgInput {
@@ -148,14 +356,18 @@ input ProductInput {
     brand: String
     category_id: String
     create_time: Date
+    group_amount: Int
+    group_precision: Int
     id: String
     imgs: [ProductImgInput]
     is_delete: Boolean
     is_enable: Int
+    is_group: Int
     is_hot: Int
     is_new: Int
     name: String
     number: Int
+    origin_category_id: String
     page: Int
     price_in: Float
     price_market: Float
@@ -167,7 +379,51 @@ input ProductInput {
     stock: Float
     unit: String
     update_time: Date
+    user_id: String
     weight: Float
+}
+
+input SaveOrderInput {
+    actually_paid: Float
+    address_id: String
+    coupon_discount: Float
+    create_time: Date
+    id: String
+    is_delete: Int
+    name: String
+    number: String
+    order_id: String
+    payment_method_card_id: String
+    product: [OrderProductInput]
+    sale_tax: Float
+    state: Int
+    subtotal: Float
+    transportation_costs: Float
+    update_time: Date
+    user: [OrderUser]
+    vip_discount: Float
+}
+
+input SaveShopCartInput {
+    id: String!
+    is_next: Int!
+    number: Int!
+    product_id: String
+}
+
+input ShopCartInput {
+    id: String
+    is_next: Int
+    number: Int
+    product_id: String
+}
+
+input UpdateUserInfoInput {
+    email: String
+    id: String
+    name: String
+    phone: String
+    user_name: String
 }
 
 input UserInput {

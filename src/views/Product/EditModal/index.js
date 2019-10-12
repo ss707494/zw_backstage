@@ -135,6 +135,7 @@ export const EditModal = (
         ...pick(editData, [
           'id', 'name', 'remark', 'is_hot', 'is_new', 'stock', 'unit',
           'weight', 'price_in', 'price_out', 'price_market', 'brand',
+          'is_group', 'group_amount', 'group_precision',
         ]),
         category_id: threeCode,
         imgs
@@ -178,6 +179,26 @@ export const EditModal = (
         <DialogTitle>新增产品</DialogTitle>
         <S.Content>
           <form>
+            <SText.TextFieldBox
+                as={FormControl}
+            >
+              <InputLabel
+                  shrink
+                  htmlFor="tag"
+              >是否拼团</InputLabel>
+              <FormControlLabel
+                  control={
+                    <Checkbox
+                        checked={!!editData.is_group || false}
+                        onChange={e => setEditData({
+                          ...editData,
+                          is_group: e.target.checked ? 1 : 0
+                        })}
+                    />
+                  }
+                  label=""
+              />
+            </SText.TextFieldBox>
             <CusTextField
                 InputProps={{
                   readOnly: true,
@@ -369,6 +390,24 @@ export const EditModal = (
                 ))}
               </CusSelectField>
             </S.FieldTwoBox>
+            <CusTextField
+                label="拼团数量"
+                type="number"
+                value={editData.group_amount}
+                onChange={e => setEditData({
+                  ...editData,
+                  group_amount: parseFloat(e.target.value)
+                })}
+            />
+            <CusTextField
+                label="拼团精度"
+                type="number"
+                value={editData.group_precision}
+                onChange={e => setEditData({
+                  ...editData,
+                  group_precision: parseFloat(e.target.value)
+                })}
+            />
             <S.UploadFormControl
                 as={FormControl}
             >

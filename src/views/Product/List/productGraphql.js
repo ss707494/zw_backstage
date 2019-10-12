@@ -7,7 +7,7 @@ export const productGraphql = {
             id name number is_hot is_new stock price_in is_enable
             price_market price_out weight unit brand category_id
             c1_id c1_number c2_id c2_name c3_id c3_name
-            c2_number c3_number
+            c2_number c3_number is_group group_amount group_precision
             imgs { id url number }
         }
         product_total(ListInput: $data)
