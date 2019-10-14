@@ -144,6 +144,7 @@ export const Product = ({ theme }) => {
       ...pageState.pageData,
       category_id: search?.category_id ? search?.category_id : null,
       ...param,
+      is_group: -1,
     }
   })
   React.useEffect(() => {
@@ -152,6 +153,7 @@ export const Product = ({ theme }) => {
         ...search,
         category_id: search?.category_id ? search?.category_id : null,
         ...pageState.pageData,
+        is_group: -1,
       }
     })
   }, [getList, search, pageState.pageData])
