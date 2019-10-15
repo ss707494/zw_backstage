@@ -135,7 +135,7 @@ export const EditModal = (
         ...pick(editData, [
           'id', 'name', 'remark', 'is_hot', 'is_new', 'stock', 'unit',
           'weight', 'price_in', 'price_out', 'price_market', 'brand',
-          'is_group', 'group_amount', 'group_precision',
+          'is_group', 'group_amount', 'group_precision', 'group_remark',
         ]),
         category_id: threeCode,
         imgs
@@ -406,6 +406,15 @@ export const EditModal = (
                 onChange={e => setEditData({
                   ...editData,
                   group_precision: parseFloat(e.target.value)
+                })}
+            />
+            <CusTextField
+                label="拼团描述"
+                value={editData.group_remark}
+                placeholder="整箱"
+                onChange={e => setEditData({
+                  ...editData,
+                  group_remark: e.target.value
                 })}
             />
             <S.UploadFormControl

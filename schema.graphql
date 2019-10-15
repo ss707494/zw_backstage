@@ -127,6 +127,7 @@ type Product {
     create_time: Date
     group_amount: Int
     group_precision: Int
+    group_remark: String
     id: String
     imgs: [ProductImg]
     is_delete: Int
@@ -358,6 +359,7 @@ input ProductInput {
     create_time: Date
     group_amount: Int
     group_precision: Int
+    group_remark: String
     id: String
     imgs: [ProductImgInput]
     is_delete: Boolean
