@@ -12,7 +12,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import { ImgUpload } from "@/component/ImgUpload";
-import { fileUploadAjax } from "@/common/utils";
+import { fileUploadAjax, parseFloatForInput } from "@/common/utils";
 import { categoryGraphql } from "@/views/Category/List";
 import { useMutationGraphql, useQueryGraphql } from "@/component/ApolloQuery";
 import { save_product } from "@/views/Product/List/productGraphql";
@@ -324,7 +324,7 @@ export const EditModal = (
                 value={editData.stock}
                 onChange={e => setEditData({
                   ...editData,
-                  stock: parseFloat(e.target.value)
+                  stock: parseFloatForInput(e.target.value)
                 })}
             />
             <CusTextField
@@ -333,7 +333,7 @@ export const EditModal = (
                 value={editData.price_in}
                 onChange={e => setEditData({
                   ...editData,
-                  price_in: parseFloat(e.target.value)
+                  price_in: parseFloatForInput(e.target.value)
                 })}
             />
             <CusTextField
@@ -350,7 +350,7 @@ export const EditModal = (
                 value={editData.price_market}
                 onChange={e => setEditData({
                   ...editData,
-                  price_market: parseFloat(e.target.value)
+                  price_market: parseFloatForInput(e.target.value)
                 })}
             />
             <CusTextField
@@ -359,7 +359,7 @@ export const EditModal = (
                 value={editData.price_out}
                 onChange={e => setEditData({
                   ...editData,
-                  price_out: parseFloat(e.target.value)
+                  price_out: parseFloatForInput(e.target.value)
                 })}
             />
             <S.FieldTwoBox>
@@ -369,7 +369,7 @@ export const EditModal = (
                   value={editData.weight}
                   onChange={e => setEditData({
                     ...editData,
-                    weight: parseFloat(e.target.value)
+                    weight: parseFloatForInput(e.target.value)
                   })}
               />
               <CusSelectField
@@ -396,7 +396,7 @@ export const EditModal = (
                 value={editData.group_amount}
                 onChange={e => setEditData({
                   ...editData,
-                  group_amount: parseFloat(e.target.value)
+                  group_amount: parseFloatForInput(e.target.value)
                 })}
             />
             <CusTextField
@@ -405,7 +405,7 @@ export const EditModal = (
                 value={editData.group_precision}
                 onChange={e => setEditData({
                   ...editData,
-                  group_precision: parseFloat(e.target.value)
+                  group_precision: parseFloatForInput(e.target.value)
                 })}
             />
             <CusTextField

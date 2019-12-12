@@ -23,6 +23,7 @@ const reactAppPreRoute = process.env.REACT_APP_PRE_ROUTE;
 const menuData = [
   [`${reactAppPreRoute}/category`, '分类管理', ''],
   [`${reactAppPreRoute}/product`, '产品管理', ''],
+  [`${reactAppPreRoute}/addProduct`, '补货管理', ''],
   [`${reactAppPreRoute}/test`, '测试页面', ''],
 ]
 

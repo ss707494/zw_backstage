@@ -11,6 +11,20 @@ interface listSearch {
     sort_type: String
 }
 
+type AddItem {
+    amount: Float
+    count: Float
+    create_time: Date
+    id: String
+    is_delete: Int
+    name: String
+    product_id: String
+    remark: String
+    supplement_id: String
+    supplier: String
+    update_time: Date
+}
+
 type Address {
     address: String
     city: String
@@ -53,6 +67,22 @@ type Category {
     update_time: Date
 }
 
+type GroupInfo {
+    doing: Int
+    finish: Int
+}
+
+type GroupQueue {
+    create_time: String
+    fill_amount: Int
+    id: String
+    is_delete: Int
+    name: String
+    product: Product
+    product_id: String
+    update_time: Date
+}
+
 type Mutation {
     addToShopCart(ShopCartInput: ShopCartInput): result
     changePassword(data: ChangePassword!): String
@@ -62,9 +92,11 @@ type Mutation {
     remove_shop_cart(id: String!): result
     save_address(editAddressInput: EditAddressInput): result
     save_category(Category: CategoryInput): result
+    save_group_order(saveGroupOrderInput: SaveGroupOrderInput, saveOrderInput: SaveOrderInput): result
     save_order(saveOrderInput: SaveOrderInput): result
     save_pay_card(editPayCardInput: EditPayCardInput): result
     save_product(ProductInput: ProductInput): result
+    save_product_supplement(productSupplementInput: ProductSupplementInput): result
     save_shop_cart(SaveShopCartInput: SaveShopCartInput): result
     set_default_address(defaultId: String!): result
     set_default_pay_card(defaultId: String!): result
@@ -80,6 +112,7 @@ type Order {
     address_id: String
     coupon_discount: Float
     create_time: Date
+    discount_product_total: Float
     id: String
     is_delete: Int
     name: String
@@ -126,6 +159,7 @@ type Product {
     category_id: String
     create_time: Date
     group_amount: Int
+    group_info: GroupInfo
     group_precision: Int
     group_remark: String
     id: String
@@ -157,6 +191,21 @@ type ProductImg {
     url: String
 }
 
+type ProductSupplement {
+    addItemList: [AddItem]
+    amount: Float
+    code: String
+    create_time: Date
+    id: String
+    is_delete: Int
+    name: String
+    number: String
+    state: Int
+    supplier: String
+    update_time: Date
+    user_id: String
+}
+
 type Query {
     address_list(addressInput: AddressInput): [Address]
     allDataUser: String
@@ -165,11 +214,15 @@ type Query {
     category_origin(id: String): Category
     category_total(CategoryInput: CategoryInput): Int
     getPassCode(pass: String!): String
+    group_order_list(id: String): [Order]
+    group_queue_list(groupQueueListInput: GroupQueueListInput): [GroupQueue]
     oneUser(id: String!): User
-    order_detail(id: String!): Order
+    order_detail(id: String!, isGroup: Int): Order
     order_list(id: String): [Order]
     pay_card_list(payCardInput: PayCardInput): [PayCard]
     product_list(ListInput: ProductInput): [Product]
+    product_supplement_list(productSupplementListInput: ProductSupplementListInput): [ProductSupplement]
+    product_supplement_list_total(productSupplementListInput: ProductSupplementListInput): Int
     product_total(ListInput: ProductInput): Int
     shop_cart_list(ShopCartInput: ShopCartInput): [ShopCart]
     test: String
@@ -223,6 +276,15 @@ type result {
 type token {
     refreshtoken: String
     token: String
+}
+
+input AddItemInput {
+    addNumber: Float
+    addPrice: Float
+    addRemark: String
+    addSupplier: String
+    id: String
+    product_id: String
 }
 
 input AddressInput {
@@ -308,6 +370,16 @@ input EditPayCardInput {
     zip_code: String
 }
 
+input GroupQueueListInput {
+    create_time: String
+    fill_amount: Int
+    id: String
+    is_delete: Int
+    name: String
+    product_id: String
+    update_time: Date
+}
+
 input OrderProductInput {
     count: Float
     create_time: Date
@@ -385,11 +457,39 @@ input ProductInput {
     weight: Float
 }
 
+input ProductSupplementInput {
+    addList: [AddItemInput]
+    id: String
+}
+
+input ProductSupplementListInput {
+    amount: Float
+    code: String
+    create_time: Date
+    id: String
+    is_delete: Int
+    name: String
+    number: String
+    state: Int
+    supplier: String
+    update_time: Date
+    user_id: String
+}
+
+input SaveGroupOrderInput {
+    group_queue_id: String
+    id: String
+    order_group_amount: Int
+    origin_group_amount: Int
+    product_id: String
+}
+
 input SaveOrderInput {
     actually_paid: Float
     address_id: String
     coupon_discount: Float
     create_time: Date
+    discount_product_total: Float
     id: String
     is_delete: Int
     name: String

@@ -22,6 +22,15 @@ export const fileUploadAjax = (data, files, url, option) => {
   })
 }
 
+export const parseFloatForInput = value => {
+  if (value === '-' || value === '') return value
+  try {
+    return parseFloat(value)
+  } catch (e) {
+    console.error(e)
+  }
+}
+
 export default {
   getObjectURL
 }
