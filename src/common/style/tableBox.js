@@ -54,7 +54,16 @@ export const StyleTableBox = {
     }
   }
 }
-`
+`,
+  ActionTableCell: styled('section')`&&& {
+  display: flex;
+  > button {
+    margin-right: 8px;
+    &:last-of-type {
+      margin-right: 0;
+    }
+  }
+}`
 
 }
 

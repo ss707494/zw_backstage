@@ -16,7 +16,7 @@ export const useInitState = () => {
   const [open, setOpen] = useState(false)
   const [editData, setEditData] = useState({})
   const editClick = (item) => () => {
-    setEditData(ssLog(item))
+    setEditData(item)
     setOpen(true)
   }
   const handleClose = () => {
@@ -48,7 +48,6 @@ export const WaitListModal = (
 
   const saveLoading = false
   const handleSave = async () => {
-    console.log(editData)
     const { save_product_supplement } = await saveProductSupplement({
       data: {
         addList: editData.waitList.map(v => ({

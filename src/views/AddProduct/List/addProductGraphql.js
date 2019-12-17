@@ -42,10 +42,22 @@ export const productSupplementListGraphql = gql`
             number
             user_id
             state
+            create_time
             addItemList {
                 name
+                count
                 amount
                 supplier
+                product {
+                    number
+                    is_group
+                    name
+                    stock
+                    price_in
+                    price_out
+                    price_market
+                    weight
+                }
             }
         }
     }

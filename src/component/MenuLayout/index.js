@@ -24,6 +24,7 @@ const menuData = [
   [`${reactAppPreRoute}/category`, '分类管理', ''],
   [`${reactAppPreRoute}/product`, '产品管理', ''],
   [`${reactAppPreRoute}/addProduct`, '补货管理', ''],
+  [`${reactAppPreRoute}/order`, '订单管理', ''],
   [`${reactAppPreRoute}/test`, '测试页面', ''],
 ]
 

@@ -18,6 +18,7 @@ type AddItem {
     id: String
     is_delete: Int
     name: String
+    product: Product
     product_id: String
     remark: String
     supplement_id: String
@@ -210,6 +211,8 @@ type Query {
     address_list(addressInput: AddressInput): [Address]
     allDataUser: String
     allUser(data: UserInput): [User]
+    all_order_list(allOrderListInput: AllOrderListInput): [Order]
+    all_order_list_total(allOrderListInput: AllOrderListInput): Int
     category_list(CategoryInput: CategoryInput): [Category]
     category_origin(id: String): Category
     category_total(CategoryInput: CategoryInput): Int
@@ -302,6 +305,12 @@ input AddressInput {
     update_time: Date
     user_id: String
     zip: String
+}
+
+input AllOrderListInput {
+    page: Int
+    rows_per_page: Int
+    sort_type: String
 }
 
 input CategoryInput {
@@ -470,6 +479,8 @@ input ProductSupplementListInput {
     is_delete: Int
     name: String
     number: String
+    page: Int
+    rows_per_page: Int
     state: Int
     supplier: String
     update_time: Date

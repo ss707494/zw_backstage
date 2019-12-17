@@ -1,3 +1,4 @@
+import format from 'date-fns/format'
 
 export const getObjectURL = file => {
   return  window?.createObjectURL?.(file)
@@ -30,6 +31,8 @@ export const parseFloatForInput = value => {
     console.error(e)
   }
 }
+
+export const formatDate = format
 
 export default {
   getObjectURL
