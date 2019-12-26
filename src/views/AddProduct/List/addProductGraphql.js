@@ -44,11 +44,13 @@ export const productSupplementListGraphql = gql`
             state
             create_time
             addItemList {
+                id
                 name
                 count
                 amount
                 supplier
                 product {
+                    id
                     number
                     is_group
                     name

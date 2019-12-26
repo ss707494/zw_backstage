@@ -126,6 +126,8 @@ type Order {
     subtotal: Float
     transportation_costs: Float
     update_time: Date
+    user: User
+    user_id: String
     vip_discount: Float
 }
 

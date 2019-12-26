@@ -12,9 +12,12 @@ import { CusTableCell as TableCell } from "@/component/CusTableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableBody from "@material-ui/core/TableBody";
 import { formatDate } from "@/common/utils";
+import { useOrderProductModalInitState, OrderProductModal } from "@/views/Order/DetailModal";
 
 export const OrderList = ({ theme }) => {
   const pageState = useInitPageData()
+  const orderProductModalState = useOrderProductModalInitState()
+  const { editClick: orderProductModalOpen } = orderProductModalState
   const [getList, { all_order_list: listData, all_order_list_total: total }, listLoad] = useQueryGraphql(orderGraphql.getListByPage)
 
   React.useEffect(() => {
@@ -40,7 +43,7 @@ export const OrderList = ({ theme }) => {
               : <StyleTableBox.Table theme={theme}>
                 <TableHead>
                   <TableRow>
-                    {['订单编号', '创建时间', '订单详情']
+                    {['订单编号', '创建用户', '创建时间', '订单详情']
                         .map(e => <TableCell key={`TableHead${e}`}>
                           {e}
                         </TableCell>)
@@ -50,12 +53,16 @@ export const OrderList = ({ theme }) => {
                 <TableBody>
                   {listData?.map(e => <TableRow key={`TableBody${e?.id}`}>
                     <TableCell>{e?.number}</TableCell>
+                    <TableCell>{e?.user?.name}</TableCell>
                     <TableCell>{formatDate(new Date(e?.create_time), 'yyyy/MM/dd HH:mm')}</TableCell>
                     <TableCell>
                       <StyleTableBox.ActionTableCell>
                         <Button
                             color="secondary"
                             onClick={() => {
+                              orderProductModalOpen({
+                                productList: e?.product
+                              })()
                             }}
                             variant="contained"
                         >详情</Button>
@@ -71,6 +78,10 @@ export const OrderList = ({ theme }) => {
               refresh={getList}
           />
         </main>
+        <OrderProductModal
+            theme={theme}
+            {...orderProductModalState}
+        />
       </StyleTableBox.Box>
   )
 }
