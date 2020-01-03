@@ -19,7 +19,8 @@ interface DictItem {
     name: string,
     code: string,
 }
-const buildDictItem = (name:string, code: string): DictItem => {
+
+const buildDictItem = (name: string, code: string): DictItem => {
     return {
         name,
         code,
@@ -49,10 +50,13 @@ export const Dictionary = ({theme}: { theme: any }) => {
             <S.LeftBox>
                 {dictTypes?.map(e =>
                     e.code === activeCode ?
-                        <S.ActiveBox>
+                        <S.ActiveBox
+                            key={`dict_type${e.code}`}
+                        >
                             {e.name}
                         </S.ActiveBox>
                         : <S.LeftCard
+                            key={`dict_type${e.code}`}
                             onClick={changeActiveCode(e.code)}
                         >
                             {e.name}
