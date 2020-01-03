@@ -35,6 +35,7 @@ const dictTypes: DictType[] = [
 ]
 
 export const Dictionary = ({theme}: { theme: any }) => {
+    debugger
     const [activeCode, setActiveCode] = React.useState(dictTypes[0].code)
     const changeActiveCode = (activeCode: string) => () => {
         setActiveCode(activeCode)
