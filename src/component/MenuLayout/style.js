@@ -66,6 +66,7 @@ S.MenuList = styled(Paper)`
 `
 
 S.MenuMain = styled('div')`
+  display: grid;
 `
 
 S.Link = styled(Link)`

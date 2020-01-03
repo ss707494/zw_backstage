@@ -22,9 +22,11 @@ const _themeOption = createMuiTheme({
 const reactAppPreRoute = process.env.REACT_APP_PRE_ROUTE;
 const menuData = [
   [`${reactAppPreRoute}/category`, '分类管理', ''],
-  [`${reactAppPreRoute}/product`, '产品管理', ''],
+  [`${reactAppPreRoute}/product/0`, '普通产品管理', ''],
+  [`${reactAppPreRoute}/product/1`, '拼团产品管理', ''],
   [`${reactAppPreRoute}/addProduct`, '补货管理', ''],
   [`${reactAppPreRoute}/order`, '订单管理', ''],
+  [`${reactAppPreRoute}/dictionary`, '字典管理', ''],
   [`${reactAppPreRoute}/test`, '测试页面', ''],
 ]
 
@@ -90,7 +92,9 @@ export const MenuLayout = ({ children, location }) => {
             {fold ? <KeyboardArrowRight/> : <KeyboardArrowLeft/>}
           </S.FoldMenu>
         </S.MenuList>
-        <S.MenuMain>
+        <S.MenuMain
+            key={location?.pathname}
+        >
           {wrapperTheme(_themeOption)(children)}
           {/*{children}*/}
         </S.MenuMain>
