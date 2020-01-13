@@ -71,14 +71,16 @@ export const useQueryGraphql = (query, options) => {
   const [res, setRes] = useState()
   const [error, setError] = useState()
   const [loading, setLoading] = useState(false)
-  const getData = useCallback(async (params) => {
+  const getData = useCallback(async (params, funOption) => {
     setLoading(true)
     const { data } = await client.query({
+      fetchPolicy: 'network-only',
       query,
       variables: {
         ...params
       },
       ...options,
+      ...funOption,
     }).catch(e => {
       setError(e)
       throw e

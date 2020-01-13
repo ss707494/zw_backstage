@@ -1,12 +1,11 @@
 import styled from 'styled-components'
-import { Button } from "@material-ui/core";
-
-export const S = {}
+import {Button} from "@material-ui/core";
 
 const border = `1px solid rgba(224,224,224,1)`
 const boxShadow = `box-shadow: 0 2px 4px rgba(0,0,0,0.2)`
 
-S.Box = styled('div')`
+export const contentWithLeftBox: {[key: string]: any}= {}
+contentWithLeftBox.Box = styled('div')`
   display: grid;
   grid-template-columns: 200px 1fr;
   grid-template-rows: 1fr;
@@ -14,19 +13,19 @@ S.Box = styled('div')`
   border: ${border};
 `
 
-S.LeftBox = styled('div')`
+contentWithLeftBox.LeftBox = styled('div')`
   display: grid;
   border-right: ${border};
   grid-auto-rows: min-content;
 `
-S.LeftCard = styled(Button)`
+contentWithLeftBox.LeftCard = styled(Button)`
 &&& {
     border-bottom: ${border};
     padding: 12px;
 }
 `
 
-S.ActiveBox = styled(S.LeftCard)`
+contentWithLeftBox.ActiveBox = styled(contentWithLeftBox.LeftCard)`
     ${boxShadow};
     background:  linear-gradient(to right, rgba(144,139,139,0.34), #fff);
     border: ${border};
@@ -42,7 +41,7 @@ S.ActiveBox = styled(S.LeftCard)`
     }
 `
 
-S.RightBox = styled('div')`
+contentWithLeftBox.RightBox = styled('div')`
     ${boxShadow};
     padding: 20px;
 `

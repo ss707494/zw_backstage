@@ -68,6 +68,32 @@ type Category {
     update_time: Date
 }
 
+type Dictionary {
+    code: String
+    create_time: Date
+    dict_type_code: String
+    id: String
+    is_delete: Int
+    is_disable: Int
+    name: String
+    parent_code: String
+    remark: String
+    sort: Int
+    update_time: Date
+}
+
+type DictionaryType {
+    code: String
+    create_time: Date
+    id: String
+    is_delete: Int
+    name: String
+    parent_code: String
+    remark: String
+    sort: Int
+    update_time: Date
+}
+
 type GroupInfo {
     doing: Int
     finish: Int
@@ -88,11 +114,13 @@ type Mutation {
     addToShopCart(ShopCartInput: ShopCartInput): result
     changePassword(data: ChangePassword!): String
     deleteOneUser(id: String!): String
+    finish_order(saveOrderInput: SaveOrderInput): result
     importAllUser(data: String!): String
     remove_all_shop_cart(ids: [String!]!): result
     remove_shop_cart(id: String!): result
     save_address(editAddressInput: EditAddressInput): result
     save_category(Category: CategoryInput): result
+    save_dict_item(dictionaryInput: DictionaryInput): result
     save_group_order(saveGroupOrderInput: SaveGroupOrderInput, saveOrderInput: SaveOrderInput): result
     save_order(saveOrderInput: SaveOrderInput): result
     save_pay_card(editPayCardInput: EditPayCardInput): result
@@ -160,6 +188,7 @@ type Product {
     c3_name: String
     c3_number: String
     category_id: String
+    count: Int
     create_time: Date
     group_amount: Int
     group_info: GroupInfo
@@ -218,6 +247,8 @@ type Query {
     category_list(CategoryInput: CategoryInput): [Category]
     category_origin(id: String): Category
     category_total(CategoryInput: CategoryInput): Int
+    dict_item_list(dictionaryInput: DictionaryInput): [Dictionary]
+    dict_type_list(dictionaryInput: DictionaryInput): [DictionaryType]
     getPassCode(pass: String!): String
     group_order_list(id: String): [Order]
     group_queue_list(groupQueueListInput: GroupQueueListInput): [GroupQueue]
@@ -268,6 +299,7 @@ type UserCoin {
 type result {
     address: Address
     category: Category
+    dictionary: Dictionary
     flag: Int
     msg: String
     order: Order
@@ -345,6 +377,20 @@ input ChangePasswordInput {
     confirmation_password: String
     new_password: String!
     old_password: String!
+}
+
+input DictionaryInput {
+    code: String
+    create_time: Date
+    dict_type_code: String
+    id: String
+    is_delete: Int
+    is_disable: Int
+    name: String
+    parent_code: String
+    remark: String
+    sort: Int
+    update_time: Date
 }
 
 input EditAddressInput {

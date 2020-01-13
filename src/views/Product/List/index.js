@@ -108,6 +108,7 @@ const useTypeObj = () => {
 }
 
 export const Product = ({ theme, match }) => {
+  const _is_group = ~~match?.params?.is_group ?? -1
   const pageState = useInitPageData()
   const editModalState = useInitState()
   const { editClick } = editModalState
@@ -153,10 +154,10 @@ export const Product = ({ theme, match }) => {
         ...search,
         category_id: search?.category_id ? search?.category_id : null,
         ...pageState.pageData,
-        is_group: ~~match?.params?.is_group ?? -1,
+        is_group: _is_group,
       }
     })
-  }, [getList, search, pageState.pageData, match])
+  }, [getList, search, pageState.pageData, _is_group])
   React.useEffect(() => {
     // if (!typeHelpObj.res) return
     setSearch(pre => ({

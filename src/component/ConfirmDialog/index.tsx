@@ -14,7 +14,7 @@ const _themeOption = createMuiTheme({
     type: 'light',
   },
 })
-export let showConfirm = ({ message, title, open, callBack, oneButton }) => {
+export let showConfirm: showConfirm = () => {
 }
 
 export const ConfirmDialog = () => {
@@ -35,7 +35,7 @@ export const ConfirmDialog = () => {
         title: '',
         message: '',
       },
-      showConfirm: (option) => {
+      showConfirm: (option: {}) => {
         setContext({
           confirm: {
             ...option,
