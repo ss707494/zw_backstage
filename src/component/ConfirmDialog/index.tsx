@@ -54,7 +54,7 @@ export const ConfirmDialog = () => {
     })
   }
   const { message, title, open, callBack, oneButton } = context.confirm || {}
-  return wrapperTheme(_themeOption)(
+  return wrapperTheme(_themeOption, { seed: 'ConfirmDialog' })(
       !context.confirm ? <div/> :
           <Dialog
               open={open}

@@ -34,6 +34,8 @@ export const parseFloatForInput = value => {
 
 export const formatDate = format
 
+export const dealNonBooleanProps = (value) => !!value ? 1 : 0
+
 export default {
   getObjectURL
 }

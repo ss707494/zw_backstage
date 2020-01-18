@@ -27,6 +27,7 @@ const menuData = [
   [`${reactAppPreRoute}/addProduct`, '补货管理', ''],
   [`${reactAppPreRoute}/order`, '订单管理', ''],
   [`${reactAppPreRoute}/dictionary`, '字典管理', ''],
+  [`${reactAppPreRoute}/dataConfig`, '配置管理', ''],
   [`${reactAppPreRoute}/test`, '测试页面', ''],
 ]
 
@@ -95,7 +96,7 @@ export const MenuLayout = ({ children, location }) => {
         <S.MenuMain
             key={location?.pathname}
         >
-          {wrapperTheme(_themeOption)(children)}
+          {wrapperTheme(_themeOption, { seed: 'MenuLayout' })(children)}
           {/*{children}*/}
         </S.MenuMain>
       </S.MenuLayout>

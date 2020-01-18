@@ -68,6 +68,17 @@ type Category {
     update_time: Date
 }
 
+type DataConfig {
+    create_time: Date
+    id: String
+    is_delete: Int
+    name: String
+    remark: String
+    type: String
+    update_time: Date
+    value: String
+}
+
 type Dictionary {
     code: String
     create_time: Date
@@ -127,6 +138,7 @@ type Mutation {
     save_product(ProductInput: ProductInput): result
     save_product_supplement(productSupplementInput: ProductSupplementInput): result
     save_shop_cart(SaveShopCartInput: SaveShopCartInput): result
+    set_data_config(dataConfigInput: DataConfigInput): result
     set_default_address(defaultId: String!): result
     set_default_pay_card(defaultId: String!): result
     updateUser(data: UserInput!): User
@@ -247,6 +259,7 @@ type Query {
     category_list(CategoryInput: CategoryInput): [Category]
     category_origin(id: String): Category
     category_total(CategoryInput: CategoryInput): Int
+    data_config(dataConfigInput: DataConfigInput): DataConfig
     dict_item_list(dictionaryInput: DictionaryInput): [Dictionary]
     dict_type_list(dictionaryInput: DictionaryInput): [DictionaryType]
     getPassCode(pass: String!): String
@@ -299,6 +312,7 @@ type UserCoin {
 type result {
     address: Address
     category: Category
+    dataConfig: DataConfig
     dictionary: Dictionary
     flag: Int
     msg: String
@@ -377,6 +391,17 @@ input ChangePasswordInput {
     confirmation_password: String
     new_password: String!
     old_password: String!
+}
+
+input DataConfigInput {
+    create_time: Date
+    id: String
+    is_delete: Int
+    name: String
+    remark: String
+    type: String
+    update_time: Date
+    value: String
 }
 
 input DictionaryInput {

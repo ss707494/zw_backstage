@@ -24,13 +24,10 @@ export const Dictionary = ({theme}: { theme: any }) => {
   const [getDictItemList, {dict_item_list: dictItemList}, dictItemListLoad] = useQueryGraphql(getDictItemListGraphql)
   const [activeCode, setActiveCode] = React.useState('')
   const [saveDictItem, , ] = useMutationGraphql(saveDictItemGraphql)
-  const _getDictItemList = (data?: {}) => {
+  const _getDictItemList = () => {
     getDictItemList({
       data: {
-        ...{
-          ...data,
-          dict_type_code: activeCode,
-        }
+        dict_type_code: activeCode,
       }
     })
   }
@@ -48,8 +45,7 @@ export const Dictionary = ({theme}: { theme: any }) => {
     changeActiveCode(_types?.dict_type_list?.[0]?.code)()
   }, [changeActiveCode, getDictTypeList])
   React.useEffect(() => {
-    _getDictTypeList().then(r => {
-    })
+    _getDictTypeList()
   }, [_getDictTypeList])
 
   return (

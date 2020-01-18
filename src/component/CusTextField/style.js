@@ -13,7 +13,7 @@ S.TextFieldBox = styled(TextField)`
       position: relative;
       font-size: 16px;
       color: #000;
-      transform: translate(0, 1.5px) scale(1);
+      transform: translate(0, 0) scale(1);
       display: flex;
       align-items: center;
       width: ${$labelWidth};

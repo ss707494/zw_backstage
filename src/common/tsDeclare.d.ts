@@ -1,4 +1,3 @@
-
 declare interface CommonModalState {
   open,
   setOpen,
@@ -23,3 +22,4 @@ declare interface DictItem {
 }
 
 declare type showConfirm = (option?: { message?: string, title?: string, open?: boolean, callBack?: (any) => any, oneButton?: boolean|number }) => any
+
