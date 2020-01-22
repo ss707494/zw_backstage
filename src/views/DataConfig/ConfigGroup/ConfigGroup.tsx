@@ -1,24 +1,20 @@
 import React, {useEffect, useState} from "react";
 import {merge} from "lodash";
-import {useMutationGraphql, useQueryGraphql} from "@/component/ApolloQuery";
+import {useQueryGraphql} from "@/component/ApolloQuery";
 import {getDictItemListGraphql} from "@/views/Dictionary/List/dictionaryGraphql";
-import {ConfigGroupStyleBox, SettingBox, Title, TextField} from "@/views/DataConfig/ConfigGroup/ConfigGroupStyle";
-import {CusButton} from "@/component/CusButton";
-import {gql} from "apollo-boost";
-import {dealNonBooleanProps} from "@/common/utils";
-
-export const setDataConfigGraphql = gql`
-    mutation($data: DataConfigInput) {
-        set_data_config(dataConfigInput: $data) {
-            flag
-        }
-    }
-`
+import {
+  ConfigGroupStyleBox,
+  SettingBox,
+  TextField,
+  GroupDiscountBox
+} from "@/views/DataConfig/ConfigGroup/ConfigGroupStyle";
+import {parseFloatForInput} from "@/common/utils";
+import {HeaderAction} from "@/views/DataConfig/component/HeaderAction/HeaderAction";
+import { Title } from "../component/Title/Title";
 
 export const ConfigGroup = ({dataConfig = {}}: any) => {
   const [getDictItemList, {dict_item_list: dictItemList},] = useQueryGraphql(getDictItemListGraphql)
   const [configData, setConfigData] = useState<any>({})
-  const [setDataConfig, , setDataConfigLoading] = useMutationGraphql(setDataConfigGraphql)
 
   useEffect(() => {
     setConfigData(dataConfig?.value)
@@ -32,56 +28,71 @@ export const ConfigGroup = ({dataConfig = {}}: any) => {
     })
   }, [dataConfig?.type, getDictItemList])
 
-  console.log(configData)
   return (
       <ConfigGroupStyleBox>
-        <header>
-          <CusButton
-              loading={dealNonBooleanProps(setDataConfigLoading)}
-              variant={"contained"}
-              color={"primary"}
-              onClick={() => {
-                setDataConfig({
-                  data: {
-                    type: dataConfig.type,
-                    value: configData,
-                  }
-                })
-              }}
-          >保存</CusButton>
-        </header>
+        <HeaderAction
+            dataConfig={dataConfig}
+            configData={configData}
+        />
         <main>
+          <Title>成团折扣</Title>
+          <GroupDiscountBox>
+            <TextField
+                label={''}
+                value={configData?.groupDiscount}
+                onChange={(event: any) => {
+                  setConfigData(merge({}, configData, {
+                    groupDiscount: (event.target.value),
+                  }))
+                }}
+                // InputProps={{
+                //   endAdornment: '%'
+                // }}
+            />
+          </GroupDiscountBox>
           <Title>打折设置</Title>
           <SettingBox>
             <div>名称</div>
             <div>分团份数</div>
             <div>分团折扣</div>
-            {dictItemList?.map((e: DictItem) => <React.Fragment key={`dictItemList${e.code}`}>
-              <section>
-                <TextField
-                    label={e.name}
-                    value={configData?.[e.code]?.groups}
-                    onChange={(event: any) => {
-                      setConfigData(merge({}, configData, {
-                        [e.code]: {
-                          groups: (event.target.value),
-                        },
-                      }))
-                    }}
-                />
-              </section>
-              <main>
-                <TextField
-                    label={''}
-                    value={configData?.[e.code]?.discount}
-                    onChange={(event: any) => setConfigData(merge({}, configData, {
-                      [e.code]: {
-                        discount: (event.target.value),
-                      },
-                    }))}
-                />
-              </main>
-            </React.Fragment>)}
+            {dictItemList?.map((e: DictItem) => {
+              const groups = configData?.[e.code]?.groups
+              return <React.Fragment key={`dictItemList${e.code}`}>
+                <header>{e.name}</header>
+                <section>
+                  <TextField
+                      label={''}
+                      value={groups}
+                      onChange={(event: any) => {
+                        setConfigData(merge({}, configData, {
+                          [e.code]: {
+                            groups: parseFloatForInput(event.target.value),
+                          },
+                        }))
+                      }}
+                  />
+                </section>
+                <main>
+                  {Array(~~groups).fill(1).map((v, index: number) => <TextField
+                          key={`Array(~~groups)${index}`}
+                          label={`${index + 1}`}
+                          value={configData?.[e.code]?.discount?.[index + 1]}
+                          onChange={(event: any) => setConfigData(merge({}, configData, {
+                            [e.code]: {
+                              discount: Array(~~groups).fill(1).reduce((pre, v, discountIndex) => ({
+                                ...pre,
+                                ...(discountIndex < index ? {} : {
+                                  [discountIndex + 1]: (event.target.value),
+                                })
+                              }), {}),
+                            },
+                          }))}
+                      />
+                  )
+                  }
+                </main>
+              </React.Fragment>;
+            })}
           </SettingBox>
         </main>
       </ConfigGroupStyleBox>

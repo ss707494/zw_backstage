@@ -63,6 +63,12 @@ S.MenuList = styled(Paper)`
     max-width: ${({fold}) => ~~fold ? '0' : menuWidth};
     width: ${menuWidth};
   }
+  & .MuiMenuItem-root {
+    line-height: 1.7;
+  }
+  & .MuiList-root {
+    z-index: 9;
+  }
 `
 
 S.MenuMain = styled('div')`

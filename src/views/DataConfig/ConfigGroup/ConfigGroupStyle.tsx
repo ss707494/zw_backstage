@@ -1,5 +1,7 @@
 import styled from "styled-components";
 import {CusTextField} from "@/component/CusTextField";
+import React from "react";
+import {TextFieldProps} from "@material-ui/core/TextField/TextField";
 
 export const ConfigGroupStyle: any = {}
 
@@ -8,25 +10,37 @@ export const ConfigGroupStyleBox = styled.div`
   > header {
     margin-bottom: 18px;
   }
-
 `
-export const Title = styled.div`
-  font-weight: bold;
-  font-size: 16px;
-  margin-bottom: 8px;
+
+export const GroupDiscountBox = styled.div`
+  margin-bottom: 16px;
+  max-width: 300px;
 `
 
 export const SettingBox = styled.div`
   display: grid;
-  grid-template-columns: 90px 200px 200px;
-  grid-gap: 10px;
+  grid-auto-flow: column;
+  grid-template-columns: 90px 200px;
+  grid-auto-columns: 200px;
+  grid-template-rows: repeat(3, max-content);
   align-items: center;
+  justify-items: center;
   > section {
-    grid-column: 1 / 3;
+    padding: 6px 6px 10px;
+  }
+  > main {
+    padding: 6px;
+    align-self: start;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-gap: 4px;
+    .MenuLayout-MuiFormLabel-root {
+      justify-content: center;
+    }
   }
 `
 
-export const TextField = styled(CusTextField)`
+export const TextField: React.ComponentType<TextFieldProps> = styled(CusTextField)`
   &&& {
     margin-bottom: 0;
   }

@@ -1,3 +1,4 @@
+
 declare interface CommonModalState {
   open,
   setOpen,
@@ -18,8 +19,13 @@ declare interface DictItem {
   sort: string,
   dict_type_code: string,
   is_disable: number,
-
 }
+
+declare interface DataConfig {
+  type?: string,
+  value?: object,
+}
+
 
 declare type showConfirm = (option?: { message?: string, title?: string, open?: boolean, callBack?: (any) => any, oneButton?: boolean|number }) => any
 

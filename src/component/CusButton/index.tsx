@@ -1,8 +1,8 @@
 import React from 'react'
 import { S } from './style'
-import {ButtonProps} from "@material-ui/core/Button";
+import {ButtonProps} from "@material-ui/core";
 
-interface CusButtonProps extends ButtonProps {
+declare interface CusButtonProps extends ButtonProps {
   loading?: boolean | number
 }
 

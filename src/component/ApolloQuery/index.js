@@ -41,16 +41,16 @@ export const WrapperQuery = (query, variables) => child => (
 //   ]
 // }
 
-export const useMutationGraphql = (mutation, option) => {
+export const useMutationGraphql = (mutation, option, dealParamsIn) => {
   const [res, setRes] = useState()
   const [error, setError] = useState()
   const [loading, setLoading] = useState(false)
-  const mutate = useCallback(async (param) => {
+  const mutate = useCallback(async (params) => {
     setLoading(true)
     const { data } = await client.mutate({
       mutation,
       variables: {
-        ...param,
+        ...(dealParamsIn ? dealParamsIn(params) : params)
       },
       ...option,
     }).catch(e => {
@@ -61,13 +61,13 @@ export const useMutationGraphql = (mutation, option) => {
     })
     setRes(data)
     return data
-  }, [mutation, option])
+  }, [dealParamsIn, mutation, option])
   return [
     mutate, res, loading, error
   ]
 }
 
-export const useQueryGraphql = (query, options) => {
+export const useQueryGraphql = (query, options, dealParamsIn) => {
   const [res, setRes] = useState()
   const [error, setError] = useState()
   const [loading, setLoading] = useState(false)
@@ -77,7 +77,7 @@ export const useQueryGraphql = (query, options) => {
       fetchPolicy: 'network-only',
       query,
       variables: {
-        ...params
+        ...(dealParamsIn ? dealParamsIn(params) : params)
       },
       ...options,
       ...funOption,
@@ -89,10 +89,22 @@ export const useQueryGraphql = (query, options) => {
     })
     setRes(data)
     return data
-  }, [options, query])
+  }, [dealParamsIn, options, query])
   return [
-      getData, res ?? {}, loading, error
+    getData, res ?? {}, loading, error
   ]
+}
+
+const dealParams = (params => ({
+  data: params,
+}))
+
+export const useQuerySimpleData = (query, options) => {
+  return useQueryGraphql(query, options, dealParams)
+}
+
+export const useMutationSimpleData = (query, options) => {
+  return useMutationGraphql(query, options, dealParams)
 }
 
 export default {
