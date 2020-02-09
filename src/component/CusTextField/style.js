@@ -5,7 +5,9 @@ const $labelWidth = '90px'
 export const S = {}
 S.TextFieldBox = styled(TextField)`
   &&& {
+    display: flex;
     flex-direction: row;
+    align-items: center;
     margin-bottom: 24px;
     position: relative;
     width: 100%;
@@ -22,6 +24,7 @@ S.TextFieldBox = styled(TextField)`
     &&&&& {
       > div {
         width: 100%;
+        height: min-content;
         background: ${({theme}) => theme?.palette?.formBackground};
         border: 0;  
         //border: 1px solid rgba(0, 0, 0, 0.42);

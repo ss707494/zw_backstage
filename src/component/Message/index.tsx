@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useCustomContext } from '@/common/context'
 import { S } from './style'
 
-export let showMessage = ({ message, open = true, duration = 1000 }) => {
+export let showMessage: ({ message, open: boolean, duration: number}: any) => any = () => {
 }
 
 export const CreateMessageObj = () => {
@@ -29,6 +29,7 @@ export const CreateMessageObj = () => {
   const { open, msg } = message
 
   return <S.Snackbar
+      // @ts-ignore
       msg_type={message.msg_type}
       open={open}
       message={`${msg}`}

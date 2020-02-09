@@ -119,13 +119,6 @@ export const WaitListModal = (
                       type="number"
                       value={e?.addPrice}
                       onChange={event => {
-                        console.log({
-                          ...editData,
-                          waitList: editData.waitList.map((waitV, waitI) => waitI !== i ? (waitV) : ({
-                            ...waitV,
-                            addPrice: parseFloat(event.target.value),
-                          }))
-                        })
                         return setEditData({
                           ...editData,
                           waitList: editData.waitList.map((waitV, waitI) => waitI !== i ? (waitV) : ({

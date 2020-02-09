@@ -5,12 +5,12 @@ import {getDictItemListGraphql} from "@/views/Dictionary/List/dictionaryGraphql"
 import {
   ConfigGroupStyleBox,
   SettingBox,
-  TextField,
   GroupDiscountBox
 } from "@/views/DataConfig/ConfigGroup/ConfigGroupStyle";
 import {parseFloatForInput} from "@/common/utils";
 import {HeaderAction} from "@/views/DataConfig/component/HeaderAction/HeaderAction";
 import { Title } from "../component/Title/Title";
+import {TextField} from "@/views/DataConfig/component/TextField";
 
 export const ConfigGroup = ({dataConfig = {}}: any) => {
   const [getDictItemList, {dict_item_list: dictItemList},] = useQueryGraphql(getDictItemListGraphql)
@@ -45,9 +45,6 @@ export const ConfigGroup = ({dataConfig = {}}: any) => {
                     groupDiscount: (event.target.value),
                   }))
                 }}
-                // InputProps={{
-                //   endAdornment: '%'
-                // }}
             />
           </GroupDiscountBox>
           <Title>打折设置</Title>

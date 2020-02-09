@@ -18,7 +18,7 @@ import { useMutationGraphql, useQueryGraphql } from "@/component/ApolloQuery";
 import { save_product } from "@/views/Product/List/productGraphql";
 import { pick } from "lodash";
 
-const useLinkage = () => {
+export const useLinkage = () => {
   const [data, setData] = useState({
     oneCode: '',
     twoCode: '',

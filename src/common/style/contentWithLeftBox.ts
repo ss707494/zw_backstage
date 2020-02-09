@@ -4,7 +4,14 @@ import {Button} from "@material-ui/core";
 const border = `1px solid rgba(224,224,224,1)`
 const boxShadow = `box-shadow: 0 2px 4px rgba(0,0,0,0.2)`
 
-export const contentWithLeftBox: {[key: string]: any}= {}
+export const contentWithLeftBox: {
+  Box?: any,
+  LeftBox?: any,
+  LeftCard?: any,
+  ActiveBox?: any,
+  RightBox?: any,
+  [key: string]: any,
+}= {}
 contentWithLeftBox.Box = styled('div')`
   display: grid;
   grid-template-columns: 200px 1fr;

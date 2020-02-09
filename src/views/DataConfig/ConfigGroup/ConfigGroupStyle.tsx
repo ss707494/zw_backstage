@@ -1,7 +1,4 @@
 import styled from "styled-components";
-import {CusTextField} from "@/component/CusTextField";
-import React from "react";
-import {TextFieldProps} from "@material-ui/core/TextField/TextField";
 
 export const ConfigGroupStyle: any = {}
 
@@ -37,14 +34,5 @@ export const SettingBox = styled.div`
     .MenuLayout-MuiFormLabel-root {
       justify-content: center;
     }
-  }
-`
-
-export const TextField: React.ComponentType<TextFieldProps> = styled(CusTextField)`
-  &&& {
-    margin-bottom: 0;
-  }
-  & .MuiInputLabel-root {
-    background: #61dafb;
   }
 `

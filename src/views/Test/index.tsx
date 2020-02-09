@@ -1,22 +1,31 @@
-import React from 'react'
-import { S } from './style'
-import { CusTextField } from "@/component/CusTextField";
-import MenuItem from "@material-ui/core/MenuItem";
-import { CusSelectField } from "@/component/CusSelectField";
-import { ImgPreview } from "@/component/ImgPreview";
-import Button from "@material-ui/core/Button";
-import { showMessage } from "@/component/Message";
-import { ImgUpload } from "@/component/ImgUpload";
-
+import React, {useEffect, useState} from 'react'
+import {S} from './style'
+import {CusTextField} from "@/component/CusTextField"
+import MenuItem from "@material-ui/core/MenuItem"
+import {CusSelectField} from "@/component/CusSelectField"
+import {ImgPreview} from "@/component/ImgPreview"
+import Button from "@material-ui/core/Button"
+import {showMessage} from "@/component/Message"
+import {ImgUpload} from "@/component/ImgUpload"
+import {KeyboardDateTimePicker} from '@material-ui/pickers'
+import {useStore} from "@/common/context"
+import {StoreTest, testModel} from "@/views/Test/StoreTest/StoreTest"
 
 export const Test = () => {
 
-  const [search, setSearch] = React.useState({
+  const [search, setSearch] = React.useState<any>({
     type: '',
     sort: '',
   })
   const [imgOpen, setImgOpen] = React.useState(false)
   const [imgSrc,] = React.useState('')
+  const [date, changeDate] = useState(new Date())
+
+  const {store, state, dealActionAsync} = useStore('test', testModel)
+  useEffect(() => {
+    dealActionAsync(testModel.asyncActions.setTest)()
+  }, [dealActionAsync])
+
   return (
       <S.Box>
         <div>
@@ -26,6 +35,8 @@ export const Test = () => {
             testJsx
           </Button>
           <ImgUpload
+              onChange={() => {
+              }}
           />
           <img
               style={{
@@ -60,7 +71,7 @@ export const Test = () => {
               id="kfjsdf"
               label="sad"
               placeholder="alksdlkjf"
-              onChange={(v) => {
+              onChange={(v: any) => {
                 setSearch({
                   ...search,
                   type: v.target.value
@@ -80,7 +91,6 @@ export const Test = () => {
         </div>
         <div>
           <div>
-            {/* eslint-disable jsx-a11y/alt-text */}
           </div>
           <ImgPreview
               open={imgOpen}
@@ -93,19 +103,32 @@ export const Test = () => {
         <div>
           <Button
               onClick={() => {
-                showMessage({ message: 'test', duration: 9999 })
+                showMessage({message: 'test', duration: 9999})
               }}
           >
             showMessage
           </Button>
           <Button
               onClick={() => {
-                showMessage({ message: 'test', duration: 9999, msg_type: 'error' })
+                showMessage({message: 'test', duration: 9999, msg_type: 'error'})
               }}
           >
             showMessage
           </Button>
         </div>
+        <div>
+          <KeyboardDateTimePicker
+              format={'yyyy/MM/dd HH:mm'}
+              value={date}
+              onChange={(date: any) => changeDate(date)}
+          />
+        </div>
+        <div>
+          store out
+          {JSON.stringify(store)}
+          {JSON.stringify(state)}
+        </div>
+        <StoreTest />
 
       </S.Box>
   )

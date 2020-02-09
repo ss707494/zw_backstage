@@ -9,14 +9,12 @@ import {parseFloatForInput} from "@/common/utils";
 
 export const DictAddModal = (
     {
-      theme,
       open,
       setOpen,
       modalData,
       setModalData,
-      openClick,
       refresh,
-    }: any) => {
+    }: CommonModalState) => {
   const handleClose = () => {
     setOpen(false)
     refresh()

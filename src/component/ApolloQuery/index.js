@@ -13,34 +13,6 @@ export const WrapperQuery = (query, variables) => child => (
     </Query>
 )
 
-// export const useQueryGraphql = (query, variables, option) => {
-//   const [data, setData] = useState({})
-//   const [error, setError] = useState()
-//   const [loading, setLoading] = useState(false)
-//   const getData = async (param) => {
-//     setLoading(true)
-//     const { data } = await client.query({
-//       query,
-//       variables: {
-//         ...variables,
-//         ...param,
-//       },
-//       fetchPolicy: 'network-only',
-//       ...option,
-//     }).catch(e => {
-//       setError(e)
-//       return e
-//     }).finally(() => {
-//       setLoading(false)
-//     })
-//     data && setData(data)
-//     return data
-//   }
-//   return [
-//     getData, data, loading, error
-//   ]
-// }
-
 export const useMutationGraphql = (mutation, option, dealParamsIn) => {
   const [res, setRes] = useState()
   const [error, setError] = useState()

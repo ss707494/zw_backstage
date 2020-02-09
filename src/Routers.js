@@ -7,9 +7,11 @@ import { CreateMessageObj } from '@/component/Message'
 import { ConfirmDialog } from '@/component/ConfirmDialog'
 import { wrapperTheme } from '@/common/theme'
 import { wrapperApollo } from "@/common/apolloCLient";
+import { WrapperApollo } from '@/common/rootWrapper/DateWarpper.tsx'
 
 export default () => {
   return [
+    WrapperApollo,
     WrapperContext,
     wrapperApollo,
     wrapperTheme(),

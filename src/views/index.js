@@ -10,7 +10,7 @@ const importAll = list => list.keys().reduce((i, e) => {
   ]
 }, [])
 
-export const allRouters = importAll(require.context('./', true, /^\.\/\w*\/index\.js$/i))
+export const allRouters = importAll(require.context('./', true, /^\.\/\w*\/index\.[j|t]sx?$/i))
 
 export const routes = allRouters.map(({ props, Type, Layout }, i) => {
   const Compon = !props.component ? () => {} : withTheme(props.component)

@@ -62,6 +62,7 @@ type Category {
     p2_name: String
     p3_id: String
     p3_name: String
+    parent_data: Category
     parent_id: String
     remark: String
     sort: Int
@@ -76,7 +77,7 @@ type DataConfig {
     remark: String
     type: String
     update_time: Date
-    value: String
+    value: JSON
 }
 
 type Dictionary {
@@ -137,6 +138,7 @@ type Mutation {
     save_pay_card(editPayCardInput: EditPayCardInput): result
     save_product(ProductInput: ProductInput): result
     save_product_supplement(productSupplementInput: ProductSupplementInput): result
+    save_promo_code(promoCodeInput: PromoCodeInput): result
     save_shop_cart(SaveShopCartInput: SaveShopCartInput): result
     set_data_config(dataConfigInput: DataConfigInput): result
     set_default_address(defaultId: String!): result
@@ -250,6 +252,28 @@ type ProductSupplement {
     user_id: String
 }
 
+type PromoCode {
+    category_data: Category
+    code: String
+    create_time: Date
+    discount_amount: Float
+    discount_condition: String
+    discount_condition_amount: Float
+    discount_type: String
+    effective_date_end: Date
+    effective_date_start: Date
+    id: String
+    img_url: String
+    is_delete: Int
+    name: String
+    product_category: String
+    promo_code_type: String
+    remark: String
+    reuse_times: Int
+    title: String
+    update_time: Date
+}
+
 type Query {
     address_list(addressInput: AddressInput): [Address]
     allDataUser: String
@@ -273,6 +297,7 @@ type Query {
     product_supplement_list(productSupplementListInput: ProductSupplementListInput): [ProductSupplement]
     product_supplement_list_total(productSupplementListInput: ProductSupplementListInput): Int
     product_total(ListInput: ProductInput): Int
+    promo_code_list(PromoCodeInput: PromoCodeInput): [PromoCode]
     shop_cart_list(ShopCartInput: ShopCartInput): [ShopCart]
     test: String
     totalUser(data: UserInput): Int
@@ -319,6 +344,7 @@ type result {
     order: Order
     payCard: PayCard
     product: Product
+    promoCode: PromoCode
     shopCart: ShopCart
     token: token
     user: User
@@ -401,7 +427,7 @@ input DataConfigInput {
     remark: String
     type: String
     update_time: Date
-    value: String
+    value: JSON
 }
 
 input DictionaryInput {
@@ -560,6 +586,27 @@ input ProductSupplementListInput {
     user_id: String
 }
 
+input PromoCodeInput {
+    code: String
+    create_time: Date
+    discount_amount: Float
+    discount_condition: String
+    discount_condition_amount: Float
+    discount_type: String
+    effective_date_end: Date
+    effective_date_start: Date
+    id: String
+    img_url: String
+    is_delete: Int
+    name: String
+    product_category: String
+    promo_code_type: String
+    remark: String
+    reuse_times: Int
+    title: String
+    update_time: Date
+}
+
 input SaveGroupOrderInput {
     group_queue_id: String
     id: String
@@ -629,3 +676,6 @@ input UserSortInput {
 
 "Date custom scalar type"
 scalar Date
+
+"The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf)."
+scalar JSON
