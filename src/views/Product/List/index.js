@@ -22,6 +22,7 @@ import Link from "@material-ui/core/Link";
 import { categoryGraphql } from "@/views/Category/List";
 import { useMutationGraphql, useQueryGraphql } from "@/component/ApolloQuery";
 import { productGraphql, save_product } from "@/views/Product/List/productGraphql";
+import { dealImgUrl } from '@/component/ImgDealUrl/ImgDealUrl'
 
 const KEYWORD_TYPE = {
   num: '1',
@@ -369,7 +370,7 @@ export const Product = ({ theme, match }) => {
                     <TableCell width={240}>
                       <S.ImgPreview>
                         <img
-                            src={e?.imgs?.[0]?.url}
+                            src={dealImgUrl(e?.imgs?.[0]?.url)}
                             alt=""/>
                         <section>
                           <div>{e?.imgs?.length}/7</div>

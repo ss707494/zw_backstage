@@ -1,8 +1,9 @@
 import React from 'react'
 import { S } from './style'
-import { Add, Replay } from "@material-ui/icons";
-import { getObjectURL } from "@/common/utils";
-import Upload from "rc-upload";
+import { Add, Replay } from "@material-ui/icons"
+import { getObjectURL } from "@/common/utils"
+import Upload from "rc-upload"
+import { dealImgUrl } from '@/component/ImgDealUrl/ImgDealUrl.tsx'
 
 export const ImgUpload = (
     {
@@ -33,7 +34,7 @@ export const ImgUpload = (
                     <span>点击添加</span>
                   </span>
                   : <S.ImgBox>
-                    <img src={imgSrc}
+                    <img src={dealImgUrl(imgSrc)}
                          alt=""/>
                     <Replay />
                   </S.ImgBox>

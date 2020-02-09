@@ -2,6 +2,7 @@ import React from 'react'
 import { S } from './style'
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
+import { dealImgUrl } from '@/component/ImgDealUrl/ImgDealUrl.tsx'
 
 const { Box, Img } = S
 
@@ -19,7 +20,8 @@ export const ImgPreview = ({ open, closeModal, data = [] }) => {
           >
             <img
                 alt=""
-                src={e?.url}/>
+                src={dealImgUrl(e?.url)}
+            />
           </Img>)}
         </Carousel>
       </Box>

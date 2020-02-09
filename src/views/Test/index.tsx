@@ -10,6 +10,7 @@ import {ImgUpload} from "@/component/ImgUpload"
 import {KeyboardDateTimePicker} from '@material-ui/pickers'
 import {useStore} from "@/common/context"
 import {StoreTest, testModel} from "@/views/Test/StoreTest/StoreTest"
+import {dealImgUrl} from "@/component/ImgDealUrl/ImgDealUrl"
 
 export const Test = () => {
 
@@ -42,7 +43,7 @@ export const Test = () => {
               style={{
                 width: '300px'
               }}
-              src={imgSrc}
+              src={dealImgUrl(imgSrc)}
               alt=""/>
         </div>
         <div>
