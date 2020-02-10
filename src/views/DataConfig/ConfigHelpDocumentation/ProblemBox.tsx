@@ -17,7 +17,16 @@ const ProblemBoxStyle = styled.div`
   padding: 10px;
   border: 1px solid ${grey[200]};
   grid-template-columns: repeat(4, 1fr);
-  align-items: center;
+  > * {
+    padding: 8px;
+    display: grid;
+    align-items: center
+  }
+  > aside {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-column-gap: 10px;
+  }
 
 `
 
@@ -31,15 +40,22 @@ export const ProblemBox = () => {
   const addOne = () => {
     dealStoreActionEdit(modalModel.actions.openClick)({})
   }
+  const editOne = (item: any) => {
+    dealStoreActionEdit(modalModel.actions.openClick)(item)
+  }
   return (
       <ProblemBoxStyle>
-        {problemList.map((v: Problem) => (<React.Fragment key={`problemList.map_${v.answer}`}>
+        {problemList.map((v: Problem, index) => (<React.Fragment key={`problemList.map_${v.answer}`}>
           <aside>
             <CusButton
+                variant={"contained"}
+                color={"primary"}
+                onClick={() => editOne({...v, index})}
+            >删除</CusButton>
+            <CusButton
                 variant={"outlined"}
-                onClick={() => {
-                }}
-            >编辑问题</CusButton>
+                onClick={() => editOne({...v, index})}
+            >编辑</CusButton>
           </aside>
           <section>{v?.problem}</section>
           <section>{v?.answer}</section>

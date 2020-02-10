@@ -15,7 +15,12 @@ export const EditProblem = () => {
   const setModalData = dealStoreActionEdit(editActions.setModal)
   const handleSave = () => {
     if (modalData?.problem && modalData?.answer && modalData?.sort) {
-      dealStoreAction(actions.addProblem)(modalData)
+      if (modalData?.index > -1) {
+        dealStoreAction(actions.editProblem)(modalData)
+      } else {
+        dealStoreAction(actions.addProblem)(modalData)
+      }
+      dealStoreActionEdit(editActions.onClose)()
     }
   }
 

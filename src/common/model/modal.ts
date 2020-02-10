@@ -1,4 +1,4 @@
-import {fpMerge} from "@/common/utils";
+import {fpMerge} from "@/common/utils"
 
 export interface ModalModel {
   open: boolean,
@@ -8,7 +8,7 @@ export interface ModalModel {
 export const modalModel: ContextModel<ModalModel, {
   onClose: ActionFun,
   openClick: ActionFun<ModalModel>,
-  setModal: ActionFun<ModalModel, {[key: string]: any}>,
+  setModal: ActionFun<ModalModel, { [key: string]: any }>,
 }> = {
   state: {
     modalData: {},
@@ -16,7 +16,10 @@ export const modalModel: ContextModel<ModalModel, {
   },
   actions: {
     openClick: (value, data) => {
-      return fpMerge(data, {open: true})
+      return fpMerge(data, {
+        open: true,
+        modalData: value,
+      })
     },
     onClose: (value, data) => fpMerge(data, {
       modalData: {},

@@ -33,13 +33,16 @@ export const ConfigHelpDocumentation = ({dataConfig = {}}: any) => {
   const {state, actions, dealStoreAction: actionFactory} = useStore(ModuleEnum.ConfigHelpDocumentation, configHelpDocumentationModel)
   const configData = state
   const {actType} = configData
-  const setActType = actionFactory(actions.setActType)
+  const setActType = useCallback(actionFactory(actions.setActType), [])
   const setConfigData = useCallback(actionFactory(actions.setConfig), [])
   useEffect(() => {
     if (dataConfig?.value) {
       setConfigData(dataConfig?.value)
     }
-  }, [dataConfig.value, setConfigData])
+    if (dataConfig?.value?.typeList?.length) {
+      setActType(dataConfig?.value?.typeList[0])
+    }
+  }, [dataConfig.value, setActType, setConfigData])
 
   const tabsChange = (item: DictType) => () => {
     setActType(item)

@@ -1,4 +1,5 @@
 import {fpMerge, fpSet} from "@/common/utils"
+import _ from "lodash"
 
 export interface ConfigHelpDocumentationModel {
   list: object[],
@@ -11,6 +12,9 @@ export const configHelpDocumentationModel: ContextModel<ConfigHelpDocumentationM
   setActType: ActionFun,
   setConfig: ActionFun,
   addProblem: ActionFun<ConfigHelpDocumentationModel, Problem>,
+  editProblem: ActionFun<ConfigHelpDocumentationModel, {
+    index: number,
+  } & Problem>,
 }> = {
   state: {
     actType: {code: "", name: "", sort: 0},
@@ -31,6 +35,7 @@ export const configHelpDocumentationModel: ContextModel<ConfigHelpDocumentationM
         ...preData ?? [],
         value
     ]),
+    editProblem: (value, data) => fpSet(data, ['problemListData', data.actType.code, value?.index], _.pick(value, ['answer', 'sort', 'problem'])),
   },
   asyncActions: {},
 }
