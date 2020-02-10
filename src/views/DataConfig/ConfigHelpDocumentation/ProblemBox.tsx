@@ -46,9 +46,13 @@ export const ProblemBox = () => {
   return (
       <ProblemBoxStyle>
         {problemList.map((v: Problem, index) => (<React.Fragment key={`problemList.map_${v.answer}`}>
+          {['操作', '问题', '答案', '排序'].map(value => <div
+              key={`${value}`}
+              style={{textAlign: 'center'}}
+          >{value}</div>)}
           <aside>
             <CusButton
-                variant={"contained"}
+                variant={"outlined"}
                 color={"primary"}
                 onClick={() => editOne({...v, index})}
             >删除</CusButton>
