@@ -10,7 +10,6 @@ export const testModel: ContextModel<{test: string}, {
   state: {test: 'ss'},
   actions: {
     doTest: (v, data) => {
-      console.log('123123')
       return {
         ...data,
         test: data.test + '::sss::'
@@ -27,7 +26,7 @@ export const testModel: ContextModel<{test: string}, {
 export const StoreTest = () => {
   const {actions, store, state, dealStoreAction} = useStore('test', testModel)
   console.log(store)
-  dealStoreAction(actions.doTest)()
+  // dealStoreAction(actions.doTest)()
 
 
   return (
@@ -36,7 +35,7 @@ export const StoreTest = () => {
         {JSON.stringify(store)}
         {JSON.stringify(state)}
         <CusButton
-            onClick={dealStoreAction(testModel.actions.doTest)}
+            onClick={dealStoreAction(actions.doTest)}
         >
           doTest
         </CusButton>

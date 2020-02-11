@@ -22,10 +22,10 @@ export const Test = () => {
   const [imgSrc,] = React.useState('')
   const [date, changeDate] = useState(new Date())
 
-  const {store, state, dealActionAsync} = useStore('test', testModel)
+  const {store, state, dealActionAsync, asyncActions} = useStore('test', testModel)
   useEffect(() => {
-    dealActionAsync(testModel.asyncActions.setTest)()
-  }, [dealActionAsync])
+    dealActionAsync(asyncActions.setTest)()
+  }, [asyncActions.setTest, dealActionAsync])
 
   return (
       <S.Box>
