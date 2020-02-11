@@ -1,4 +1,4 @@
-import {Dialog, DialogActions, DialogContent, TextField} from "@material-ui/core";
+import {Dialog, DialogActions, DialogContent, TextField} from "@material-ui/core"
 import React from "react";
 import {parseFloatForInput} from "@/common/utils";
 import {CusButton} from "@/component/CusButton";
@@ -41,7 +41,6 @@ export const EditProblem = () => {
           />
           <TextField
               fullWidth
-              type={'textarea'}
               color={"secondary"}
               label={'答案'}
               value={modalData?.answer || ''}

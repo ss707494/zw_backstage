@@ -16,7 +16,7 @@ const ProblemBoxStyle = styled.div`
   margin-top: 15px;
   padding: 10px;
   border: 1px solid ${grey[200]};
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(120px, 520px));
   > * {
     padding: 8px;
     display: grid;
@@ -26,6 +26,13 @@ const ProblemBoxStyle = styled.div`
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-column-gap: 10px;
+  }
+  > section {
+    > span {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
   }
 
 `
@@ -61,9 +68,9 @@ export const ProblemBox = () => {
                 onClick={() => editOne({...v, index})}
             >编辑</CusButton>
           </aside>
-          <section>{v?.problem}</section>
-          <section>{v?.answer}</section>
-          <section>{v?.sort}</section>
+          <section><span>{v?.problem}</span></section>
+          <section><span>{v?.answer}</span></section>
+          <section><span>{v?.sort}</span></section>
         </React.Fragment>))}
         <footer>
           <CusButton
