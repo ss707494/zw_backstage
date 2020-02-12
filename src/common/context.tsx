@@ -3,6 +3,14 @@ import merge from 'lodash/merge'
 import {Dispatch, SetStateAction} from "react"
 import {fpMerge} from "@/common/utils"
 import _ from "lodash"
+import {graphQLMutate, graphQLQuery} from "@/component/ApolloQuery"
+
+export enum ModuleEnum {
+  FetchLoad = 'FetchLoad',
+  FetchError = 'FetchError',
+  ConfigHelpDocumentation = 'ConfigHelpDocumentation',
+  Test = 'Test',
+}
 
 export const context = React.createContext<any[]>([])
 
@@ -22,9 +30,17 @@ type UseStoreResult<T, E, Y> = {
   asyncActions: Y,
 }
 
+const setStateBySet = (setCon: Dispatch<SetStateAction<object>>, key: ModuleEnum) => {
+  return (data: any) => setCon(prevState => fpMerge(prevState, {
+    store: {
+      [key]: data,
+    }
+  }))
+}
 export const useStore = <T, E extends ActionObj<T>, Y extends AsyncActionObj<T>>(key: ModuleEnum | string, newModel: ContextModel<T, E, Y>): UseStoreResult<T, E, Y> => {
   const {asyncActions, actions, state} = newModel
   const [con, , setCon] = useCustomContext()
+
   const setState = useCallback((data) => {
     setCon(prevState => fpMerge(prevState, {
       store: {
@@ -32,14 +48,36 @@ export const useStore = <T, E extends ActionObj<T>, Y extends AsyncActionObj<T>>
       },
     }))
   }, [key, setCon]) as Dispatch<SetStateAction<T>>
+
+  const setLoad = useCallback(setStateBySet(setCon, ModuleEnum.FetchLoad), [])
+  const setError = useCallback(setStateBySet(setCon, ModuleEnum.FetchError), [])
+  const query: GraphqlQuery = useCallback(async (query, params, option) => {
+    setLoad({[query]: true})
+    const {data} = await graphQLQuery(query, params, option).catch(e => {
+      setError({[query]: e})
+    }).finally(() => {
+      setLoad({[query]: false})
+    })
+    return data
+  }, [setError, setLoad])
+  const mutate: GraphqlMutate = useCallback(async (mutation, params, option) => {
+    setLoad({[mutation]: true})
+    const {data} = await graphQLMutate(query, params, option).catch(e => {
+      setError({[mutation]: e})
+    }).finally(() => {
+      setLoad({[mutation]: false})
+    })
+    return data
+  }, [query, setError, setLoad])
+
   const dealStoreAction = useCallback((action) => (value?: any) => {
     return setState(data => {
       return action(value, data)
     })
   }, [setState])
   const dealActionAsync = useCallback((asyncAction: AsyncActionFun) => async (value?: any) => {
-    return asyncAction(value, setState)
-  }, [setState])
+    return asyncAction(value, setState, {query, mutate})
+  }, [mutate, query, setState])
   useEffect(() => {
     if (!con?.store?.[key]) {
       setCon((preState: any) => (fpMerge(preState, {
@@ -83,11 +121,6 @@ export const dealNameSpace = (key: ModuleEnum, nameSpace: string) => {
     return `${key}_${nameSpace}`
   }
   return `${key}`
-}
-
-export enum ModuleEnum {
-  ConfigHelpDocumentation = 'ConfigHelpDocumentation',
-  Test = 'Test',
 }
 
 export default {

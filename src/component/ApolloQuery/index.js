@@ -13,6 +13,32 @@ export const WrapperQuery = (query, variables) => child => (
     </Query>
 )
 
+const dealParams = (params => ({
+  data: params,
+}))
+
+export const graphQLMutate = async (mutation, params, option) => {
+  const _dealParamsIn = option?.dealParamsIn ?? dealParams
+  return client.mutate({
+    mutation,
+    variables: {
+      ...(_dealParamsIn ? _dealParamsIn(params) : params)
+    },
+    ...option,
+  })
+}
+export const graphQLQuery = async (query, params, option) => {
+  const _dealParamsIn = option?.dealParamsIn ?? dealParams
+  return client.query({
+    fetchPolicy: 'network-only',
+    query,
+    variables: {
+      ...(_dealParamsIn ? _dealParamsIn(params) : params)
+    },
+    ...option,
+  })
+}
+
 export const useMutationGraphql = (mutation, option, dealParamsIn) => {
   const [res, setRes] = useState()
   const [error, setError] = useState()
@@ -66,10 +92,6 @@ export const useQueryGraphql = (query, options, dealParamsIn) => {
     getData, res ?? {}, loading, error
   ]
 }
-
-const dealParams = (params => ({
-  data: params,
-}))
 
 export const useQuerySimpleData = (query, options) => {
   return useQueryGraphql(query, options, dealParams)
