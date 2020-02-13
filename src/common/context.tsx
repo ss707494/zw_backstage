@@ -37,9 +37,29 @@ const setStateBySet = (setCon: Dispatch<SetStateAction<object>>, key: ModuleEnum
     }
   }))
 }
+export const useGraphqlStoreByKey = (key: ModuleEnum) => {
+  const [con, , setCon] = useCustomContext()
+  const data = con?.store?.[ModuleEnum.FetchLoad]
+  const setData = useCallback((prop, newValue) => setStateBySet(setCon, key)({
+    [prop?.loc?.source?.body]: newValue
+  }), [key, setCon])
+  const getData = (query: any) => {
+    return data?.[query?.loc?.source?.body]
+  }
+  return {
+    data,
+    setData,
+    getData,
+  }
+}
+export const useGetLoad = () => useGraphqlStoreByKey(ModuleEnum.FetchLoad)
+export const useGetError = () => useGraphqlStoreByKey(ModuleEnum.FetchError)
+
 export const useStore = <T, E extends ActionObj<T>, Y extends AsyncActionObj<T>>(key: ModuleEnum | string, newModel: ContextModel<T, E, Y>): UseStoreResult<T, E, Y> => {
   const {asyncActions, actions, state} = newModel
   const [con, , setCon] = useCustomContext()
+  const {setData: setLoad} = useGetLoad()
+  const {setData: setError} = useGetError()
 
   const setState = useCallback((data) => {
     setCon(prevState => fpMerge(prevState, {
@@ -49,25 +69,23 @@ export const useStore = <T, E extends ActionObj<T>, Y extends AsyncActionObj<T>>
     }))
   }, [key, setCon]) as Dispatch<SetStateAction<T>>
 
-  const setLoad = useCallback(setStateBySet(setCon, ModuleEnum.FetchLoad), [])
-  const setError = useCallback(setStateBySet(setCon, ModuleEnum.FetchError), [])
   const query: GraphqlQuery = useCallback(async (query, params, option) => {
-    setLoad({[query]: true})
-    const {data} = await graphQLQuery(query, params, option).catch(e => {
-      setError({[query]: e})
+    setLoad(query, true)
+    const res = await graphQLQuery(query, params, option).catch(e => {
+      setError(query, e)
     }).finally(() => {
-      setLoad({[query]: false})
+      setLoad(query, false)
     })
-    return data
+    return res?.data
   }, [setError, setLoad])
   const mutate: GraphqlMutate = useCallback(async (mutation, params, option) => {
-    setLoad({[mutation]: true})
-    const {data} = await graphQLMutate(query, params, option).catch(e => {
-      setError({[mutation]: e})
+    setLoad(mutation, true)
+    const res = await graphQLMutate(query, params, option).catch(e => {
+      setError(mutation, e)
     }).finally(() => {
-      setLoad({[mutation]: false})
+      setLoad(mutation, false)
     })
-    return data
+    return res?.data
   }, [query, setError, setLoad])
 
   const dealStoreAction = useCallback((action) => (value?: any) => {

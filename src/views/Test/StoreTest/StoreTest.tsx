@@ -1,22 +1,20 @@
-import React from "react"
-import {useStore} from "@/common/context"
+import React, {useEffect} from "react"
+import {useGetLoad, useStore} from "@/common/context"
 import {CusButton} from "@/component/CusButton"
+import {gql} from "apollo-boost"
+import {getDataConfigGraphql} from "@/views/DataConfig/configGroup"
 
-type sstest = (v: (pre: string) => any) => any;
-interface Addd {
-  (sstest: sstest) : any
-}
-const sss: Addd = ((sstest) => {
-  return {}
-})
-
-const ss: AsyncActionFun<string, string> = (value, setData, option) => {
-}
+const queryTest = gql`
+    query {
+        test
+    }
+`
 
 export const testModel: ContextModel<{test: string}, {
   doTest: ActionFun,
 }, {
-  setTest: AsyncActionFun<{test: string}>
+  setTest: AsyncActionFun<{test: string}>,
+  asyncWait: AsyncActionFun,
 }> = {
   state: {test: 'ss'},
   actions: {
@@ -30,15 +28,26 @@ export const testModel: ContextModel<{test: string}, {
   asyncActions: {
     setTest: (value, setData) => {
       setData(() => ({test: 'sd'}))
-    }
+    },
+    asyncWait: async (value, setData, {query}) => {
+      await query(queryTest)
+
+      console.log('queryTest')
+    },
   },
 }
 
 export const StoreTest = () => {
-  const {actions, store, state, dealStoreAction} = useStore('test', testModel)
-  console.log(store)
+  const loadObj = useGetLoad()
+  const {actions, store, state, dealStoreAction, dealActionAsync, asyncActions} = useStore('test', testModel)
+  console.log(queryTest)
+  console.log(getDataConfigGraphql)
+  console.log(loadObj.getData(queryTest))
   // dealStoreAction(actions.doTest)()
 
+  useEffect(() => {
+    dealActionAsync(asyncActions.asyncWait)()
+  }, [asyncActions.asyncWait, dealActionAsync])
 
   return (
       <div>
@@ -50,6 +59,15 @@ export const StoreTest = () => {
         >
           doTest
         </CusButton>
+        <div>
+          {loadObj.getData(queryTest)}
+          {JSON.stringify(loadObj)}
+          <CusButton
+              onClick={dealActionAsync(asyncActions.asyncWait)}
+          >
+            asyncWait
+          </CusButton>
+        </div>
       </div>
   )
 }
