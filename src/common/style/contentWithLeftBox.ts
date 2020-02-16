@@ -36,7 +36,7 @@ contentWithLeftBox.ActiveBox = styled(contentWithLeftBox.LeftCard)`
     ${boxShadow};
     background:  linear-gradient(to right, rgba(144,139,139,0.34), #fff);
     border: ${border};
-    border-right: none;
+    border-right: 0;
     &:after {
       content: '';
       position: absolute;
