@@ -3,6 +3,8 @@ export enum DictTypeEnum {
   UserLevel = 'UserLevel',
   Freight = 'Freight',
   HelpDocumentation = 'HelpDocumentation',
+  PromotionThemeSelect = 'PromotionThemeSelect',
+  PromotionFlashSale = 'PromotionFlashSale',
 }
 
 

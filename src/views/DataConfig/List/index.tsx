@@ -9,6 +9,7 @@ import {useParams} from "react-router-dom"
 import history from "@/common/history";
 import {ConfigFreight} from "@/views/DataConfig/ConfigFreight/ConfigFreight";
 import ConfigHelpDocumentation from "@/views/DataConfig/ConfigHelpDocumentation/ConfigHelpDocumentation";
+import {ConfigThemeSelect} from "@/views/DataConfig/ConfigThemeSelect/ConfigThemeSelect"
 
 const leftMenu: DictType[] = [
   {
@@ -27,6 +28,14 @@ const leftMenu: DictType[] = [
     name: '帮助文档设置',
     code: DictTypeEnum.HelpDocumentation,
   },
+  {
+    name: '促销-主题甄选',
+    code: DictTypeEnum.PromotionThemeSelect,
+  },
+  {
+    name: '促销-限时抢购',
+    code: DictTypeEnum.PromotionFlashSale,
+  },
 ]
 
 const configCom: { [key: string]: any } = {
@@ -34,6 +43,7 @@ const configCom: { [key: string]: any } = {
   [DictTypeEnum.UserLevel]: ConfigUserLevel,
   [DictTypeEnum.Freight]: ConfigFreight,
   [DictTypeEnum.HelpDocumentation]: ConfigHelpDocumentation,
+  [DictTypeEnum.PromotionThemeSelect]: ConfigThemeSelect,
 }
 
 export const DataConfig = () => {

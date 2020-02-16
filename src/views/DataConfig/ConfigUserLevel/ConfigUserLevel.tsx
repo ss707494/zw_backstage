@@ -26,7 +26,6 @@ export const ConfigUserLevel = ({dataConfig = {}}: any) => {
       dict_type_code: dataConfig?.type,
     })
   }, [dataConfig?.type, getDictItemList])
-  console.log(dictItemList)
 
   return (
       <div>

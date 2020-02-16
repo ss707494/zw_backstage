@@ -8,7 +8,7 @@ import {
   ModuleEnum,
   useStore
 } from "@/common/context"
-import {modalModel} from "@/common/model/modal"
+import {modalModelFactory} from "@/common/model/modal"
 import {configHelpDocumentationModel} from "@/views/DataConfig/ConfigHelpDocumentation/model"
 
 const ProblemBoxStyle = styled.div`
@@ -16,11 +16,14 @@ const ProblemBoxStyle = styled.div`
   margin-top: 15px;
   padding: 10px;
   border: 1px solid ${grey[200]};
-  grid-template-columns: repeat(4, minmax(120px, 520px));
+  grid-template-columns: max-content repeat(3, minmax(120px, 520px));
   > * {
     padding: 8px;
     display: grid;
-    align-items: center
+    align-items: center;
+    border: 1px solid ${grey[200]};
+    margin-right: -1px;
+    margin-bottom: -1px;
   }
   > aside {
     display: grid;
@@ -28,11 +31,15 @@ const ProblemBoxStyle = styled.div`
     grid-column-gap: 10px;
   }
   > section {
+    padding: 8px 16px;
     > span {
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;
     }
+  }
+  > footer {
+    border: 0;
   }
 
 `
@@ -41,14 +48,14 @@ export const ProblemBox = () => {
   const {state} = useStore(ModuleEnum.ConfigHelpDocumentation, configHelpDocumentationModel)
   const configData = state
   const actType = configData.actType
-  const {dealStoreAction: dealStoreActionEdit} = useStore(dealNameSpace(ModuleEnum.ConfigHelpDocumentation, EditProblemNamespace), modalModel)
+  const {dealStoreAction: dealStoreActionEdit, actions} = useStore(dealNameSpace(ModuleEnum.ConfigHelpDocumentation, EditProblemNamespace), modalModelFactory({}))
 
   const problemList = configData?.problemListData?.[actType.code] ?? []
   const addOne = () => {
-    dealStoreActionEdit(modalModel.actions.openClick)({})
+    dealStoreActionEdit(actions.openClick)({})
   }
   const editOne = (item: any) => {
-    dealStoreActionEdit(modalModel.actions.openClick)(item)
+    dealStoreActionEdit(actions.openClick)(item)
   }
   return (
       <ProblemBoxStyle>

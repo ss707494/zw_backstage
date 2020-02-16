@@ -1,5 +1,5 @@
 declare module '@loadable/component';
-declare var ssLog: any;
+declare var ssLog: any
 
 declare type ParamType<T> = T extends (param: infer P) => any ? P : T;
 
@@ -50,16 +50,16 @@ declare interface Problem {
   sort: number,
 }
 
-type SetStateAction<S> = S | ((prevState: S) => S);
+declare type SetStateActionStore<S> = S | ((prevState: S, store?: any) => S);
 
 type Dispatch<A> = (value: A) => void;
 
-declare type ActionFun<T = any, E = any> = (value: E, data: T, option?: { data?: T, setData?: any }) => any | Promise<any>
+declare type ActionFun<T = any, E = any> = (value: E, data: T, option?: { data?: T, setData?: any, store?: any }) => any | Promise<any>
 
 declare type GraphqlQuery = (query: string, params?: any, option?: any) => any
 declare type GraphqlMutate = (mutation: string, params?: any, option?: any) => any
 
-declare type AsyncActionFun<T = any, E = any> = (value: E, setData: Dispatch<SetStateAction<T>>, option: { data?: T, setData?: any, query: GraphqlQuery, mutate: GraphqlMutate}) => any | Promise<any>
+declare type AsyncActionFun<T = any, E = any> = (value: E, setData: Dispatch<SetStateActionStore<T>>, option: { data?: T, setData?: any, query: GraphqlQuery, mutate: GraphqlMutate, store?: any }) => any | Promise<any>
 
 declare type ActionObj<T> = {
   [key: string]: ActionFun<T>
@@ -69,7 +69,7 @@ declare type AsyncActionObj<T> = {
   [key: string]: AsyncActionFun<T>
 }
 
-declare interface ContextModel<T, E extends ActionObj<T>, Y extends AsyncActionObj<T> = any> {
+declare interface ContextModel<T, E extends ActionObj<T> = any, Y extends AsyncActionObj<T> = any> {
   state: T,
   actions: E,
   asyncActions: Y,

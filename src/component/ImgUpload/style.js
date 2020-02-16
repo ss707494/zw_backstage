@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled from "styled-components"
 import { blueGrey, grey, common } from "@material-ui/core/colors";
 import { CusButton } from "@/component/CusButton";
 

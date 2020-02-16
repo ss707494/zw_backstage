@@ -3,14 +3,19 @@ import React from "react";
 import {parseFloatForInput} from "@/common/utils";
 import {CusButton} from "@/component/CusButton";
 import {dealNameSpace, ModuleEnum, useStore} from "@/common/context"
-import {modalModel} from "@/common/model/modal"
+import {modalModelFactory} from "@/common/model/modal"
 import {configHelpDocumentationModel} from "@/views/DataConfig/ConfigHelpDocumentation/model"
 
 export const EditProblemNamespace = 'editProblem'
 
 export const EditProblem = () => {
   const {dealStoreAction, actions} = useStore(ModuleEnum.ConfigHelpDocumentation, configHelpDocumentationModel)
-  const {state: editState, dealStoreAction: dealStoreActionEdit, actions: editActions} = useStore(dealNameSpace(ModuleEnum.ConfigHelpDocumentation, EditProblemNamespace), modalModel)
+  const {state: editState, dealStoreAction: dealStoreActionEdit, actions: editActions} = useStore(dealNameSpace(ModuleEnum.ConfigHelpDocumentation, EditProblemNamespace), modalModelFactory({
+    problem: '',
+    answer: '',
+    sort: 0,
+    index: 0,
+  }))
   const modalData = editState.modalData
   const setModalData = dealStoreActionEdit(editActions.setModal)
   const handleSave = () => {

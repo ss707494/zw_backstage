@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled from "styled-components"
 import { Dialog } from "@material-ui/core";
 import DialogContent from "@material-ui/core/DialogContent";
 

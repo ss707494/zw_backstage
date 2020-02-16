@@ -11,7 +11,7 @@ export const getObjectURL = (file: any) => {
 }
 
 export const fileUploadAjax = (data: any, files: any, url: string, option?: any) => {
-  const formData = new FormData();
+  const formData = new FormData()
   if (data) {
     Object.keys(data).forEach(key => {
       formData.append(key, data[key])
@@ -50,7 +50,10 @@ export const fpSet = <E = any>(origin: any, path: any, value: SetData<E>) => {
   return newData
 }
 
-export const fpMerge = (origin: any, newValue: any) => {
+export const fpMerge: <TObject, TSource1>(
+    origin: TObject,
+    newValue: TSource1,
+) => TObject & TSource1 = (origin, newValue) => {
   return merge({}, origin, newValue)
 }
 

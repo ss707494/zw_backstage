@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled from "styled-components"
 import {Button} from "@material-ui/core";
 
 const border = `1px solid rgba(224,224,224,1)`
