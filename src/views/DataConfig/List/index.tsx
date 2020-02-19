@@ -11,7 +11,6 @@ import {ConfigFreight} from "@/views/DataConfig/ConfigFreight/ConfigFreight"
 import ConfigHelpDocumentation from "@/views/DataConfig/ConfigHelpDocumentation/ConfigHelpDocumentation"
 import {ConfigThemeSelect} from "@/views/DataConfig/ConfigThemeSelect/ConfigThemeSelect"
 import {ConfigHomeCarousel} from "@/views/DataConfig/ConfigHomeCarousel/ConfigHomeCarousel"
-import {ConfigFlashSale} from "@/views/DataConfig/ConfigFlashSale/ConfigFlashSale"
 
 const leftMenu: DictType[] = [
   {
