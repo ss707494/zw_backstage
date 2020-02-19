@@ -1,6 +1,6 @@
 import React, {useEffect} from "react"
 import {ModuleEnum, useStore} from "@/common/context"
-import {themeSelectModel} from "@/views/DataConfig/ConfigThemeSelect/model/config"
+import {ConfigThemeSelectTs, themeSelectModel} from "@/views/DataConfig/ConfigThemeSelect/model/config"
 import {HeaderAction} from "@/views/DataConfig/component/HeaderAction/HeaderAction"
 import styled from "styled-components"
 import {CusButton} from "@/component/CusButton"
@@ -9,6 +9,7 @@ import {EditModal} from "@/views/DataConfig/ConfigThemeSelect/EditModal"
 import {grey} from "@material-ui/core/colors"
 import {dealImgUrl} from "@/component/ImgDealUrl/ImgDealUrl"
 import {SelectProduct, selectProductModel} from "@/views/DataConfig/ConfigThemeSelect/SelectProduct"
+import {fpMerge} from "@/common/utils"
 
 const Box = styled.div`
   display: grid;
@@ -52,15 +53,15 @@ export const ConfigThemeSelect = ({dataConfig = {}}: any) => {
 
   useEffect(() => {
     if (dataConfig?.value) {
-      dealStoreAction(actions.setConfigData)(dataConfig.value)
+      dealStoreAction(actions.setConfigData)(fpMerge(dataConfig.value, themeSelectModel.state.configData))
     }
   }, [actions.setConfigData, dataConfig.value, dealStoreAction])
   useEffect(() => {
-    dealStoreActionSel(actionsSel.setDealOut)(async (selectList) => {
-      console.log(selectList)
+    dealStoreActionSel(actionsSel.setDealOut)(async (data) => {
+      dealStoreAction(actions.setListSelectProduct)(data)
       return true
     })
-  }, [actionsSel.setDealOut, dealStoreActionSel])
+  }, [actions.setListSelectProduct, actionsSel.setDealOut, dealStoreAction, dealStoreActionSel])
   return (
       <div>
         <HeaderAction
@@ -69,7 +70,7 @@ export const ConfigThemeSelect = ({dataConfig = {}}: any) => {
         />
         <Box>
           {['操作', '主题名称', '描述', '图片', '有效日期'].map(v => (<header key={`header_${v}`}>{v}</header>))}
-          {configData.list.map(v => (
+          {configData.list?.map((v: ConfigThemeSelectTs) => (
               <React.Fragment key={`configData.list_${v.title}`}>
                 <aside>
                   <CusButton

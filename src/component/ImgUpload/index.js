@@ -8,7 +8,9 @@ import { dealImgUrl } from '@/component/ImgDealUrl/ImgDealUrl.tsx'
 export const ImgUpload = (
     {
       onChange,
-      initSrc = ''
+      initSrc = '',
+      mainCss = '',
+      noSetSrc = false,
     }) => {
 
   const [imgSrc, setImgSrc] = React.useState(initSrc)
@@ -21,13 +23,17 @@ export const ImgUpload = (
       <S.ImgUpload>
         <Upload
             beforeUpload={(file) => {
-              setImgSrc(getObjectURL(file))
+              if (!noSetSrc) {
+                setImgSrc(getObjectURL(file))
+              }
               onChange(file)
               return false
             }}
         >
           <S.AddButton>
-            <S.Add>
+            <S.Add
+                mainCss={mainCss}
+            >
               {!imgSrc
                   ? <span>
                     <Add/>

@@ -5,6 +5,7 @@ export enum DictTypeEnum {
   HelpDocumentation = 'HelpDocumentation',
   PromotionThemeSelect = 'PromotionThemeSelect',
   PromotionFlashSale = 'PromotionFlashSale',
+  HomeCarousel = 'HomeCarousel',
 }
 
 

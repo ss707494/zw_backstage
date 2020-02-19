@@ -1,8 +1,7 @@
 import {fileUploadAjax, fpMerge, fpSet} from "@/common/utils"
 import {modelFactory} from "@/common/context"
-import {ConfigThemeSelect} from "@/views/DataConfig/ConfigThemeSelect/ConfigThemeSelect"
 
-export declare type ConfigThemeSelect = {
+export declare type ConfigThemeSelectTs = {
   title: string,
   remark: string,
   imgUrl: string,
@@ -13,12 +12,13 @@ export declare type ConfigThemeSelect = {
 
 export const themeSelectModel = modelFactory({
   configData: {
-    list: [] as ConfigThemeSelect[],
+    list: [],
   },
 }, {
-  setConfigData: (value, data) => fpMerge(data, {configData: value}),
+  setConfigData: (value, data) => fpSet(data, ['configData'], {...value}),
+  setListSelectProduct: ({selectList, index}: { selectList: string[], index: number }, data) => fpSet(data, ['configData', 'list', index, 'selectProductList'], selectList),
 }, {
-  updateOne: async (value: { configThemeSelect: ConfigThemeSelect, imgFile: any, index: number }, setData) => {
+  updateOne: async (value: { configThemeSelect: ConfigThemeSelectTs, imgFile: any, index: number }, setData) => {
     let uploadRes = value.configThemeSelect.imgUrl
     if (value.imgFile) {
       uploadRes = (await fileUploadAjax({}, [value.imgFile], '/api/fileUpload'))?.data?.files?.[0]?.url ?? ''
@@ -32,7 +32,7 @@ export const themeSelectModel = modelFactory({
       setData(pre => fpMerge(pre, {
         configData: {
           list: [
-            ...pre.configData.list,
+            ...pre.configData?.list,
             {
               ...value.configThemeSelect,
               imgUrl: uploadRes,

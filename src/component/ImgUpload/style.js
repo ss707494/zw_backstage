@@ -21,6 +21,7 @@ S.Add = styled('section')`&&& {
     flex-direction: column;
     align-items: center;
   }
+  ${props => props?.mainCss}
 }
 `
 S.ImgBox = styled('section')`

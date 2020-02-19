@@ -11,11 +11,11 @@ export const selectProductModel = modelFactory({
   list: [],
   selectList: [] as string[],
   index: -1,
-  dealOut: async (selectList: string[], event: any) => {
-    return selectList
+  dealOut: async ({selectList, index}: {selectList: string[], index: number}, event: any) => {
+    return false
   },
 }, {
-  setDealOut: (value: (selectList: string[], event: any) => any, data) => fpMerge(data, {dealOut: value}),
+  setDealOut: (value: (data: {selectList: string[], index: number}, event: any) => any, data) => fpMerge(data, {dealOut: value}),
   setOpen: (value, data) => fpMerge(data, {
     open: value,
   }),
@@ -54,7 +54,7 @@ const DialogContentBox = styled(DialogContent)`
 `
 
 export const SelectProduct = () => {
-  const {state: {open, list, selectList, dealOut}, actions, asyncActions, dealStoreAction, dealActionAsync} = useStore(ModuleEnum.SelectProduct, selectProductModel)
+  const {state: {index, open, list, selectList, dealOut}, actions, asyncActions, dealStoreAction, dealActionAsync} = useStore(ModuleEnum.SelectProduct, selectProductModel)
 
   useEffect(() => {
     dealActionAsync(asyncActions.getList)()
@@ -82,7 +82,7 @@ export const SelectProduct = () => {
                   })}
               />
             </aside>
-            <section>{value.name}{JSON.stringify(selectList)}{value.id}{`${selectList.includes(value.id)}`}</section>
+            <section>{value.name}</section>
           </React.Fragment>)}
         </DialogContentBox>
         <DialogActions>
@@ -91,7 +91,7 @@ export const SelectProduct = () => {
               color={"primary"}
               variant={"contained"}
               onClick={async event => {
-                const res = await dealOut(selectList, event)
+                const res = await dealOut({selectList, index}, event)
                 if (res) {
                   onClose()
                 }
