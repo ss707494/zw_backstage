@@ -9,30 +9,30 @@ import {configHelpDocumentationModel} from "@/views/DataConfig/ConfigHelpDocumen
 export const EditProblemNamespace = 'editProblem'
 
 export const EditProblem = () => {
-  const {dealStoreAction, actions} = useStore(ModuleEnum.ConfigHelpDocumentation, configHelpDocumentationModel)
-  const {state: editState, dealStoreAction: dealStoreActionEdit, actions: editActions} = useStore(dealNameSpace(ModuleEnum.ConfigHelpDocumentation, EditProblemNamespace), modalModelFactory({
+  const {handleAction: dealAction, actions} = useStore(ModuleEnum.ConfigHelpDocumentation, configHelpDocumentationModel)
+  const {state: editState, handleAction: dealActionEdit, actions: editActions} = useStore(dealNameSpace(ModuleEnum.ConfigHelpDocumentation, EditProblemNamespace), modalModelFactory({
     problem: '',
     answer: '',
     sort: 0,
     index: 0,
   }))
   const modalData = editState.modalData
-  const setModalData = dealStoreActionEdit(editActions.setModal)
+  const setModalData = dealActionEdit(editActions.setModal)
   const handleSave = () => {
     if (modalData?.problem && modalData?.answer && modalData?.sort) {
       if (modalData?.index > -1) {
-        dealStoreAction(actions.editProblem)(modalData)
+        dealAction(actions.editProblem)(modalData)
       } else {
-        dealStoreAction(actions.addProblem)(modalData)
+        dealAction(actions.addProblem)(modalData)
       }
-      dealStoreActionEdit(editActions.onClose)()
+      dealActionEdit(editActions.onClose)()
     }
   }
 
   return (
       <Dialog
           open={editState.open}
-          onClose={dealStoreActionEdit(editActions.onClose)}
+          onClose={dealActionEdit(editActions.onClose)}
       >
         <DialogContent>
           <TextField

@@ -15,14 +15,14 @@ const Box = styled.div`
 `
 
 export const ConfigHomeCarousel = ({dataConfig = {}}: any) => {
-  const {state: {configData}, dealStoreAction, actions, dealActionAsync, asyncActions} = useStore(ModuleEnum.ConfigThemeSelect, homeCarousel)
+  const {state: {configData}, handleAction, actions} = useStore(ModuleEnum.ConfigThemeSelect, homeCarousel)
   const {imgList} = configData
 
   useEffect(() => {
     if (dataConfig?.value) {
-      dealStoreAction(actions.setConfigData)(dataConfig.value)
+      handleAction(actions.setConfigData)(dataConfig.value)
     }
-  }, [actions.setConfigData, dataConfig.value, dealStoreAction])
+  }, [actions.setConfigData, dataConfig.value, handleAction])
 
   return (
       <div>
@@ -31,12 +31,12 @@ export const ConfigHomeCarousel = ({dataConfig = {}}: any) => {
             configData={configData}
         />
         <Box>
-          {imgList?.map((value, index) => <ImgUpload
+          {imgList?.map((value: string, index: number) => <ImgUpload
               key={`imgList_${value}`}
               mainCss={css`width: 320px; height: 200px`.toString()}
               initSrc={value}
               onChange={(file: any) => {
-                dealActionAsync(asyncActions.setOneImg)({file, index})
+                handleAction(actions.setOneImg)({index, file})
               }}
           />)}
           <ImgUpload
@@ -44,12 +44,10 @@ export const ConfigHomeCarousel = ({dataConfig = {}}: any) => {
               initSrc={''}
               noSetSrc={true}
               onChange={(file: any) => {
-                dealActionAsync(asyncActions.addOne)(file)
+                handleAction(actions.addOne)(file)
               }}
           />
         </Box>
-
-
       </div>
   )
 }

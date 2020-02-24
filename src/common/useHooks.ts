@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {SetStateAction, useState} from "react"
 
 export const useCommonModalState:() => CommonModalState = () => {
   const [open, setOpen] = useState(false)
@@ -14,5 +14,19 @@ export const useCommonModalState:() => CommonModalState = () => {
     modalData,
     setModalData,
     openClick,
+  }
+}
+
+export const useModelState = <T, E, Y>(model: ModelData<T, E>): ModelResult<T, E> => {
+  const {state: modelState, actions} = model
+  const [state, setState] = useState(modelState) as [T, ModelDispatch<SetStateAction<T>>]
+  const handleAction: HandleAction<T> = action => (value?: any) => {
+    return action(value, setState, {})
+  }
+
+  return {
+    state,
+    actions,
+    handleAction,
   }
 }

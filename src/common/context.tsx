@@ -1,8 +1,6 @@
-import React, {useState, useContext, useCallback, useEffect} from 'react'
-import merge from 'lodash/merge'
-import {Dispatch, SetStateAction} from "react"
-import {fpMerge, fpSet} from "@/common/utils"
 import _ from "lodash"
+import React, {useState, useContext, useCallback, useEffect, SetStateAction} from 'react'
+import {fpMerge, fpSet} from "@/common/utils"
 import {graphQLMutate, graphQLQuery} from "@/component/ApolloQuery"
 
 export enum ModuleEnum {
@@ -16,23 +14,20 @@ export enum ModuleEnum {
 
 export const context = React.createContext<any[]>([])
 
-export const useCustomContext: () => [any, any, Dispatch<SetStateAction<{ [key: string]: any }>>] = () => {
+export const useCustomContext: () => [any, any, ModelDispatch<SetStateAction<{ [key: string]: any }>>] = () => {
   const [context1, setContext, setContextOri] = useContext(context)
   return [context1, useCallback(setContext, []), setContextOri]
 }
 
-type UseStoreResult<T, E, Y> = {
-  store: any,
-  state: T,
-  setState: Dispatch<SetStateActionStore<T>>,
-  setContext: Dispatch<SetStateAction<any>>,
-  dealStoreAction: <S>(action: ActionFun<T, S>) => ((value?: S) => any),
-  dealActionAsync: <S>(asyncAction: AsyncActionFun<T, S>) => ((value?: S) => any),
-  actions: E,
-  asyncActions: Y,
-}
+type SetStateActionStore<S> = S | ((prevState: S, store?: any) => S);
 
-const setStateBySet = (setCon: Dispatch<SetStateAction<object>>, key: ModuleEnum) => {
+type UseStoreResult<T, E> = {
+  store: any
+  setState: ModelDispatch<SetStateActionStore<T>>
+  setContext: ModelDispatch<SetStateAction<any>>
+} & ModelResult<T, E>
+
+const setStateBySet = (setCon: ModelDispatch<SetStateAction<object>>, key: ModuleEnum) => {
   return (data: any) => setCon(prevState => fpSet(prevState, ['store', key, 'state'], data))
 }
 export const useGraphqlStoreByKey = (key: ModuleEnum) => {
@@ -60,28 +55,11 @@ export const dealNameSpace = (key: ModuleEnum, nameSpace: string) => {
   return `${key}`
 }
 
-export function modelFactory<E, T extends ActionObj<E>, S extends AsyncActionObj<E>>(state: E, actions: T, asyncActions: S): ContextModel<E, T, S>
-
-export function modelFactory<E, T extends ActionObj<E & A>, S extends AsyncActionObj<E & A>, A, B extends ActionObj<A>, C extends AsyncActionObj<A>>(state: E, actions: T, asyncActions: S, otherModel?: ContextModel<A, B, C>): ContextModel<E & A, T & B, S & C>
-
-export function modelFactory<E, T extends ActionObj<E & A>, S extends AsyncActionObj<E & A>, A, B extends ActionObj<A>, C extends AsyncActionObj<A>>(state: E, actions: T, asyncActions: S, otherModel?: ContextModel<A, B, C>) {
-  return fpMerge({
-    state,
-    actions,
-    asyncActions,
-  }, otherModel)
-}
-
-// export const modelFactory: ModelFactoryType = (state, actions, asyncActions) => {
-//   return fpMerge({
-//     state,
-//     actions,
-//     asyncActions,
-//   }, {})
-// }
-
-export const useStore = <T, E extends ActionObj<T>, Y extends AsyncActionObj<T>>(key: ModuleEnum | string | [ModuleEnum, string], newModel: ContextModel<T, E, Y>): UseStoreResult<T, E, Y> => {
-  const {asyncActions, actions, state} = newModel
+export const useStore = <T, E, B extends keyof E>(key: ModuleEnum | string | [ModuleEnum, string], newModel: {
+  state: T
+  actions: E
+}): UseStoreResult<T, E> => {
+  const {actions, state} = newModel
   const [con, , setCon] = useCustomContext()
   const {setData: setLoad} = useGetLoad()
   const {setData: setError} = useGetError()
@@ -89,7 +67,7 @@ export const useStore = <T, E extends ActionObj<T>, Y extends AsyncActionObj<T>>
 
   const setState = useCallback((data) => {
     setCon(prevState => fpSet(prevState, ['store', _key, 'state'], _.isFunction(data) ? data(prevState?.store?.[_key]?.state as T, prevState?.store) : data))
-  }, [_key, setCon]) as Dispatch<SetStateActionStore<T>>
+  }, [_key, setCon]) as ModelDispatch<SetStateActionStore<T>>
 
   const query: GraphqlQuery = useCallback(async (query, params, option) => {
     setLoad(query, true)
@@ -110,13 +88,8 @@ export const useStore = <T, E extends ActionObj<T>, Y extends AsyncActionObj<T>>
     return res?.data
   }, [query, setError, setLoad])
 
-  const dealStoreAction = useCallback((action) => (value?: any) => {
-    return setState((data, store) => {
-      return action(value, data as T, {store})
-    })
-  }, [setState])
-  const dealActionAsync = useCallback((asyncAction: AsyncActionFun) => async (value?: any) => {
-    return asyncAction(value, setState, {query, mutate})
+  const handleAction = useCallback((action) => async (value?: any) => {
+    return action(value, setState, {query, mutate})
   }, [mutate, query, setState])
 
   useEffect(() => {
@@ -126,22 +99,18 @@ export const useStore = <T, E extends ActionObj<T>, Y extends AsyncActionObj<T>>
         state: con?.store?.[_key]?.state ?? state,
         setState,
         setContext: setCon,
-        dealStoreAction,
-        dealActionAsync,
+        handleAction,
         actions: actions,
-        asyncActions: asyncActions,
       })))
     }
-  }, [_key, actions, asyncActions, con.store, dealActionAsync, dealStoreAction, setCon, setState, state])
+  }, [_key, actions, con.store, setCon, setState, state, handleAction])
   return {
     store: con?.store,
     state: con?.store?.[_key]?.state ?? state,
     setState,
     setContext: setCon,
-    dealStoreAction,
-    dealActionAsync,
+    handleAction,
     actions: actions,
-    asyncActions: asyncActions,
   }
 }
 
@@ -151,7 +120,7 @@ export const WrapperContext = (el: any) => {
   return (
       <context.Provider value={[cont, (data: any) => {
         return setContext((prevState => ({
-          ...merge(prevState, data)
+          ...fpMerge(prevState, data)
         })))
       }, setContext]}>
         {el}

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useState} from 'react'
 import {S} from './style'
 import {CusTextField} from "@/component/CusTextField"
 import MenuItem from "@material-ui/core/MenuItem"
@@ -8,11 +8,25 @@ import Button from "@material-ui/core/Button"
 import {showMessage} from "@/component/Message"
 import {ImgUpload} from "@/component/ImgUpload"
 import {KeyboardDateTimePicker} from '@material-ui/pickers'
-import {useStore} from "@/common/context"
-import {StoreTest, testModel} from "@/views/Test/StoreTest/StoreTest"
 import {dealImgUrl} from "@/component/ImgDealUrl/ImgDealUrl"
+import {modelFactory} from "@/common/ModelAction/modelUtil"
+import {fpMerge} from "@/common/utils"
+import {CusButton} from "@/component/CusButton"
+import {useModelState} from "@/common/useHooks"
+
+const testModel = modelFactory({
+  count: 0,
+  ss: '123',
+}, {
+  add: (value, setData,) => setData(data => fpMerge(data, {count: data.count + 1})),
+  // ss: (value, data, {}) => {
+  // },
+})
+
+
 
 export const Test = () => {
+  const {handleAction: dealAction, actions, state: {count}} = useModelState(testModel)
 
   const [search, setSearch] = React.useState<any>({
     type: '',
@@ -21,11 +35,6 @@ export const Test = () => {
   const [imgOpen, setImgOpen] = React.useState(false)
   const [imgSrc,] = React.useState('')
   const [date, changeDate] = useState(new Date())
-
-  const {store, state, dealActionAsync, asyncActions} = useStore('test', testModel)
-  useEffect(() => {
-    dealActionAsync(asyncActions.setTest)()
-  }, [asyncActions.setTest, dealActionAsync])
 
   return (
       <S.Box>
@@ -125,11 +134,14 @@ export const Test = () => {
           />
         </div>
         <div>
-          store out
-          {JSON.stringify(store)}
-          {JSON.stringify(state)}
+          <header>count test</header>
+          <div>{count}</div>
+          <CusButton
+              onClick={() => {
+                dealAction(actions.add)()
+              }}
+          >add</CusButton>
         </div>
-        <StoreTest />
 
       </S.Box>
   )

@@ -30,26 +30,26 @@ const DialogContentBox = styled(DialogContent)`
 `
 
 export const EditModal = () => {
-  const {state, actions, dealStoreAction} = useStore([ModuleEnum.ConfigThemeSelect, 'editModal'], editThemeModel)
-  const {asyncActions: asyncActionsConfig, dealActionAsync: dealStoreActionConfig} = useStore(ModuleEnum.ConfigThemeSelect, themeSelectModel)
+  const {state, actions, handleAction: dealAction} = useStore([ModuleEnum.ConfigThemeSelect, 'editModal'], editThemeModel)
+  const {actions: asyncActionsConfig, handleAction: dealActionConfig} = useStore(ModuleEnum.ConfigThemeSelect, themeSelectModel)
 
   return (
       <Dialog
           open={state.open}
-          onClose={() => dealStoreAction(actions.onClose)()}
+          onClose={() => dealAction(actions.onClose)()}
       >
         <DialogContentBox>
           <FullTextField
               label={'名称'}
               value={state.modalData.title}
-              onChange={event => dealStoreAction(actions.setModal)({
+              onChange={event => dealAction(actions.setModal)({
                 title: event?.target?.value,
               })}
           />
           <FullTextField
               label={'描述'}
               value={state.modalData.remark}
-              onChange={event => dealStoreAction(actions.setModal)({
+              onChange={event => dealAction(actions.setModal)({
                 remark: event?.target?.value,
               })}
           />
@@ -62,7 +62,7 @@ export const EditModal = () => {
             <ImgUpload
                 initSrc={state.modalData.imgUrl}
                 onChange={(file: any) => {
-                  dealStoreAction(actions.uploadImg)(file)
+                  dealAction(actions.uploadImg)(file)
                 }}
             />
           </FormControl>
@@ -75,7 +75,7 @@ export const EditModal = () => {
             <KeyboardDateTimePicker
                 format={'yyyy/MM/dd HH:mm'}
                 value={state.modalData.startTime}
-                onChange={date => dealStoreAction(actions.setModal)({
+                onChange={date => dealAction(actions.setModal)({
                   startTime: date,
                 })}
             />
@@ -89,7 +89,7 @@ export const EditModal = () => {
             <KeyboardDateTimePicker
                 format={'yyyy/MM/dd HH:mm'}
                 value={state.modalData.endTime}
-                onChange={date => dealStoreAction(actions.setModal)({
+                onChange={date => dealAction(actions.setModal)({
                   endTime: date,
                 })}
             />
@@ -101,13 +101,13 @@ export const EditModal = () => {
               variant={"contained"}
               color={"primary"}
               onClick={async () => {
-                const res = await dealStoreActionConfig(asyncActionsConfig.updateOne)({
+                const res = await dealActionConfig(asyncActionsConfig.updateOne)({
                   imgFile: state.imgFile,
                   configThemeSelect: state.modalData,
                   index: state.isEdit,
                 })
                 if (res) {
-                  dealStoreAction(actions.onClose)()
+                  dealAction(actions.onClose)()
                 }
               }}
           >保存</CusButton>

@@ -46,22 +46,23 @@ const ImgBox = styled.section`
 const findIndex = (list: any[], item: any) => list.findIndex(con => con.title === item.title)
 
 export const ConfigThemeSelect = ({dataConfig = {}}: any) => {
-  const {state: {configData}, dealStoreAction, actions} = useStore(ModuleEnum.ConfigThemeSelect, themeSelectModel)
-  const {actions: editModalActions, dealStoreAction: dealEditActions} = useStore([ModuleEnum.ConfigThemeSelect, 'editModal'], editThemeModel)
+  const {state: {configData}, handleAction: dealAction, actions} = useStore(ModuleEnum.ConfigThemeSelect, themeSelectModel)
+  const {actions: editModalActions, handleAction: dealEditActions} = useStore([ModuleEnum.ConfigThemeSelect, 'editModal'], editThemeModel)
+
   const selectProductModelData = useStore(ModuleEnum.SelectProduct, selectProductModel)
-  const {actions: actionsSel, dealStoreAction: dealStoreActionSel} = selectProductModelData
+  const {actions: actionsSel, handleAction: dealActionSel} = selectProductModelData
 
   useEffect(() => {
     if (dataConfig?.value) {
-      dealStoreAction(actions.setConfigData)(fpMerge(dataConfig.value, themeSelectModel.state.configData))
+      dealAction(actions.setConfigData)(fpMerge(dataConfig.value, themeSelectModel.state.configData))
     }
-  }, [actions.setConfigData, dataConfig.value, dealStoreAction])
+  }, [actions.setConfigData, dataConfig.value, dealAction])
   useEffect(() => {
-    dealStoreActionSel(actionsSel.setDealOut)(async (data) => {
-      dealStoreAction(actions.setListSelectProduct)(data)
+    dealActionSel(actionsSel.setDealOut)(async (data) => {
+      dealAction(actions.setListSelectProduct)(data)
       return true
     })
-  }, [actions.setListSelectProduct, actionsSel.setDealOut, dealStoreAction, dealStoreActionSel])
+  }, [actions.setListSelectProduct, actionsSel.setDealOut, dealAction, dealActionSel])
   return (
       <div>
         <HeaderAction
@@ -91,7 +92,7 @@ export const ConfigThemeSelect = ({dataConfig = {}}: any) => {
                   <CusButton
                       style={{gridColumn: '1 / 3'}}
                       variant={"outlined"}
-                      onClick={() => selectProductModelData.dealStoreAction(selectProductModelData.actions.openClick)({
+                      onClick={() => selectProductModelData.handleAction(selectProductModelData.actions.openClick)({
                         open: true,
                         index: findIndex(configData.list, v),
                         selectList: v.selectProductList ?? [],

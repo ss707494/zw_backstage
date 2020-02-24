@@ -48,18 +48,19 @@ export const ProblemBox = () => {
   const {state} = useStore(ModuleEnum.ConfigHelpDocumentation, configHelpDocumentationModel)
   const configData = state
   const actType = configData.actType
-  const {dealStoreAction: dealStoreActionEdit, actions} = useStore(dealNameSpace(ModuleEnum.ConfigHelpDocumentation, EditProblemNamespace), modalModelFactory({}))
+  const {handleAction: dealActionEdit, actions} = useStore(dealNameSpace(ModuleEnum.ConfigHelpDocumentation, EditProblemNamespace), modalModelFactory({}))
 
-  const problemList = configData?.problemListData?.[actType.code] ?? []
+  const problemList: Problem[] = configData.problemListData?.[actType.code] ?? []
+
   const addOne = () => {
-    dealStoreActionEdit(actions.openClick)({})
+    dealActionEdit(actions.openClick)({})
   }
   const editOne = (item: any) => {
-    dealStoreActionEdit(actions.openClick)(item)
+    dealActionEdit(actions.openClick)(item)
   }
   return (
       <ProblemBoxStyle>
-        {problemList.map((v: Problem, index) => (<React.Fragment key={`problemList.map_${v.answer}`}>
+        {problemList.map((v, index) => (<React.Fragment key={`problemList.map_${v.answer}`}>
           {['操作', '问题', '答案', '排序'].map(value => <div
               key={`${value}`}
               style={{textAlign: 'center'}}

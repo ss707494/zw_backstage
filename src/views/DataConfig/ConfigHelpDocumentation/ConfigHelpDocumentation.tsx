@@ -30,7 +30,7 @@ const MainBox = styled.main`
 
 export const ConfigHelpDocumentation = ({dataConfig = {}}: any) => {
   const addTypeModalState = useCommonModalState()
-  const {state, actions, dealStoreAction: actionFactory} = useStore(ModuleEnum.ConfigHelpDocumentation, configHelpDocumentationModel)
+  const {state, actions, handleAction: actionFactory} = useStore(ModuleEnum.ConfigHelpDocumentation, configHelpDocumentationModel)
   const configData = state
   const {actType} = configData
   const setActType = useCallback(actionFactory(actions.setActType), [])
