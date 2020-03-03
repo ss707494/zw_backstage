@@ -1,22 +1,23 @@
 import React, { useState } from 'react'
 import { S } from './style'
 import { S as SText } from '@/component/CusTextField/style'
-import DialogTitle from "@material-ui/core/DialogTitle";
-import { CusTextField } from "@/component/CusTextField";
-import { CusSelectField } from "@/component/CusSelectField";
-import MenuItem from "@material-ui/core/MenuItem";
-import { CusButton } from "@/component/CusButton";
-import { showMessage } from "@/component/Message";
-import { FormControl } from "@material-ui/core";
-import InputLabel from "@material-ui/core/InputLabel";
-import Checkbox from "@material-ui/core/Checkbox";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import { ImgUpload } from "@/component/ImgUpload";
-import { fileUploadAjax, parseFloatForInput } from "@/common/utils";
-import { categoryGraphql } from "@/views/Category/List";
-import { useMutationGraphql, useQueryGraphql } from "@/component/ApolloQuery";
-import { save_product } from "@/views/Product/List/productGraphql";
-import { pick } from "lodash";
+import DialogTitle from "@material-ui/core/DialogTitle"
+import { CusTextField } from "@/component/CusTextField"
+import { CusSelectField } from "@/component/CusSelectField"
+import MenuItem from "@material-ui/core/MenuItem"
+import { CusButton } from "@/component/CusButton"
+import { showMessage } from "@/component/Message"
+import { FormControl } from "@material-ui/core"
+import InputLabel from "@material-ui/core/InputLabel"
+import Checkbox from "@material-ui/core/Checkbox"
+import FormControlLabel from "@material-ui/core/FormControlLabel"
+import { ImgUpload } from "@/component/ImgUpload"
+import { fileUploadAjax, parseFloatForInput } from "@/common/utils"
+import { categoryGraphql } from "@/views/Category/List"
+import { useMutationGraphql, useQueryGraphql } from "@/component/ApolloQuery"
+import { save_product } from "@/views/Product/List/productGraphql"
+import { pick } from "lodash"
+import { useParams } from 'react-router-dom'
 
 export const useLinkage = () => {
   const [data, setData] = useState({
@@ -102,6 +103,9 @@ export const EditModal = (
       refreshData = () => {
       }
     }) => {
+  const routerParams = useParams()
+  const is_group = ~~routerParams?.is_group ?? -1
+
   const [updateData, , updateLoading] = useMutationGraphql(save_product)
   const [typeNum, setTypeNum] = useState({
     oneNum: '',
@@ -119,7 +123,7 @@ export const EditModal = (
     setEditData({})
   }
   const handleSave = async () => {
-    const filesKey = Object.keys(files);
+    const filesKey = Object.keys(files)
     let imgs
     if (filesKey.length) {
       const uploadRes = await fileUploadAjax({}, filesKey.map(e => files[e]), '/api/fileUpload')
@@ -179,26 +183,26 @@ export const EditModal = (
         <DialogTitle>新增产品</DialogTitle>
         <S.Content>
           <form>
-            <SText.TextFieldBox
-                as={FormControl}
-            >
-              <InputLabel
-                  shrink
-                  htmlFor="tag"
-              >是否拼团</InputLabel>
-              <FormControlLabel
-                  control={
-                    <Checkbox
-                        checked={!!editData.is_group || false}
-                        onChange={e => setEditData({
-                          ...editData,
-                          is_group: e.target.checked ? 1 : 0
-                        })}
-                    />
-                  }
-                  label=""
-              />
-            </SText.TextFieldBox>
+            {/*<SText.TextFieldBox*/}
+            {/*    as={FormControl}*/}
+            {/*>*/}
+            {/*  <InputLabel*/}
+            {/*      shrink*/}
+            {/*      htmlFor="tag"*/}
+            {/*  >是否拼团</InputLabel>*/}
+            {/*  <FormControlLabel*/}
+            {/*      control={*/}
+            {/*        <Checkbox*/}
+            {/*            checked={!!editData.is_group || false}*/}
+            {/*            onChange={e => setEditData({*/}
+            {/*              ...editData,*/}
+            {/*              is_group: e.target.checked ? 1 : 0*/}
+            {/*            })}*/}
+            {/*        />*/}
+            {/*      }*/}
+            {/*      label=""*/}
+            {/*  />*/}
+            {/*</SText.TextFieldBox>*/}
             <CusTextField
                 InputProps={{
                   readOnly: true,
@@ -390,33 +394,37 @@ export const EditModal = (
                 ))}
               </CusSelectField>
             </S.FieldTwoBox>
-            <CusTextField
-                label="拼团数量"
-                type="number"
-                value={editData.group_amount}
-                onChange={e => setEditData({
-                  ...editData,
-                  group_amount: parseFloatForInput(e.target.value)
-                })}
-            />
-            <CusTextField
-                label="拼团精度"
-                type="number"
-                value={editData.group_precision}
-                onChange={e => setEditData({
-                  ...editData,
-                  group_precision: parseFloatForInput(e.target.value)
-                })}
-            />
-            <CusTextField
-                label="拼团描述"
-                value={editData.group_remark}
-                placeholder="整箱"
-                onChange={e => setEditData({
-                  ...editData,
-                  group_remark: e.target.value
-                })}
-            />
+            {is_group === 1 ? (
+                <>
+                  <CusTextField
+                      label="拼团数量"
+                      type="number"
+                      value={editData.group_amount}
+                      onChange={e => setEditData({
+                        ...editData,
+                        group_amount: parseFloatForInput(e.target.value)
+                      })}
+                  />
+                  < CusTextField
+                      label="拼团精度"
+                      type="number"
+                      value={editData.group_precision}
+                      onChange={e => setEditData({
+                        ...editData,
+                        group_precision: parseFloatForInput(e.target.value)
+                      })}
+                  />
+                  <CusTextField
+                      label="拼团描述"
+                      value={editData.group_remark}
+                      placeholder="整箱"
+                      onChange={e => setEditData({
+                        ...editData,
+                        group_remark: e.target.value
+                      })}
+                  />
+                </>
+            ) : ''}
             <S.UploadFormControl
                 as={FormControl}
             >
@@ -446,7 +454,7 @@ export const EditModal = (
         </S.Content>
       </S.Box>
   )
-};
+}
 
 export default {
   EditModal

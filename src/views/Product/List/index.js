@@ -23,10 +23,15 @@ import { categoryGraphql } from "@/views/Category/List";
 import { useMutationGraphql, useQueryGraphql } from "@/component/ApolloQuery";
 import { productGraphql, save_product } from "@/views/Product/List/productGraphql";
 import { dealImgUrl } from '@/component/ImgDealUrl/ImgDealUrl'
+import { dealNumberZero } from '@/common/utils.ts'
 
 const KEYWORD_TYPE = {
   num: '1',
   name: '2'
+}
+
+const getProductNumber = (one, two, three, num) => {
+  return `${dealNumberZero(2)(one)}${dealNumberZero(2)(two)}${dealNumberZero(2)(three)}${dealNumberZero(3)(num)}`
 }
 
 const useTypeObj = () => {
@@ -168,7 +173,6 @@ export const Product = ({ theme, match }) => {
       category_id: typeHelpObj.res || '',
     }))
   }, [typeHelpObj.res])
-  // console.log(listData)
 
   return (
       <S.Box>
@@ -327,7 +331,7 @@ export const Product = ({ theme, match }) => {
                   const _order = [
                     ['create_time desc', '按产品创建/修改时间'],
                     ['number asc', '商品编号'],
-                    ['stock desc', '库存倒序'],
+                    ['stock asc', '库存倒序'],
                   ];
                   return <CusSelect
                       placeholder="选择排序"
@@ -355,7 +359,7 @@ export const Product = ({ theme, match }) => {
               : <S.Table theme={theme}>
                 <TableHead>
                   <TableRow>
-                    {['商品编号', '中文名称', '图片', '热门', '新品', '库存', '进货价格', '市场价格', '售卖价格', '重量']
+                    {['商品编号', '中文名称', '图片', '热门', '新品', '库存', '进货价格', '市场价格', '售卖价格', '重量', '单位']
                         .map(e => <TableCell key={`TableHead${e}`}>
                           {e}
                         </TableCell>)
@@ -366,7 +370,7 @@ export const Product = ({ theme, match }) => {
                 <TableBody>
                   {listData?.map(e => <TableRow
                       key={`TableBody${e?.id}`}>
-                    <TableCell>{e?.number}</TableCell>
+                    <TableCell>{getProductNumber(e?.c3_number, e?.c2_number, e?.c1_number, e?.number)}</TableCell>
                     <TableCell>{e?.name}</TableCell>
                     <TableCell width={240}>
                       <S.ImgPreview>
@@ -404,6 +408,7 @@ export const Product = ({ theme, match }) => {
                     <TableCell>{e?.price_out}</TableCell>
                     <TableCell>{e?.price_market}</TableCell>
                     <TableCell>{e?.weight}</TableCell>
+                    <TableCell>{e?.unit}</TableCell>
                     <TableCell>
                       <S.ActionTableCell>
                         <Button
