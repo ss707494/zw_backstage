@@ -160,7 +160,7 @@ export const Category = ({ theme }) => {
                       typeTwo: _value
                     })
                     getListData({
-                      full_parent_id: v.target.value,
+                      full_parent_id: _value === '' ? search.type : _value,
                     })
                   }}
                   value={search.typeTwo}

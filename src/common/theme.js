@@ -1,6 +1,12 @@
 import React from 'react'
 import { createMuiTheme } from '@material-ui/core'
-import { StylesProvider, ThemeProvider, createGenerateClassName } from '@material-ui/core/styles'
+import { jssPreset, StylesProvider, ThemeProvider, createGenerateClassName } from '@material-ui/core/styles'
+import {create} from "jss"
+import jssTemplate from 'jss-plugin-template'
+
+const jss = create({
+  plugins: [jssTemplate(), ...jssPreset().plugins],
+})
 
 const _themeOption = createMuiTheme({
   palette: {
@@ -11,7 +17,8 @@ const _themeOption = createMuiTheme({
 
 export const wrapperTheme = (themeOption = _themeOption, classOption) => (el) => {
   return wrapperStyle(createGenerateClassName(classOption))(
-        <ThemeProvider theme={themeOption}>
+        <ThemeProvider
+            theme={themeOption}>
           {el}
         </ThemeProvider>
   )
@@ -20,6 +27,7 @@ export const wrapperTheme = (themeOption = _themeOption, classOption) => (el) =>
 export const wrapperStyle = (generateClassName) => (el) => {
   return (
       <StylesProvider
+          jss={jss}
           generateClassName={generateClassName}
       >
         {el}

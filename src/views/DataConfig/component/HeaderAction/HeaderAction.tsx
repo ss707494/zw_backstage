@@ -19,7 +19,7 @@ const HeaderActionBox = styled.div`
   margin-bottom: 18px;
 `
 
-export const HeaderAction = ({dataConfig, configData}: {dataConfig: DataConfig, configData: object}) => {
+export const HeaderAction = ({dataConfig, configData}: {dataConfig: DataConfig; configData: object}) => {
   const [setDataConfig, , setDataConfigLoading] = useMutationGraphql(setDataConfigGraphql)
 
   return (

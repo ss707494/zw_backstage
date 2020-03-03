@@ -66,9 +66,6 @@ S.MenuList = styled(Paper)`
   & .MuiMenuItem-root {
     line-height: 1.7;
   }
-  & .MuiList-root {
-    z-index: 9;
-  }
 `
 
 S.MenuMain = styled('div')`
@@ -109,8 +106,8 @@ S.FoldMenu = styled(Button)`
       transform-origin: left;
       border-top-right-radius: 8px;
       border-bottom-right-radius: 8px;
-      width: 170%;
-      left: -5px;
+      width: 130%;
+      left: 0;
       transform: perspective(8px) rotateY(5deg);
     }
   }

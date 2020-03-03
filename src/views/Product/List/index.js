@@ -95,7 +95,7 @@ const useTypeObj = () => {
   React.useEffect(() => {
     setTypeHelpObj(pre => ({
       ...pre,
-      res: typeHelpObj.typeThree || pre.typeTwo,
+      res: typeHelpObj.typeThree || pre.typeTwo || pre.typeOne,
     }))
   }, [typeHelpObj.typeThree])
 
@@ -144,8 +144,9 @@ export const Product = ({ theme, match }) => {
     data: {
       ...search,
       ...pageState.pageData,
-      category_id: search?.category_id ? search?.category_id : null,
+      origin_category_id: search?.category_id ? search?.category_id : null,
       ...param,
+      category_id: null,
       is_group: ~~match?.params?.is_group ?? -1,
     }
   })
@@ -153,7 +154,8 @@ export const Product = ({ theme, match }) => {
     getList({
       data: {
         ...search,
-        category_id: search?.category_id ? search?.category_id : null,
+        origin_category_id: search?.category_id ? search?.category_id : null,
+        category_id: null,
         ...pageState.pageData,
         is_group: _is_group,
       }
@@ -353,7 +355,7 @@ export const Product = ({ theme, match }) => {
               : <S.Table theme={theme}>
                 <TableHead>
                   <TableRow>
-                    {['商品编号', '是否拼团', '中文名称', '图片', '热门', '新品', '库存', '进货价格', '市场价格', '售卖价格', '重量']
+                    {['商品编号', '中文名称', '图片', '热门', '新品', '库存', '进货价格', '市场价格', '售卖价格', '重量']
                         .map(e => <TableCell key={`TableHead${e}`}>
                           {e}
                         </TableCell>)
@@ -365,7 +367,6 @@ export const Product = ({ theme, match }) => {
                   {listData?.map(e => <TableRow
                       key={`TableBody${e?.id}`}>
                     <TableCell>{e?.number}</TableCell>
-                    <TableCell>{e?.is_group ? '是' : '否'}</TableCell>
                     <TableCell>{e?.name}</TableCell>
                     <TableCell width={240}>
                       <S.ImgPreview>
