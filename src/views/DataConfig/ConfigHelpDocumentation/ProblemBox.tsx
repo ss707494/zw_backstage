@@ -3,13 +3,9 @@ import React from "react"
 import styled from "styled-components"
 import {grey} from "@material-ui/core/colors"
 import {EditProblem, EditProblemNamespace} from "@/views/DataConfig/ConfigHelpDocumentation/EditProblem"
-import {
-  dealNameSpace,
-  ModuleEnum,
-  useStore
-} from "@/common/context"
 import {modalModelFactory} from "@/common/model/modal"
 import {configHelpDocumentationModel} from "@/views/DataConfig/ConfigHelpDocumentation/model"
+import {ModuleEnum, useStoreModel} from "@/common/ModelAction/useStore"
 
 const ProblemBoxStyle = styled.div`
   display: grid;
@@ -45,18 +41,18 @@ const ProblemBoxStyle = styled.div`
 `
 
 export const ProblemBox = () => {
-  const {state} = useStore(ModuleEnum.ConfigHelpDocumentation, configHelpDocumentationModel)
+  const {state} = useStoreModel(ModuleEnum.ConfigHelpDocumentation, configHelpDocumentationModel)
   const configData = state
   const actType = configData.actType
-  const {handleAction: dealActionEdit, actions} = useStore(dealNameSpace(ModuleEnum.ConfigHelpDocumentation, EditProblemNamespace), modalModelFactory({}))
+  const {actions} = useStoreModel([ModuleEnum.ConfigHelpDocumentation, EditProblemNamespace], modalModelFactory({}))
 
   const problemList: Problem[] = configData.problemListData?.[actType.code] ?? []
 
   const addOne = () => {
-    dealActionEdit(actions.openClick)({})
+    (actions.openClick)({})
   }
   const editOne = (item: any) => {
-    dealActionEdit(actions.openClick)(item)
+    (actions.openClick)(item)
   }
   return (
       <ProblemBoxStyle>

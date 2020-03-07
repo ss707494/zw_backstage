@@ -8,13 +8,13 @@ import {
   TextFieldProps,
 } from "@material-ui/core"
 import React from "react"
-import {ModuleEnum, useStore} from "@/common/context"
 import {editThemeModel} from "@/views/DataConfig/ConfigThemeSelect/model/editTheme"
 import {CusButton} from "@/component/CusButton"
 import {ImgUpload} from "@/component/ImgUpload"
 import styled from "styled-components"
 import {KeyboardDateTimePicker} from "@material-ui/pickers"
 import {themeSelectModel} from "@/views/DataConfig/ConfigThemeSelect/model/config"
+import {ModuleEnum, useStoreModel} from "@/common/ModelAction/useStore"
 
 const FullTextField:React.ComponentType<TextFieldProps> = (props) => <TextField
     fullWidth
@@ -30,26 +30,26 @@ const DialogContentBox = styled(DialogContent)`
 `
 
 export const EditModal = () => {
-  const {state, actions, handleAction: dealAction} = useStore([ModuleEnum.ConfigThemeSelect, 'editModal'], editThemeModel)
-  const {actions: asyncActionsConfig, handleAction: dealActionConfig} = useStore(ModuleEnum.ConfigThemeSelect, themeSelectModel)
+  const {state, actions} = useStoreModel([ModuleEnum.ConfigThemeSelect, 'editModal'], editThemeModel)
+  const {actions: asyncActionsConfig} = useStoreModel(ModuleEnum.ConfigThemeSelect, themeSelectModel)
 
   return (
       <Dialog
           open={state.open}
-          onClose={() => dealAction(actions.onClose)()}
+          onClose={() => (actions.onClose)({})}
       >
         <DialogContentBox>
           <FullTextField
               label={'名称'}
               value={state.modalData.title}
-              onChange={event => dealAction(actions.setModal)({
+              onChange={event => (actions.setModal)({
                 title: event?.target?.value,
               })}
           />
           <FullTextField
               label={'描述'}
               value={state.modalData.remark}
-              onChange={event => dealAction(actions.setModal)({
+              onChange={event => (actions.setModal)({
                 remark: event?.target?.value,
               })}
           />
@@ -62,7 +62,7 @@ export const EditModal = () => {
             <ImgUpload
                 initSrc={state.modalData.imgUrl}
                 onChange={(file: any) => {
-                  dealAction(actions.uploadImg)(file)
+                  (actions.uploadImg)(file)
                 }}
             />
           </FormControl>
@@ -75,7 +75,7 @@ export const EditModal = () => {
             <KeyboardDateTimePicker
                 format={'yyyy/MM/dd HH:mm'}
                 value={state.modalData.startTime}
-                onChange={date => dealAction(actions.setModal)({
+                onChange={date => (actions.setModal)({
                   startTime: date,
                 })}
             />
@@ -89,7 +89,7 @@ export const EditModal = () => {
             <KeyboardDateTimePicker
                 format={'yyyy/MM/dd HH:mm'}
                 value={state.modalData.endTime}
-                onChange={date => dealAction(actions.setModal)({
+                onChange={date => (actions.setModal)({
                   endTime: date,
                 })}
             />
@@ -101,13 +101,13 @@ export const EditModal = () => {
               variant={"contained"}
               color={"primary"}
               onClick={async () => {
-                const res = await dealActionConfig(asyncActionsConfig.updateOne)({
+                const res = await (asyncActionsConfig.updateOne)({
                   imgFile: state.imgFile,
                   configThemeSelect: state.modalData,
                   index: state.isEdit,
                 })
                 if (res) {
-                  dealAction(actions.onClose)()
+                  (actions.onClose)({})
                 }
               }}
           >保存</CusButton>

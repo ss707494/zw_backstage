@@ -1,4 +1,4 @@
-import { gql } from "apollo-boost";
+import { gql } from "apollo-boost"
 
 export const orderGraphql = {
   getListByPage: gql`
@@ -9,6 +9,9 @@ export const orderGraphql = {
               number
               create_time
               user_id
+              state
+              subtotal
+              finish_time
               user {
                   id
                   name
@@ -26,6 +29,11 @@ export const orderGraphql = {
                   price_out
                   price_market
                   weight
+              }
+              address {
+                  city
+                  province
+                  zip
               }
           }
           all_order_list_total(allOrderListInput: $data)

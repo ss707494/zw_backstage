@@ -43,7 +43,7 @@ export const OrderList = ({ theme }) => {
               : <StyleTableBox.Table theme={theme}>
                 <TableHead>
                   <TableRow>
-                    {['订单编号', '创建用户', '创建时间', '订单详情']
+                    {['订单编号', '创建时间', '订单状态', '金额', '抵扣达人币', '新增达人币', '注册id', '用户名', '城市', '州', '邮政编码', '取货方式', '取货日期', '订单详情']
                         .map(e => <TableCell key={`TableHead${e}`}>
                           {e}
                         </TableCell>)
@@ -53,8 +53,20 @@ export const OrderList = ({ theme }) => {
                 <TableBody>
                   {listData?.map(e => <TableRow key={`TableBody${e?.id}`}>
                     <TableCell>{e?.number}</TableCell>
-                    <TableCell>{e?.user?.name}</TableCell>
                     <TableCell>{formatDate(new Date(e?.create_time), 'yyyy/MM/dd HH:mm')}</TableCell>
+                    <TableCell>{e?.state}</TableCell>
+                    <TableCell>{e?.subtotal}</TableCell>
+                    {/* todo */}
+                    <TableCell>{0}</TableCell>
+                    <TableCell>{0}</TableCell>
+                    <TableCell>{ }</TableCell>
+                    <TableCell>{e?.user?.name}</TableCell>
+                    <TableCell>{e?.address?.city}</TableCell>
+                    <TableCell>{e?.address?.province}</TableCell>
+                    <TableCell>{e?.address?.zip}</TableCell>
+                    <TableCell>{ }</TableCell>
+                    <TableCell>{!e?.finish_time ? '' : formatDate(new Date(e?.finish_time), 'yyyy/MM/dd HH:mm')}</TableCell>
+                    {/*<TableCell>{JSON.stringify(e)}</TableCell>*/}
                     <TableCell>
                       <StyleTableBox.ActionTableCell>
                         <Button

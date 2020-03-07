@@ -6,7 +6,7 @@ import TableBody from "@material-ui/core/TableBody";
 import { CusSelect } from '@/component/CusSelect'
 import { Pagination, useInitState as useInitPageData } from '@/component/Pagination'
 import { EditModal, useInitState } from '../EditModal'
-import { AddNumberModal, useInitState as useInitAddNumber } from '../AddNumberModal'
+import { AddNumberModal } from '../AddNumberModal/index'
 import { api } from '@/common/api'
 import { CusButton as Button } from '@/component/CusButton'
 import { CusTableCell as TableCell } from '@/component/CusTableCell'
@@ -24,6 +24,8 @@ import { useMutationGraphql, useQueryGraphql } from "@/component/ApolloQuery";
 import { productGraphql, save_product } from "@/views/Product/List/productGraphql";
 import { dealImgUrl } from '@/component/ImgDealUrl/ImgDealUrl'
 import { dealNumberZero } from '@/common/utils.ts'
+import { addProductHistoryModel } from '@/views/Product/model/addProductHistory.ts'
+import {ModuleEnum, useStoreModel} from "@/common/ModelAction/useStore"
 
 const KEYWORD_TYPE = {
   num: '1',
@@ -114,12 +116,11 @@ const useTypeObj = () => {
 }
 
 export const Product = ({ theme, match }) => {
+  const {actions: {openEditClick}} = useStoreModel(ModuleEnum.AddProductHistory, addProductHistoryModel)
   const _is_group = ~~match?.params?.is_group ?? -1
   const pageState = useInitPageData()
   const editModalState = useInitState()
   const { editClick } = editModalState
-  const addNumberModalState = useInitAddNumber()
-  const { editClick: addNumberEditClick } = addNumberModalState
   const {
     typeHelpObj,
     setTypeHelpObj,
@@ -364,7 +365,7 @@ export const Product = ({ theme, match }) => {
                           {e}
                         </TableCell>)
                     }
-                    <TableCell width={220}>操作</TableCell>
+                    <TableCell width={240}>操作ss</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -418,9 +419,9 @@ export const Product = ({ theme, match }) => {
                         >编辑</Button>
                         <Button
                             color="secondary"
-                            onClick={addNumberEditClick(e)}
+                            onClick={() => (openEditClick)({data: e})}
                             variant="contained"
-                        >补货</Button>
+                        >补货历史</Button>
                         <Button
                             color={e?.is_enable ? 'primary' : 'default'}
                             variant="contained"
@@ -456,10 +457,7 @@ export const Product = ({ theme, match }) => {
             {...editModalState}
             refreshData={getListData}
         />
-        <AddNumberModal
-            {...addNumberModalState}
-            refreshData={getListData}
-        />
+        <AddNumberModal />
         <ImgPreview
             open={previewImg.open ?? false}
             closeModal={() => setPreviewImg({

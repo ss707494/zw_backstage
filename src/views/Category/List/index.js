@@ -13,6 +13,7 @@ import { showConfirm } from "@/component/ConfirmDialog";
 import { gql } from "apollo-boost";
 import { useMutationGraphql, useQueryGraphql } from "@/component/ApolloQuery";
 import { save_category } from "@/views/Category/category.graphql";
+import { dealNumberZero } from '@/common/utils.ts'
 
 const dealSort = sort => {
   const _sortHelp = {
@@ -55,7 +56,9 @@ export const categoryGraphql = {
               c3_name
               c3_id
               p2_name
+              p2_num
               p2_id
+              p3_num
               p3_name
               p3_id
               img_url
@@ -215,7 +218,12 @@ export const Category = ({ theme }) => {
                 <TableBody>
                   {listData?.map(e => <TableRow
                       key={`TableBody${e?.id}`}>
-                    <TableCell>{e?.number}</TableCell>
+                    <TableCell>{
+                      !e?.p2_num
+                          ? `${dealNumberZero(2)(e?.number)}0000`
+                          : !e?.p3_num ? `${dealNumberZero(2)(e?.p2_num)}${dealNumberZero(2)(e?.number)}00`
+                          : `${dealNumberZero(2)(e?.p3_num)}${dealNumberZero(2)(e?.p2_num)}${dealNumberZero(2)(e?.number)}`
+                    }</TableCell>
                     <TableCell>{e?.name}</TableCell>
                     <TableCell>{e?.name}</TableCell>
                     <TableCell>{e?.p2_name ?? ''}{e?.p3_name ? `-${e?.p3_name}` : ''}</TableCell>

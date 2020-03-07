@@ -1,9 +1,9 @@
 import React, {useEffect} from "react"
-import {ModuleEnum, useStore} from "@/common/context"
 import {homeCarousel} from "@/views/DataConfig/ConfigHomeCarousel/model/HomeCarousel"
 import {HeaderAction} from "@/views/DataConfig/component/HeaderAction/HeaderAction"
 import styled, {css} from "styled-components"
 import {ImgUpload} from "@/component/ImgUpload"
+import {ModuleEnum, useStoreModel} from "@/common/ModelAction/useStore"
 
 const Box = styled.div`
   width: 100%;
@@ -15,14 +15,15 @@ const Box = styled.div`
 `
 
 export const ConfigHomeCarousel = ({dataConfig = {}}: any) => {
-  const {state: {configData}, handleAction, actions} = useStore(ModuleEnum.ConfigThemeSelect, homeCarousel)
+  // eslint-disable-next-line no-undef
+  const {state: {configData}, actions} = useStoreModel(ModuleEnum.ConfigThemeSelect, homeCarousel)
   const {imgList} = configData
 
   useEffect(() => {
     if (dataConfig?.value) {
-      handleAction(actions.setConfigData)(dataConfig.value)
+      (actions.setConfigData)(dataConfig.value)
     }
-  }, [actions.setConfigData, dataConfig.value, handleAction])
+  }, [actions, actions.setConfigData, dataConfig.value])
 
   return (
       <div>
@@ -36,7 +37,7 @@ export const ConfigHomeCarousel = ({dataConfig = {}}: any) => {
               mainCss={css`width: 320px; height: 200px`.toString()}
               initSrc={value}
               onChange={(file: any) => {
-                handleAction(actions.setOneImg)({index, file})
+                (actions.setOneImg)({index, file})
               }}
           />)}
           <ImgUpload
@@ -44,7 +45,7 @@ export const ConfigHomeCarousel = ({dataConfig = {}}: any) => {
               initSrc={''}
               noSetSrc={true}
               onChange={(file: any) => {
-                handleAction(actions.addOne)(file)
+                (actions.addOne)(file)
               }}
           />
         </Box>

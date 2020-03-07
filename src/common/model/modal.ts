@@ -11,23 +11,23 @@ export const modalModelFactory = <T>(initData: T) => modelFactory({
   open: false,
   isEdit: -1,
 }, {
-  openClick: (value, setData) => {
+  openClick: (value, {setData}) => {
     return setData(preData => fpMerge(preData, {
       open: true,
       modalData: value,
       isEdit: -1,
     }))
   },
-  openEditClick: (value: {data: any; index: number}, setData) => setData(pre => fpMerge(pre, {
+  openEditClick: (value: { data: any; index: number }, {setData}) => setData(pre => fpMerge(pre, {
     open: true,
     modalData: value.data,
     isEdit: value.index,
   })),
-  onClose: (value, setData) => setData(pre => fpMerge(pre, {
+  onClose: (value, {setData}) => setData(pre => fpMerge(pre, {
     modalData: {},
     open: false,
   })),
-  setModal: (value, setData) => setData(data => fpMerge(data, {
+  setModal: (value, {setData}) => setData(data => fpMerge(data, {
     modalData: value,
   })),
 })

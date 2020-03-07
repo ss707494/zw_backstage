@@ -1,9 +1,16 @@
 import React from 'react'
+import {RenderTimer} from "@/component/RenderTimer/RenderTimer"
+import {InnerA} from "@/views/SSTest/innerA"
+import {InnerB} from "@/views/SSTest/innerB"
 
 const SsTest = () => {
 
   return (
-      <div>ss</div>
+      <div>
+        <RenderTimer/>
+        <InnerA/>
+        <InnerB/>
+      </div>
   )
 }
 

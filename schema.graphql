@@ -5,10 +5,18 @@ schema {
     mutation: Mutation
 }
 
-interface listSearch {
-    page: Int
-    rows_per_page: Int
-    sort_type: String
+type AddHistory {
+    amount: Float
+    count: Float
+    create_time: Date
+    id: String
+    is_delete: Int
+    name: String
+    number: String
+    product_id: String
+    supplement_id: String
+    supplier: String
+    update_time: Date
 }
 
 type AddItem {
@@ -60,8 +68,10 @@ type Category {
     number: Int
     p2_id: String
     p2_name: String
+    p2_num: String
     p3_id: String
     p3_name: String
+    p3_num: String
     parent_data: Category
     parent_id: String
     remark: String
@@ -156,6 +166,7 @@ type Order {
     coupon_discount: Float
     create_time: Date
     discount_product_total: Float
+    finish_time: Date
     id: String
     is_delete: Int
     name: String
@@ -275,6 +286,8 @@ type PromoCode {
 }
 
 type Query {
+    add_history_list_by_product(addHistoryInput: AddHistoryInput): [AddHistory]
+    add_history_list_total(addHistoryInput: AddHistoryInput): Int
     address_list(addressInput: AddressInput): [Address]
     allDataUser: String
     allUser(data: UserInput): [User]
@@ -318,6 +331,7 @@ type ShopCart {
 }
 
 type User {
+    address: Address
     create_time: Date
     email: String
     id: String
@@ -353,6 +367,17 @@ type result {
 type token {
     refreshtoken: String
     token: String
+}
+
+input AddHistoryInput {
+    create_time: Date
+    id: String
+    is_delete: Int
+    name: String
+    page: Int
+    product_id: String
+    rows_per_page: Int
+    update_time: Date
 }
 
 input AddItemInput {
@@ -621,6 +646,7 @@ input SaveOrderInput {
     coupon_discount: Float
     create_time: Date
     discount_product_total: Float
+    finish_time: Date
     id: String
     is_delete: Int
     name: String

@@ -1,11 +1,11 @@
 import React, {useEffect} from "react"
-import {ModuleEnum, useStore} from "@/common/context"
 import {Checkbox, Dialog, DialogActions, DialogContent} from "@material-ui/core"
 import {fpMerge, fpSet} from "@/common/utils"
 import {productGraphql} from "@/views/Product/List/productGraphql"
 import styled from "styled-components"
 import {CusButton} from "@/component/CusButton"
 import {modelFactory} from "@/common/ModelAction/modelUtil"
+import {ModuleEnum, useStoreModel} from "@/common/ModelAction/useStore"
 
 export const selectProductModel = modelFactory({
   open: false,
@@ -16,19 +16,19 @@ export const selectProductModel = modelFactory({
     return false
   },
 }, {
-  setDealOut: (value: (data: {selectList: string[]; index: number}, event: any) => any, setData) => setData(data => fpMerge(data, {dealOut: value})),
-  setOpen: (value, setData) => setData(data => fpMerge(data, {
+  setDealOut: (value: (data: {selectList: string[]; index: number}, event: any) => any, {setData}) => setData(data => fpMerge(data, {dealOut: value})),
+  setOpen: (value, {setData}) => setData(data => fpMerge(data, {
     open: value,
   })),
   openClick: (value: {
     open: boolean
     index: number
     selectList: string[]
-  }, setData) => setData(data => fpMerge(data, value)),
-  setSelectList: ({id, checked}: { id: string; checked: boolean }, setData) => {
+  }, {setData}) => setData(data => fpMerge(data, value)),
+  setSelectList: ({id, checked}: { id: string; checked: boolean }, {setData}) => {
     return setData(data => fpSet(data, 'selectList', (checked ? [...data.selectList, id] : data.selectList.filter(value => value !== id))))
   },
-  getList: async (value, setData, {query}) => {
+  getList: async (value, {setData, query}) => {
     // await option?.query
     const {product_list} = await query(productGraphql.getList, {
       page: 0,
@@ -52,12 +52,12 @@ const DialogContentBox = styled(DialogContent)`
 `
 
 export const SelectProduct = () => {
-  const {state: {index, open, list, selectList, dealOut}, actions, handleAction: dealAction} = useStore(ModuleEnum.SelectProduct, selectProductModel)
+  const {state: {index, open, list, selectList, dealOut}, actions} = useStoreModel(ModuleEnum.SelectProduct, selectProductModel)
 
   useEffect(() => {
-    dealAction(actions.getList)()
-  }, [actions.getList, dealAction])
-  const onClose = () => dealAction(actions.openClick)({
+    (actions.getList)({})
+  }, [actions])
+  const onClose = () => (actions.openClick)({
     open: false,
     selectList: [],
     index: -1,
@@ -74,7 +74,7 @@ export const SelectProduct = () => {
             <aside>
               <Checkbox
                   checked={selectList.includes(value.id)}
-                  onChange={event => dealAction(actions.setSelectList)({
+                  onChange={event => (actions.setSelectList)({
                     id: value.id,
                     checked: event.target.checked
                   })}

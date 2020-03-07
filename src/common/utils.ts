@@ -1,6 +1,6 @@
 import format from 'date-fns/format'
 import set from 'lodash/set'
-import {cloneDeep, merge} from 'lodash'
+import {cloneDeep, PropertyPath} from 'lodash'
 import _ from 'lodash'
 
 export const getObjectURL = (file: any) => {
@@ -50,12 +50,33 @@ export const fpSet = <E = any>(origin: any, path: any, value: SetData<E>) => {
   return newData
 }
 
+export const delay = (time: number) => (new Promise(resolve => setTimeout(resolve, time)))
+
+export const fpSetPre:<T extends object>(path: PropertyPath, newValue: SetData) => (origin: T) => T = (path: any, value) => (origin) => {
+  let newData = cloneDeep(origin)
+  if (_.isFunction(value)) {
+    const oldData = _.get(origin, path)
+    set(newData, path, value(oldData))
+  } else {
+    set(newData, path, value)
+  }
+  return newData
+}
+
+const customizer = (objValue: any, srcValue: any) => {
+  if (_.isArray(srcValue)) {
+    return srcValue
+  }
+}
+
 export const fpMerge: <TObject, TSource1>(
     origin: TObject,
     newValue: TSource1,
 ) => TObject & TSource1 = (origin, newValue) => {
-  return merge({}, origin, newValue)
+  return _.mergeWith({}, origin, newValue, customizer)
 }
+
+export const fpMergePre: <Pre, New extends Partial<Pre>>(newValue: New) => (origin: Pre) => Pre & New = (newValue) => (pre) => _.mergeWith({}, pre, newValue, customizer)
 
 export const fpRemove = (arr: any, index: number) => {
   if (!arr) return []

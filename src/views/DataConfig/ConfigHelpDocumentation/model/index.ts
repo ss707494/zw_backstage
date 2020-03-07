@@ -16,17 +16,17 @@ export const configHelpDocumentationModel = modelFactory({
   problemListData: {},
   ssObj: {},
 } as ConfigHelpDocumentationModel, {
-  setActType: (value, setData) => {
+  setActType: (value, {setData}) => {
     return setData(data => fpMerge(data, {
       actType: value,
     }))
   },
-  setConfig: (value, setData) => {
+  setConfig: (value, {setData}) => {
     return setData(data => fpMerge(data, value))
   },
-  addProblem: (value, setData) => setData(data => fpSet(data, ['problemListData', data.actType.code], preData  => [
+  addProblem: (value, {setData}) => setData(data => fpSet(data, ['problemListData', data.actType.code], preData  => [
     ...preData ?? [],
     value
   ])),
-  editProblem: (value, setData) => setData(data => fpSet(data, ['problemListData', data.actType.code, value?.index], _.pick(value, ['answer', 'sort', 'problem']))),
+  editProblem: (value, {setData}) => setData(data => fpSet(data, ['problemListData', data.actType.code, value?.index], _.pick(value, ['answer', 'sort', 'problem']))),
 })

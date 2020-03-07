@@ -1,5 +1,4 @@
 import React, {useEffect} from "react"
-import {ModuleEnum, useStore} from "@/common/context"
 import {ConfigThemeSelectTs, themeSelectModel} from "@/views/DataConfig/ConfigThemeSelect/model/config"
 import {HeaderAction} from "@/views/DataConfig/component/HeaderAction/HeaderAction"
 import styled from "styled-components"
@@ -10,6 +9,7 @@ import {grey} from "@material-ui/core/colors"
 import {dealImgUrl} from "@/component/ImgDealUrl/ImgDealUrl"
 import {SelectProduct, selectProductModel} from "@/views/DataConfig/ConfigThemeSelect/SelectProduct"
 import {fpMerge} from "@/common/utils"
+import {ModuleEnum, useStoreModel} from "@/common/ModelAction/useStore"
 
 const Box = styled.div`
   display: grid;
@@ -46,23 +46,23 @@ const ImgBox = styled.section`
 const findIndex = (list: any[], item: any) => list.findIndex(con => con.title === item.title)
 
 export const ConfigThemeSelect = ({dataConfig = {}}: any) => {
-  const {state: {configData}, handleAction: dealAction, actions} = useStore(ModuleEnum.ConfigThemeSelect, themeSelectModel)
-  const {actions: editModalActions, handleAction: dealEditActions} = useStore([ModuleEnum.ConfigThemeSelect, 'editModal'], editThemeModel)
+  const {state: {configData}, actions} = useStoreModel(ModuleEnum.ConfigThemeSelect, themeSelectModel)
+  const {actions: editModalActions} = useStoreModel([ModuleEnum.ConfigThemeSelect, 'editModal'], editThemeModel)
 
-  const selectProductModelData = useStore(ModuleEnum.SelectProduct, selectProductModel)
-  const {actions: actionsSel, handleAction: dealActionSel} = selectProductModelData
+  const selectProductModelData = useStoreModel(ModuleEnum.SelectProduct, selectProductModel)
+  const {actions: actionsSel} = selectProductModelData
 
   useEffect(() => {
     if (dataConfig?.value) {
-      dealAction(actions.setConfigData)(fpMerge(dataConfig.value, themeSelectModel.state.configData))
+      (actions.setConfigData)(fpMerge(dataConfig.value, themeSelectModel.state.configData))
     }
-  }, [actions.setConfigData, dataConfig.value, dealAction])
+  }, [actions, dataConfig.value])
   useEffect(() => {
-    dealActionSel(actionsSel.setDealOut)(async (data) => {
-      dealAction(actions.setListSelectProduct)(data)
+    (actionsSel.setDealOut)(async (data) => {
+      (actions.setListSelectProduct)(data)
       return true
     })
-  }, [actions.setListSelectProduct, actionsSel.setDealOut, dealAction, dealActionSel])
+  }, [actions, actionsSel])
   return (
       <div>
         <HeaderAction
@@ -76,7 +76,7 @@ export const ConfigThemeSelect = ({dataConfig = {}}: any) => {
                 <aside>
                   <CusButton
                       variant={"outlined"}
-                      onClick={() => dealEditActions(editModalActions.openEditClick)({
+                      onClick={() => (editModalActions.openEditClick)({
                         data: v,
                         index: findIndex(configData.list, v),
                       })}
@@ -92,7 +92,7 @@ export const ConfigThemeSelect = ({dataConfig = {}}: any) => {
                   <CusButton
                       style={{gridColumn: '1 / 3'}}
                       variant={"outlined"}
-                      onClick={() => selectProductModelData.handleAction(selectProductModelData.actions.openClick)({
+                      onClick={() => (selectProductModelData.actions.openClick)({
                         open: true,
                         index: findIndex(configData.list, v),
                         selectList: v.selectProductList ?? [],
@@ -114,7 +114,7 @@ export const ConfigThemeSelect = ({dataConfig = {}}: any) => {
           <footer>
             <CusButton
                 variant={"outlined"}
-                onClick={() => dealEditActions(editModalActions.openClick)({})}
+                onClick={() => (editModalActions.openClick)({})}
             >新增</CusButton>
           </footer>
         </Box>

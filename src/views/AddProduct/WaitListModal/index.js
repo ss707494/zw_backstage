@@ -51,7 +51,7 @@ export const WaitListModal = (
     const { save_product_supplement } = await saveProductSupplement({
       data: {
         addList: editData.waitList.map(v => ({
-          ...pick(v, ['addNumber', 'addPrice']),
+          ...pick(v, ['addNumber', 'addPrice', 'addSupplier']),
           product_id: v.id
         })),
       }

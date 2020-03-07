@@ -15,9 +15,9 @@ export const themeSelectModel = modelFactory({
     list: [],
   },
 }, {
-  setConfigData: (value, setData) => setData(data => fpSet(data, ['configData'], {...value})),
-  setListSelectProduct: ({selectList, index}: { selectList: string[]; index: number }, setData) => setData(data => fpSet(data, ['configData', 'list', index, 'selectProductList'], selectList)),
-  updateOne: async (value: { configThemeSelect: ConfigThemeSelectTs; imgFile: any; index: number }, setData) => {
+  setConfigData: (value, {setData}) => setData(data => fpSet(data, ['configData'], {...value})),
+  setListSelectProduct: ({selectList, index}: { selectList: string[]; index: number }, {setData}) => setData(data => fpSet(data, ['configData', 'list', index, 'selectProductList'], selectList)),
+  updateOne: async (value: { configThemeSelect: ConfigThemeSelectTs; imgFile: any; index: number }, {setData}) => {
     let uploadRes = value.configThemeSelect.imgUrl
     if (value.imgFile) {
       uploadRes = (await fileUploadAjax({}, [value.imgFile], '/api/fileUpload'))?.data?.files?.[0]?.url ?? ''

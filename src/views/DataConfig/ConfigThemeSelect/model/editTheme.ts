@@ -13,8 +13,8 @@ const _modalModel = modalModelFactory({
 export const editThemeModel = mergeModel(_modalModel, {
   imgFile: '',
 }, {
-  uploadImg: (value, setData) => setData(data => fpMerge(data, {imgFile: value})),
-  ss: (value, setData) => {
+  uploadImg: (value, {setData}) => setData(data => fpMerge(data, {imgFile: value})),
+  ss: (value, {setData}) => {
     setData(pre => {
       return {...pre}
     })

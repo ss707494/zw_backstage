@@ -6,8 +6,8 @@ export const homeCarousel = modelFactory({
     imgList: [] as string[],
   },
 }, {
-  setConfigData: (value, setData) => setData(data => fpMerge(data, {configData: value})),
-  addOne: async (value, setData) => {
+  setConfigData: (value, {setData}) => setData(data => fpMerge(data, {configData: value})),
+  addOne: async (value, {setData}) => {
     const uploadRes = (await fileUploadAjax({}, [value], '/api/fileUpload'))?.data?.files?.[0]?.url ?? ''
     setData(pre => fpSet(pre, ['configData', 'imgList'], [
       ...pre.configData.imgList,
@@ -18,7 +18,7 @@ export const homeCarousel = modelFactory({
   setOneImg: async ({index, file}: {
     index: number
     file: any
-  }, setData,) => {
+  }, {setData},) => {
     const uploadRes = (await fileUploadAjax({}, [file], '/api/fileUpload'))?.data?.files?.[0]?.url ?? ''
     setData(pre => fpSet(pre, ['configData', 'imgList', index], uploadRes))
     return true

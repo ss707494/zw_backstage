@@ -43,7 +43,7 @@ export const OrderProductModal = (
           open={open}
           onClose={handleClose}
       >
-        <DialogTitle>补货列表</DialogTitle>
+        <DialogTitle>订单详情列表</DialogTitle>
         <S.Content>
           <StyleTableBox.Table theme={theme}>
             <TableHead>

@@ -10,10 +10,10 @@ import {grey} from "@material-ui/core/colors";
 import {CusButton} from "@/component/CusButton";
 import _ from "lodash";
 import {ProblemBox} from "@/views/DataConfig/ConfigHelpDocumentation/ProblemBox";
-import {ModuleEnum, useStore} from "@/common/context"
 import {
   configHelpDocumentationModel
 } from "@/views/DataConfig/ConfigHelpDocumentation/model";
+import {ModuleEnum, useStoreModel} from "@/common/ModelAction/useStore"
 
 const Box = styled.div`
   display: grid;
@@ -30,11 +30,11 @@ const MainBox = styled.main`
 
 export const ConfigHelpDocumentation = ({dataConfig = {}}: any) => {
   const addTypeModalState = useCommonModalState()
-  const {state, actions, handleAction: actionFactory} = useStore(ModuleEnum.ConfigHelpDocumentation, configHelpDocumentationModel)
+  const {state, actions} = useStoreModel(ModuleEnum.ConfigHelpDocumentation, configHelpDocumentationModel)
   const configData = state
   const {actType} = configData
-  const setActType = useCallback(actionFactory(actions.setActType), [])
-  const setConfigData = useCallback(actionFactory(actions.setConfig), [])
+  const setActType = useCallback((actions.setActType), [])
+  const setConfigData = useCallback((actions.setConfig), [])
   useEffect(() => {
     if (dataConfig?.value) {
       setConfigData(dataConfig?.value)

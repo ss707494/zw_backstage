@@ -1,4 +1,5 @@
-import {SetStateAction, useState} from "react"
+import {useState} from "react"
+import {baseActionOption} from "@/common/ModelAction/modelUtil"
 
 export const useCommonModalState:() => CommonModalState = () => {
   const [open, setOpen] = useState(false)
@@ -17,16 +18,24 @@ export const useCommonModalState:() => CommonModalState = () => {
   }
 }
 
-export const useModelState = <T, E, Y>(model: ModelData<T, E>): ModelResult<T, E> => {
+export const useModelState = <T, E extends HelpObj<ModelAction<any, T>>, Y>(model: ModelData<T, E>): ModelResult<T, E> => {
   const {state: modelState, actions} = model
-  const [state, setState] = useState(modelState) as [T, ModelDispatch<SetStateAction<T>>]
-  const handleAction: HandleAction<T> = action => (value?: any) => {
-    return action(value, setState, {})
-  }
+  const [state, setState] = useState(modelState)
+
+  const newActions = Object.keys(actions).reduce((previousValue, currentValue) => {
+    return {
+      ...previousValue,
+      [currentValue]: async (v: any) => actions[currentValue](v, {
+        ...baseActionOption,
+        data: state,
+        notice: setState,
+        setData: setState,
+      })
+    }
+  }, {}) as DealFunObj<typeof actions>
 
   return {
     state,
-    actions,
-    handleAction,
+    actions: newActions,
   }
 }
