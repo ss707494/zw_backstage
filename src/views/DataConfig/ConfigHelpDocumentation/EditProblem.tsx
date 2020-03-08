@@ -4,13 +4,13 @@ import {parseFloatForInput} from "@/common/utils";
 import {CusButton} from "@/component/CusButton";
 import {modalModelFactory} from "@/common/model/modal"
 import {configHelpDocumentationModel} from "@/views/DataConfig/ConfigHelpDocumentation/model"
-import {ModuleEnum, useStoreModel} from "@/common/ModelAction/useStore"
+import {useStoreModel} from "@/common/ModelAction/useStore"
 
 export const EditProblemNamespace = 'editProblem'
 
 export const EditProblem = () => {
-  const {actions} = useStoreModel(ModuleEnum.ConfigHelpDocumentation, configHelpDocumentationModel)
-  const {state: editState, actions: editActions} = useStoreModel([ModuleEnum.ConfigHelpDocumentation, EditProblemNamespace], modalModelFactory({
+  const {actions} = useStoreModel(configHelpDocumentationModel)
+  const {state: editState, actions: editActions} = useStoreModel(modalModelFactory('editProblem', {
     problem: '',
     answer: '',
     sort: 0,

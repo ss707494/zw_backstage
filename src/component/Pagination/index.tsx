@@ -31,7 +31,7 @@ type PageModelResult = ModelResult<{
   [key: string]: any
 }>
 
-export const pageModel = modelFactory({
+export const pageModel = modelFactory('pageModel', {
   page: 0,
   rows_per_page: 10,
   total: 0,
@@ -53,8 +53,8 @@ export const pickPageParam = (model: PageType) => ({
 
 type PageModelState = typeof pageModel.state
 
-export const dealDealPageModel = <A, E extends { getList: ModelAction<any, A & PageModelState> } & {[key: string]: ModelAction<any, A & PageModelState>}>(state: A, actions: E) => {
-  return mergeModel(pageModel, state, actions)
+export const dealDealPageModel = <A, E extends { getList: ModelAction<any, A & PageModelState> } & {[key: string]: ModelAction<any, A & PageModelState>}>(name: string, state: A, actions: E) => {
+  return mergeModel(pageModel, name, state, actions)
 }
 
 // dealDealPageModel({

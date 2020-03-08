@@ -6,7 +6,7 @@ export interface ModalModel<T> {
   modalData: T
 }
 
-export const modalModelFactory = <T>(initData: T) => modelFactory({
+export const modalModelFactory = <T>(name: string, initData: T) => modelFactory(`${name}_modalModelFactory`, {
   modalData: initData,
   open: false,
   isEdit: -1,

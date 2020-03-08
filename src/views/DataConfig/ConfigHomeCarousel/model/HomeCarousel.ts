@@ -1,7 +1,7 @@
 import {modelFactory} from "@/common/ModelAction/modelUtil"
 import {fileUploadAjax, fpMerge, fpSet} from "@/common/utils"
 
-export const homeCarousel = modelFactory({
+export const homeCarousel = modelFactory('homeCarousel', {
   configData: {
     imgList: [] as string[],
   },

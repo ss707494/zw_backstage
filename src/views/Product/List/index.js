@@ -25,7 +25,7 @@ import { productGraphql, save_product } from "@/views/Product/List/productGraphq
 import { dealImgUrl } from '@/component/ImgDealUrl/ImgDealUrl'
 import { dealNumberZero } from '@/common/utils.ts'
 import { addProductHistoryModel } from '@/views/Product/model/addProductHistory.ts'
-import {ModuleEnum, useStoreModel} from "@/common/ModelAction/useStore"
+import {useStoreModel} from "@/common/ModelAction/useStore"
 
 const KEYWORD_TYPE = {
   num: '1',
@@ -116,7 +116,7 @@ const useTypeObj = () => {
 }
 
 export const Product = ({ theme, match }) => {
-  const {actions: {openEditClick}} = useStoreModel(ModuleEnum.AddProductHistory, addProductHistoryModel)
+  const {actions: {openEditClick}} = useStoreModel(addProductHistoryModel)
   const _is_group = ~~match?.params?.is_group ?? -1
   const pageState = useInitPageData()
   const editModalState = useInitState()

@@ -2,7 +2,7 @@ import {mergeModel} from "@/common/ModelAction/modelUtil"
 import {fpMerge} from "@/common/utils"
 import {modalModelFactory} from "@/common/model/modal"
 
-const _modalModel = modalModelFactory({
+const _modalModel = modalModelFactory('modal', {
   title: '',
   remark: '',
   imgUrl: '',
@@ -10,7 +10,7 @@ const _modalModel = modalModelFactory({
   endTime: null,
 })
 
-export const editThemeModel = mergeModel(_modalModel, {
+export const editThemeModel = mergeModel(_modalModel, 'editThemeModel', {
   imgFile: '',
 }, {
   uploadImg: (value, {setData}) => setData(data => fpMerge(data, {imgFile: value})),

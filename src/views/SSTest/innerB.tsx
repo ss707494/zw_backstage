@@ -11,7 +11,7 @@ const testQuery = gql`
         test
     }
 `
-export const tModel = modelFactory({
+export const tModel = modelFactory('tModel', {
   count: 0,
 }, {
   addOne: (data: {ss: string}, notice) => {
@@ -30,7 +30,7 @@ export const tModel = modelFactory({
     option.store['rest'].actions.addOne({ss: '123'})
   },
 })
-const mergerM = mergeModel(tModel, {
+const mergerM = mergeModel(tModel, 'mergeM', {
   slkdfj: 'sdlfkj'
 }, {
 })

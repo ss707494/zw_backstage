@@ -13,7 +13,7 @@ import {ProblemBox} from "@/views/DataConfig/ConfigHelpDocumentation/ProblemBox"
 import {
   configHelpDocumentationModel
 } from "@/views/DataConfig/ConfigHelpDocumentation/model";
-import {ModuleEnum, useStoreModel} from "@/common/ModelAction/useStore"
+import {useStoreModel} from "@/common/ModelAction/useStore"
 
 const Box = styled.div`
   display: grid;
@@ -30,7 +30,7 @@ const MainBox = styled.main`
 
 export const ConfigHelpDocumentation = ({dataConfig = {}}: any) => {
   const addTypeModalState = useCommonModalState()
-  const {state, actions} = useStoreModel(ModuleEnum.ConfigHelpDocumentation, configHelpDocumentationModel)
+  const {state, actions} = useStoreModel(configHelpDocumentationModel)
   const configData = state
   const {actType} = configData
   const setActType = useCallback((actions.setActType), [])

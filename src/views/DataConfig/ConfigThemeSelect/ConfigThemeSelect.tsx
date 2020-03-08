@@ -9,7 +9,7 @@ import {grey} from "@material-ui/core/colors"
 import {dealImgUrl} from "@/component/ImgDealUrl/ImgDealUrl"
 import {SelectProduct, selectProductModel} from "@/views/DataConfig/ConfigThemeSelect/SelectProduct"
 import {fpMerge} from "@/common/utils"
-import {ModuleEnum, useStoreModel} from "@/common/ModelAction/useStore"
+import {useStoreModel} from "@/common/ModelAction/useStore"
 
 const Box = styled.div`
   display: grid;
@@ -46,10 +46,10 @@ const ImgBox = styled.section`
 const findIndex = (list: any[], item: any) => list.findIndex(con => con.title === item.title)
 
 export const ConfigThemeSelect = ({dataConfig = {}}: any) => {
-  const {state: {configData}, actions} = useStoreModel(ModuleEnum.ConfigThemeSelect, themeSelectModel)
-  const {actions: editModalActions} = useStoreModel([ModuleEnum.ConfigThemeSelect, 'editModal'], editThemeModel)
+  const {state: {configData}, actions} = useStoreModel(themeSelectModel)
+  const {actions: editModalActions} = useStoreModel(editThemeModel)
 
-  const selectProductModelData = useStoreModel(ModuleEnum.SelectProduct, selectProductModel)
+  const selectProductModelData = useStoreModel(selectProductModel)
   const {actions: actionsSel} = selectProductModelData
 
   useEffect(() => {

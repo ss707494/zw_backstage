@@ -14,7 +14,7 @@ import {ImgUpload} from "@/component/ImgUpload"
 import styled from "styled-components"
 import {KeyboardDateTimePicker} from "@material-ui/pickers"
 import {themeSelectModel} from "@/views/DataConfig/ConfigThemeSelect/model/config"
-import {ModuleEnum, useStoreModel} from "@/common/ModelAction/useStore"
+import {useStoreModel} from "@/common/ModelAction/useStore"
 
 const FullTextField:React.ComponentType<TextFieldProps> = (props) => <TextField
     fullWidth
@@ -30,8 +30,8 @@ const DialogContentBox = styled(DialogContent)`
 `
 
 export const EditModal = () => {
-  const {state, actions} = useStoreModel([ModuleEnum.ConfigThemeSelect, 'editModal'], editThemeModel)
-  const {actions: asyncActionsConfig} = useStoreModel(ModuleEnum.ConfigThemeSelect, themeSelectModel)
+  const {state, actions} = useStoreModel(editThemeModel)
+  const {actions: asyncActionsConfig} = useStoreModel(themeSelectModel)
 
   return (
       <Dialog

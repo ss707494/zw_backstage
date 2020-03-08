@@ -2,10 +2,10 @@ import {CusButton} from "@/component/CusButton"
 import React from "react"
 import styled from "styled-components"
 import {grey} from "@material-ui/core/colors"
-import {EditProblem, EditProblemNamespace} from "@/views/DataConfig/ConfigHelpDocumentation/EditProblem"
+import {EditProblem} from "@/views/DataConfig/ConfigHelpDocumentation/EditProblem"
 import {modalModelFactory} from "@/common/model/modal"
 import {configHelpDocumentationModel} from "@/views/DataConfig/ConfigHelpDocumentation/model"
-import {ModuleEnum, useStoreModel} from "@/common/ModelAction/useStore"
+import {useStoreModel} from "@/common/ModelAction/useStore"
 
 const ProblemBoxStyle = styled.div`
   display: grid;
@@ -41,10 +41,10 @@ const ProblemBoxStyle = styled.div`
 `
 
 export const ProblemBox = () => {
-  const {state} = useStoreModel(ModuleEnum.ConfigHelpDocumentation, configHelpDocumentationModel)
+  const {state} = useStoreModel(configHelpDocumentationModel)
   const configData = state
   const actType = configData.actType
-  const {actions} = useStoreModel([ModuleEnum.ConfigHelpDocumentation, EditProblemNamespace], modalModelFactory({}))
+  const {actions} = useStoreModel(modalModelFactory('ConfigHelpDocumentation', {}))
 
   const problemList: Problem[] = configData.problemListData?.[actType.code] ?? []
 

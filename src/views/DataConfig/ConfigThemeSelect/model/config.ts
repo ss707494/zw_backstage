@@ -10,7 +10,7 @@ export declare type ConfigThemeSelectTs = {
   selectProductList?: string[]
 }
 
-export const themeSelectModel = modelFactory({
+export const themeSelectModel = modelFactory('themeSelectModel', {
   configData: {
     list: [],
   },

@@ -36,10 +36,10 @@ const add_history_list_by_product = gql`
         }
     }
 `
-export const addProductHistoryModel = mergeModel(mergeTwoModel(modalModelFactory({
+export const addProductHistoryModel = mergeModel(mergeTwoModel(modalModelFactory('modal', {
   list: [],
   id: '',
-}), pageModel), {
+}), pageModel), 'addProductHistoryModel', {
   historyList: [] as HistoryItem[],
 }, {
   getList: async (value, {setData, query}) => {

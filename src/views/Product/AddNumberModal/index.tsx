@@ -4,10 +4,10 @@ import {Dialog, DialogContent, DialogTitle, Table, TableBody, TableHead, TableRo
 import {CusTableCell as TableCell} from "@/component/CusTableCell"
 import {PaginationByModel} from '@/component/Pagination'
 import {formatDate} from "@/common/utils"
-import {ModuleEnum, useStoreModel} from "@/common/ModelAction/useStore"
+import {useStoreModel} from "@/common/ModelAction/useStore"
 
 export const AddNumberModal = () => {
-  const addNumberModal = useStoreModel(ModuleEnum.AddProductHistory, addProductHistoryModel)
+  const addNumberModal = useStoreModel(addProductHistoryModel)
   const {state: {open, modalData, historyList}, actions} = addNumberModal
   const {getList} = actions
   // ssLog(historyList)

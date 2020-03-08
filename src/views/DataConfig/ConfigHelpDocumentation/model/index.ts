@@ -9,7 +9,7 @@ export interface ConfigHelpDocumentationModel {
   problemListData: { [key: string]: Problem[] }
 }
 
-export const configHelpDocumentationModel = modelFactory({
+export const configHelpDocumentationModel = modelFactory('configHelpDocumentationModel', {
   actType: {code: "", name: "", sort: 0},
   typeList: [],
   list: [],

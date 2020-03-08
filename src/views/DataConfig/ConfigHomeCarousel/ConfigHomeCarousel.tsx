@@ -3,7 +3,7 @@ import {homeCarousel} from "@/views/DataConfig/ConfigHomeCarousel/model/HomeCaro
 import {HeaderAction} from "@/views/DataConfig/component/HeaderAction/HeaderAction"
 import styled, {css} from "styled-components"
 import {ImgUpload} from "@/component/ImgUpload"
-import {ModuleEnum, useStoreModel} from "@/common/ModelAction/useStore"
+import {useStoreModel} from "@/common/ModelAction/useStore"
 
 const Box = styled.div`
   width: 100%;
@@ -16,7 +16,7 @@ const Box = styled.div`
 
 export const ConfigHomeCarousel = ({dataConfig = {}}: any) => {
   // eslint-disable-next-line no-undef
-  const {state: {configData}, actions} = useStoreModel(ModuleEnum.ConfigThemeSelect, homeCarousel)
+  const {state: {configData}, actions} = useStoreModel(homeCarousel)
   const {imgList} = configData
 
   useEffect(() => {

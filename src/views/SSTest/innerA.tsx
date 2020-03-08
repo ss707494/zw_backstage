@@ -2,11 +2,11 @@ import React from "react"
 import {RenderTimer} from "@/component/RenderTimer/RenderTimer"
 import {CusButton} from "@/component/CusButton"
 import {tModel} from "@/views/SSTest/innerB"
-import {ModuleEnum, useStoreModel} from "@/common/ModelAction/useStore"
+import {useStoreModel} from "@/common/ModelAction/useStore"
 
 export const InnerA = () => {
-  const {state} = useStoreModel(ModuleEnum.Test, tModel)
-  const {state: state2, actions: actions2} = useStoreModel(ModuleEnum.Test, tModel)
+  const {state} = useStoreModel(tModel)
+  const {state: state2, actions: actions2} = useStoreModel(tModel)
 
   return (
       <div>

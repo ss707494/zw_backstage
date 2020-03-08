@@ -19,9 +19,11 @@ const isFunction = (functionToCheck: any) => {
   return functionToCheck && {}.toString.call(functionToCheck) === '[object Function]'
 }
 
-type UseModelState = <T extends FetchObj, E extends HelpObj<ModelAction<any, T>>>(key: ModuleEnum | [ModuleEnum, string], model: ModelData<T, E>) => ModelResult<T, E> & {
+type StoreStateResult<T, E extends ModelActionObjHelp<any, T>> = ModelResult<T, E> & {
   store: OriginStore
 }
+
+type UseModelState = <T extends FetchObj, E extends ModelActionObjHelp<any, T>>(model: ModelData<T, E>, key?: ModuleEnum | [ModuleEnum, string]) => StoreStateResult<T, E>
 
 export const dealNameSpace = (key: ModuleEnum, nameSpace: string) => {
   if (nameSpace) {
@@ -30,8 +32,8 @@ export const dealNameSpace = (key: ModuleEnum, nameSpace: string) => {
   return `${key}`
 }
 
-export const useStoreModel: UseModelState = (key: ModuleEnum | [ModuleEnum, string], model) => {
-  const _key = Array.isArray(key) ? dealNameSpace(key[0], key[1]) : key
+export const useStoreModel: UseModelState = (model, key?: ModuleEnum | [ModuleEnum, string]) => {
+  const _key = model.name ?? !key ? '' : Array.isArray(key) ? dealNameSpace(key[0], key[1]) : key
   const {actions, state} = model
   const [, setState] = useState(Object.create(null))
   if (!originStore[_key]) {
@@ -47,7 +49,7 @@ export const useStoreModel: UseModelState = (key: ModuleEnum | [ModuleEnum, stri
       value?.(data)
     })
   }, [_key])
-  const setData: Dispatch<SetStateAction<& typeof state>> = useCallback((data) => {
+  const setData: Dispatch<SetStateAction<typeof state>> = useCallback((data) => {
     const oldState = originStore[_key].state
     const newData = isFunction(data) ? (data as (v: typeof oldState) => void)(oldState) : data
     originStore[_key].state = newData
@@ -91,18 +93,6 @@ export const useStoreModel: UseModelState = (key: ModuleEnum | [ModuleEnum, stri
     })
     return res?.data
   }, [query, setError, setLoad])
-
-  // Object.keys(actions).forEach(value => {
-  //   originStore[_key].actions[value] = async (v: any) => actions[value](v, {
-  //     ...baseActionOption,
-  //     data: originStore[_key].state,
-  //     notice,
-  //     setData,
-  //     query,
-  //     mutate,
-  //     store: originStore,
-  //   })
-  // })
 
   useEffect(() => {
     Object.keys(actions).forEach(value => {

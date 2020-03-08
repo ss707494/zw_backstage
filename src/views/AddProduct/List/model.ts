@@ -2,7 +2,7 @@ import {dealDealPageModel, pickPageParam} from "@/component/Pagination"
 import {productSupplementListGraphql} from "@/views/AddProduct/List/addProductGraphql"
 import {fpMergePre} from "@/common/utils"
 
-export const listModel = dealDealPageModel({
+export const listModel = dealDealPageModel('AddProductList', {
   listData: []
 }, {
   getList: async (value, {setData, query, data}) => {
@@ -12,6 +12,5 @@ export const listModel = dealDealPageModel({
       total,
       listData,
     }))
-    // debugger
   }
 })

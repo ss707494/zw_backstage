@@ -5,9 +5,9 @@ import {productGraphql} from "@/views/Product/List/productGraphql"
 import styled from "styled-components"
 import {CusButton} from "@/component/CusButton"
 import {modelFactory} from "@/common/ModelAction/modelUtil"
-import {ModuleEnum, useStoreModel} from "@/common/ModelAction/useStore"
+import {useStoreModel} from "@/common/ModelAction/useStore"
 
-export const selectProductModel = modelFactory({
+export const selectProductModel = modelFactory('selectProductModel', {
   open: false,
   list: [],
   selectList: [] as string[],
@@ -52,7 +52,7 @@ const DialogContentBox = styled(DialogContent)`
 `
 
 export const SelectProduct = () => {
-  const {state: {index, open, list, selectList, dealOut}, actions} = useStoreModel(ModuleEnum.SelectProduct, selectProductModel)
+  const {state: {index, open, list, selectList, dealOut}, actions} = useStoreModel(selectProductModel)
 
   useEffect(() => {
     (actions.getList)({})

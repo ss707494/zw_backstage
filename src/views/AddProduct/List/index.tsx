@@ -10,13 +10,13 @@ import {CusTableCell as TableCell} from "@/component/CusTableCell"
 import TableHead from "@material-ui/core/TableHead"
 import TableBody from "@material-ui/core/TableBody"
 import {formatDate} from "@/common/utils"
-import {ModuleEnum, useStoreModel} from '@/common/ModelAction/useStore'
+import {useStoreModel} from '@/common/ModelAction/useStore'
 import {listModel} from "@/views/AddProduct/List/model"
 import {productSupplementListGraphql} from "@/views/AddProduct/List/addProductGraphql"
 
 export const AddProduct = () => {
   const theme = useTheme()
-  const model = useStoreModel(ModuleEnum.AddProduct, listModel)
+  const model = useStoreModel(listModel)
   const {state, actions} = model
   const listLoad = state.fetchLoad[productSupplementListGraphql]
   const listData = state.listData
