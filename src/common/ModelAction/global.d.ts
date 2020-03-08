@@ -17,7 +17,7 @@ declare type FetchObj = {
   fetchError: HelpObj
 }
 
-declare type ModelData<A, E extends ModelActionObjHelp<any, A>> = {
+declare type ModelData<A extends FetchObj, E extends ModelActionObjHelp<any, A>> = {
   name: string,
   state: A
   actions: E
@@ -28,9 +28,9 @@ declare type ModelResult<T, E extends ModelActionObjHelp<any, T>> = {
   actions: DealFunObj<E>
 }
 
-declare type ModelAction<T = any, A = any> = (value: T, option: ModelActionOption<A>) => any
+declare type ModelAction<T = any, A = any> = (value?: T, option: ModelActionOption<A>) => any
 
-declare type ModelActionResult<T = any> = (value: T) => any
+declare type ModelActionResult<T = any> = (value?: T) => any
 
 declare type ModelActionObjHelp<A = any, B = any> = HelpObj<ModelAction<A, B>>
 

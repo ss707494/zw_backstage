@@ -8,7 +8,7 @@ declare interface CusButtonProps extends ButtonProps {
 
 export const CusButton = (prop: CusButtonProps) => (
     <>
-      <S.Box {...prop} disabled={!!prop.loading}>
+      <S.Box {...prop} disabled={!!prop.loading || prop.disabled}>
         {prop.children}
         {!!prop.loading && <S.ButtonLoading
             color="inherit"

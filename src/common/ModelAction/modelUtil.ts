@@ -27,13 +27,13 @@ export const modelFactory: ModelFactory = (name, state, actions) => {
   }
 }
 
-export function mergeModel<A, B extends HelpObj<ModelAction<any, A>>, C, D extends HelpObj<ModelAction<any, A & C>>>(model: {
+export function mergeModel<A extends FetchObj, B extends ModelActionObjHelp<any, A>, C, D extends ModelActionObjHelp<any, A & C>>(model: {
   state: A
   actions: B
   name: string
 }, name: string, state: C, actions: D): {
   state: A & C
-  actions: {
+  actions: B & D & {
     [key in keyof B]: ModelAction<any, A>
   } & {
     [key in keyof D]: ModelAction<any, A & C>
@@ -70,7 +70,7 @@ export function mergeModel<A, B extends HelpObj<ModelAction<any, A>>, C, D exten
   }
 }
 
-export function mergeTwoModel<A, B extends HelpObj<ModelAction<any, A>>, C, D extends HelpObj<ModelAction<any, C>>>(model: {
+export function mergeTwoModel<A, B extends ModelActionObjHelp<any, A>, C, D extends ModelActionObjHelp<any, C>>(model: {
   state: A
   actions: B
   name: string
@@ -81,7 +81,7 @@ export function mergeTwoModel<A, B extends HelpObj<ModelAction<any, A>>, C, D ex
 }): {
   name: string
   state: A & C
-  actions: {
+  actions: B & D & {
     [key in keyof B]: ModelAction
   } & {
     [key in keyof D]: ModelAction

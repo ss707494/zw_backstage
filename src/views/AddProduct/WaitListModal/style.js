@@ -7,6 +7,10 @@ S.Content = styled(DialogContent)`
 &&& {
   > footer {
     margin: 10px 0;
+    display: flex;
+    > button:not(:first-of-type) {
+      margin-left: 10px;
+    }
   }
 }
 `

@@ -1,65 +1,36 @@
-import React, { useState } from "react";
-import { Dialog, TableRow } from "@material-ui/core";
-import { S } from "@/views/AddProduct/WaitListModal/style";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import { StyleTableBox } from "@/common/style/tableBox";
-import TableHead from "@material-ui/core/TableHead";
-import { CusTableCell as TableCell } from "@/component/CusTableCell";
-import TableBody from "@material-ui/core/TableBody";
-import { CusButton } from "@/component/CusButton";
-import { addProductGraphql } from "@/views/AddProduct/List/addProductGraphql";
-import { useMutationGraphql } from "@/component/ApolloQuery";
-import { pick } from "lodash";
-import { showMessage } from "@/component/Message";
+import React from "react"
+import {Dialog, TableRow, useTheme} from "@material-ui/core"
+import {S} from "@/views/AddProduct/WaitListModal/style"
+import DialogTitle from "@material-ui/core/DialogTitle"
+import {StyleTableBox} from "@/common/style/tableBox"
+import TableHead from "@material-ui/core/TableHead"
+import {CusTableCell as TableCell} from "@/component/CusTableCell"
+import TableBody from "@material-ui/core/TableBody"
+import {CusButton} from "@/component/CusButton"
+import {addProductGraphql} from "@/views/AddProduct/List/addProductGraphql"
+import {useStoreModel} from '@/common/ModelAction/useStore'
+import {waitListModel} from '@/views/AddProduct/WaitListModal/model'
 
-export const useInitState = () => {
-  const [open, setOpen] = useState(false)
-  const [editData, setEditData] = useState({})
-  const editClick = (item) => () => {
-    setEditData(item)
-    setOpen(true)
-  }
-  const handleClose = () => {
-    setEditData({})
-    setOpen(false)
-  }
-  return {
-    editClick,
-    open,
-    setOpen,
-    editData,
-    setEditData,
-    handleClose
-  }
-}
+export const dealWaitItem = (item: any) => ({
+  ...item.product,
+  addNumber: item.count,
+  addPrice: item.amount,
+  addSupplier: item.supplier,
+  addRemark: item.remark,
+  id: item.id,
+  product_id: item.product?.id,
+})
 
-export const WaitListModal = (
-    {
-      theme,
-      open,
-      editData,
-      setEditData,
-      handleClose,
-      refreshData = () => {
-      }
-    }) => {
+export const WaitListModal = () => {
+  const theme = useTheme()
+  const {state, actions} = useStoreModel(waitListModel)
+  const setEditData = actions.setModal
+  const editData = state.modalData
+  const saveLoading = state.fetchLoad[addProductGraphql.save_product_supplement]
 
-  const [saveProductSupplement, , ] = useMutationGraphql(addProductGraphql.save_product_supplement)
-
-  const saveLoading = false
-  const handleSave = async () => {
-    const { save_product_supplement } = await saveProductSupplement({
-      data: {
-        addList: editData.waitList.map(v => ({
-          ...pick(v, ['addNumber', 'addPrice', 'addSupplier']),
-          product_id: v.id
-        })),
-      }
-    })
-    if (save_product_supplement.flag) {
-      showMessage({ message: save_product_supplement?.msg || '操作成功' })
-      handleClose()
-      refreshData()
+  const handleSave = async (value: { state?: number }) => {
+    if (await actions.addOneProductSupplement(value)) {
+      actions.onClose({})
     }
   }
 
@@ -67,8 +38,8 @@ export const WaitListModal = (
       <Dialog
           fullWidth={true}
           maxWidth="lg"
-          open={open}
-          onClose={handleClose}
+          open={state.open}
+          onClose={() => actions.onClose({})}
       >
         <DialogTitle>补货列表</DialogTitle>
         <S.Content>
@@ -87,7 +58,7 @@ export const WaitListModal = (
               </TableRow>
             </TableHead>
             <TableBody>
-              {editData?.waitList?.map((e, i) => <TableRow
+              {editData?.waitList?.map((e: any, i) => <TableRow
                   key={`TableBody${e?.id}`}>
                 <TableCell>{e?.number}</TableCell>
                 <TableCell>{e?.is_group ? '是' : '否'}</TableCell>
@@ -103,10 +74,11 @@ export const WaitListModal = (
                   <S.TextFieldBox
                       label=""
                       type="number"
-                      value={e?.addNumber}
+                      disabled={actions.isFinish()}
+                      value={e?.addNumber ?? ''}
                       onChange={event => setEditData({
                         ...editData,
-                        waitList: editData.waitList.map((waitV, waitI) => waitI !== i ? (waitV) : ({
+                        waitList: editData.waitList.map((waitV: any, waitI) => waitI !== i ? (waitV) : ({
                           ...waitV,
                           addNumber: parseFloat(event.target.value),
                         }))
@@ -115,47 +87,50 @@ export const WaitListModal = (
                 </TableCell>
                 <TableCell>
                   <S.TextFieldBox
+                      disabled={actions.isFinish()}
                       label=""
                       type="number"
-                      value={e?.addPrice}
+                      value={e?.addPrice ?? ''}
                       onChange={event => {
                         return setEditData({
                           ...editData,
-                          waitList: editData.waitList.map((waitV, waitI) => waitI !== i ? (waitV) : ({
+                          waitList: editData.waitList.map((waitV: object, waitI) => waitI !== i ? (waitV) : ({
                             ...waitV,
                             addPrice: parseFloat(event.target.value),
                           }))
-                        });
+                        })
                       }}
                   />
                 </TableCell>
                 <TableCell>
                   <S.TextFieldBox
+                      disabled={actions.isFinish()}
                       label=""
-                      value={e?.addSupplier}
+                      value={e?.addSupplier ?? ''}
                       onChange={event => {
                         return setEditData({
                           ...editData,
-                          waitList: editData.waitList.map((waitV, waitI) => waitI !== i ? (waitV) : ({
+                          waitList: editData.waitList.map((waitV: object, waitI) => waitI !== i ? (waitV) : ({
                             ...waitV,
                             addSupplier: (event.target.value),
                           }))
-                        });
+                        })
                       }}
                   />
                 </TableCell>
                 <TableCell>
                   <S.TextFieldBox
+                      disabled={actions.isFinish()}
                       label=""
-                      value={e?.addRemark}
+                      value={e?.addRemark ?? ''}
                       onChange={event => {
                         return setEditData({
                           ...editData,
-                          waitList: editData.waitList.map((waitV, waitI) => waitI !== i ? (waitV) : ({
+                          waitList: editData.waitList.map((waitV: object, waitI) => waitI !== i ? (waitV) : ({
                             ...waitV,
                             addRemark: (event.target.value),
                           }))
-                        });
+                        })
                       }}
                   />
                 </TableCell>
@@ -164,15 +139,35 @@ export const WaitListModal = (
             </TableBody>
           </StyleTableBox.Table>
           <footer>
-            <CusButton
+            {editData.id ? <>
+              <CusButton
+                  loading={saveLoading ? 1 : 0}
+                  disabled={actions.isFinish()}
+                  color="primary"
+                  variant="contained"
+                  fullWidth
+                  onClick={() => handleSave({})}
+              >
+                更新数量
+              </CusButton>
+              <CusButton
+                  loading={saveLoading ? 1 : 0}
+                  color="primary"
+                  variant="contained"
+                  fullWidth
+                  onClick={() => handleSave({state: actions.isFinish() ? 1 : 2})}
+              >
+                {actions.isFinish() ? '撤销补货' : '确定补货完成'}
+              </CusButton>
+            </> : <CusButton
                 loading={saveLoading ? 1 : 0}
                 color="primary"
                 variant="contained"
                 fullWidth
-                onClick={handleSave}
+                onClick={() => handleSave({})}
             >
-              确定补货
-            </CusButton>
+              保存
+            </CusButton>}
           </footer>
         </S.Content>
       </Dialog>

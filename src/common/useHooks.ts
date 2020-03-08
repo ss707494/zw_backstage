@@ -18,7 +18,7 @@ export const useCommonModalState:() => CommonModalState = () => {
   }
 }
 
-export const useModelState = <T, E extends HelpObj<ModelAction<any, T>>, Y>(model: ModelData<T, E>): ModelResult<T, E> => {
+export const useModelState = <T extends FetchObj, E extends HelpObj<ModelAction<any, T>>, Y>(model: ModelData<T, E>): ModelResult<T, E> => {
   const {state: modelState, actions} = model
   const [state, setState] = useState(modelState)
 

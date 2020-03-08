@@ -1,4 +1,4 @@
-import {fpMerge} from "@/common/utils"
+import {fpMerge, fpSet} from "@/common/utils"
 import {modelFactory} from "@/common/ModelAction/modelUtil"
 
 export interface ModalModel<T> {
@@ -23,7 +23,7 @@ export const modalModelFactory = <T>(name: string, initData: T) => modelFactory(
     modalData: value.data,
     isEdit: value.index,
   })),
-  onClose: (value, {setData}) => setData(pre => fpMerge(pre, {
+  onClose: (value, {setData}) => setData(pre => fpMerge(fpSet(pre, 'modalData', {}), {
     modalData: {},
     open: false,
   })),
