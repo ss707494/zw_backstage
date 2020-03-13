@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import { Query } from 'react-apollo'
-import { client } from '@/common/apolloCLient'
+import { client as defaultClient } from '@/common/apolloCLient'
 
 export const WrapperQuery = (query, variables) => child => (
     <Query query={query}
@@ -17,7 +17,7 @@ const dealParams = (params => ({
   data: params,
 }))
 
-export const graphQLMutate = async (mutation, params, option) => {
+export const graphQLMutate = (client = defaultClient) => async (mutation, params, option) => {
   const _dealParamsIn = option?.dealParamsIn ?? dealParams
   return client.mutate({
     mutation,
@@ -27,7 +27,8 @@ export const graphQLMutate = async (mutation, params, option) => {
     ...option,
   })
 }
-export const graphQLQuery = async (query, params, option) => {
+
+export const graphQLQuery = (client = defaultClient) => async (query, params, option) => {
   const _dealParamsIn = option?.dealParamsIn ?? dealParams
   return client.query({
     fetchPolicy: 'network-only',
@@ -45,7 +46,7 @@ export const useMutationGraphql = (mutation, option, dealParamsIn) => {
   const [loading, setLoading] = useState(false)
   const mutate = useCallback(async (params) => {
     setLoading(true)
-    const { data } = await client.mutate({
+    const { data } = await defaultClient.mutate({
       mutation,
       variables: {
         ...(dealParamsIn ? dealParamsIn(params) : params)
@@ -71,7 +72,7 @@ export const useQueryGraphql = (query, options, dealParamsIn) => {
   const [loading, setLoading] = useState(false)
   const getData = useCallback(async (params, funOption) => {
     setLoading(true)
-    const { data } = await client.query({
+    const { data } = await defaultClient.query({
       fetchPolicy: 'network-only',
       query,
       variables: {

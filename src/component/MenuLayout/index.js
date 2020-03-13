@@ -21,6 +21,7 @@ const _themeOption = createMuiTheme({
 
 const reactAppPreRoute = process.env.REACT_APP_PRE_ROUTE;
 const menuData = [
+  [`${reactAppPreRoute}/user`, '用户管理', ''],
   [`${reactAppPreRoute}/category`, '分类管理', ''],
   [`${reactAppPreRoute}/product/0`, '普通产品管理', ''],
   [`${reactAppPreRoute}/product/1`, '拼团产品管理', ''],

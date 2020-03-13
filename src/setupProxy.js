@@ -30,6 +30,15 @@ module.exports = function(app) {
     pathRewrite: {
     }
   }));
+  app.use(proxy('/type__graphql/api', {
+    // target: 'http://rap2api.taobao.org/app/mock/222495',
+    // target: 'http://128.14.236.90:4433/mock/5d347e552b71b967c8c62b82/api/',
+    // target: 'http://www.marketpayless.com',
+    target: 'http://localhost:4464',
+    changeOrigin: true,
+    pathRewrite: {
+    }
+  }));
   app.use(proxy('/upload_file', {
     // target: 'http://rap2api.taobao.org/app/mock/222495',
     // target: 'http://128.14.236.90:4433/mock/5d347e552b71b967c8c62b82/api/',

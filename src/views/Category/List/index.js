@@ -106,6 +106,13 @@ export const Category = ({ theme }) => {
       parent_id: ''
     })
   }, [getTypeOptionOne])
+  React.useEffect(() => {
+    getList({
+      ...dealSort(1),
+      ...search,
+      ...pageState.pageData,
+    })
+  }, [getList, pageState.pageData, search])
 
   return (
       <S.Box>
@@ -162,9 +169,9 @@ export const Category = ({ theme }) => {
                       full_parent_id: _value === '' ? search.type : _value,
                       typeTwo: _value
                     })
-                    getListData({
-                      full_parent_id: _value === '' ? search.type : _value,
-                    })
+                    // getListData({
+                    //   full_parent_id: _value === '' ? search.type : _value,
+                    // })
                   }}
                   value={search.typeTwo}
                   clear={1}
@@ -191,7 +198,7 @@ export const Category = ({ theme }) => {
                       ...dealSort(v.target.value),
                       sort: v.target.value
                     })
-                    getListData(dealSort(v.target.value))
+                    // getListData(dealSort(v.target.value))
                   }}
               >
                 <MenuItem value={1}>按创建时间-降序</MenuItem>
@@ -263,7 +270,6 @@ export const Category = ({ theme }) => {
           <Pagination
               {...pageState}
               count={~~total}
-              refresh={getListData}
           />
         </main>
         <EditModal

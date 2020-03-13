@@ -78,21 +78,4 @@
       <textMaps />
     </LinkMapSettings>
   </component>
-  <component name="ProjectInspectionProfilesVisibleTreeState">
-    <entry key="Project Default">
-      <profile-state>
-        <expanded-state>
-          <State />
-        </expanded-state>
-        <selected-state>
-          <State>
-            <id>Angular</id>
-          </State>
-        </selected-state>
-      </profile-state>
-    </entry>
-  </component>
-  <component name="WebPackConfiguration">
-    <option name="path" value="$PROJECT_DIR$/config/webpack.config.js" />
-  </component>
 </project>

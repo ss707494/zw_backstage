@@ -7,7 +7,7 @@ export const StyleTableBox = {
   > header {
     display: grid;
     grid-column-gap: 10px;
-    grid-template-columns: minmax(200px, auto) repeat(2, 1fr);
+    grid-template-columns: minmax(200px, auto) repeat(${props => props.headerColumn || 2}, 1fr);
     > section {
       flex: 1;
     }

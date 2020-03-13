@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ExternalDependencies">
+    <plugin id="CMD Support" />
+    <plugin id="Dart" />
+    <plugin id="IdeaVIM" />
+    <plugin id="NodeJS" />
+    <plugin id="String Manipulation" />
+    <plugin id="cn.yiiguxing.plugin.translate" />
+    <plugin id="com.chrisrm.idea.MaterialThemeUI" />
+    <plugin id="com.deadlock.scsyntax" />
+    <plugin id="com.intellij.lang.jsgraphql" />
+    <plugin id="commit-template-idea-plugin" />
+    <plugin id="io.flutter" />
+    <plugin id="izhangzhihao.rainbow.brackets" />
+    <plugin id="mobi.hsz.idea.gitignore" />
+    <plugin id="zielu.gittoolbox" />
+  </component>
+</project>

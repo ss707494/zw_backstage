@@ -2,7 +2,7 @@ import {mergeModel} from "@/common/ModelAction/modelUtil"
 import {fpMerge} from "@/common/utils"
 import {modalModelFactory} from "@/common/model/modal"
 
-const _modalModel = modalModelFactory('modal', {
+const _modalModel = modalModelFactory('themeModal', {
   title: '',
   remark: '',
   imgUrl: '',

@@ -593,6 +593,7 @@ input ProductInput {
 input ProductSupplementInput {
     addList: [AddItemInput]
     id: String
+    state: Int
 }
 
 input ProductSupplementListInput {
