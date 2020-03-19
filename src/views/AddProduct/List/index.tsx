@@ -28,7 +28,6 @@ export const AddProduct = () => {
   const {actions: waitActions} = useStoreModel(waitListModel)
 
   useEffect(() => {
-    console.log(actions.getList)
     waitActions.setRefreshCall(actions.getList)
   }, [actions.getList, waitActions])
 
@@ -89,7 +88,6 @@ export const AddProduct = () => {
                                   waitList: e?.addItemList.map(dealWaitItem),
                                 }
                               })
-                              console.log(e)
                             }}
                             variant="contained"
                         >编辑</CusButton>

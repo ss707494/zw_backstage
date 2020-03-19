@@ -28,8 +28,6 @@ import {InnerB} from "@/views/SSTest/innerB"
 // dealNameModel('ss', model).state
 
 const SsTest = () => {
-  // console.log(res)
-  debugger
 
   return (
       <div>

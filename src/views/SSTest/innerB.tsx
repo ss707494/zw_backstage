@@ -15,18 +15,13 @@ export const tModel = modelFactory('tModel', {
   count: 0,
 }, {
   addOne: (data: {ss: string}, notice) => {
-    console.log(notice.data)
     notice.setData(fpSet(notice.data, 'count', preData => preData + 1))
   },
   addOneAsync: async (value, option) => {
-    console.log(option.store)
     await delay(1000)
     option.setData(fpSet(option.data, 'count', preData => preData + 1))
   },
   testQuery: async (value, option) => {
-    const res = await option.query(testQuery, {})
-    console.log(res)
-    console.log(option.store['rest'])
     option.store['rest'].actions.addOne({ss: '123'})
   },
 })

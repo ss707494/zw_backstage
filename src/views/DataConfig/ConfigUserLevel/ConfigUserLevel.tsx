@@ -7,7 +7,6 @@ import {merge} from "lodash";
 import styled from "styled-components";
 import {Title} from "@/views/DataConfig/component/Title/Title";
 
-
 const MainBox = styled.main`
   max-width: 400px;
 `

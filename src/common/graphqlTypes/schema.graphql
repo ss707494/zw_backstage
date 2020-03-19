@@ -2,45 +2,241 @@
 
 schema {
     query: Query
+    mutation: Mutation
+}
+
+type DataConfig {
+    createTime: Timestamp
+    id: String
+    isDelete: Float
+    name: String
+    remark: String
+    type: String
+    updateTime: Timestamp
+    value: JSON
+}
+
+type Dict {
+    code: String
+    createTime: Timestamp
+    dictTypeCode: String
+    id: String
+    isDelete: Float
+    isDisable: Float
+    name: String
+    remark: String
+    sort: Float
+    updateTime: Timestamp
+}
+
+type DictTypeFirst {
+    code: String
+    createTime: Timestamp
+    id: String
+    isDelete: Float
+    name: String
+    parentCode: String
+    remark: String
+    sort: Float
+    updateTime: Timestamp
+}
+
+type Mutation {
+    saveDataConfig(dataConfigInput: DataConfigInput): DataConfig
+}
+
+type OrderInfo {
+    actuallyPaid: Float
+    addressId: String
+    couponDiscount: Float
+    createTime: Timestamp
+    discountProductTotal: Float
+    finishTime: Timestamp
+    id: String
+    isDelete: Float
+    name: String
+    number: String
+    orderId: String
+    paymentMethodCardId: String
+    rOrderProduct: [ROrderProduct!]
+    rOrderUser: ROrderUser
+    saleTax: Float
+    state: Float
+    subtotal: Float
+    transportationCosts: Float
+    updateTime: Timestamp
+    user: User
+    userAddress: UserAddress
+    vipDiscount: Float
+}
+
+type OrderPage {
+    list: [OrderInfo]
+    total: Float
+}
+
+"page type"
+type PageResult {
+    total: Float
+}
+
+type Product {
+    brand: String
+    categoryId: String
+    createTime: Timestamp
+    groupAmount: Float
+    groupPrecision: Float
+    groupRemark: String
+    id: String
+    isDelete: Float
+    isEnable: Float
+    isGroup: Float
+    isHot: Float
+    isNew: Float
+    name: String
+    number: Float
+    priceIn: Float
+    priceMarket: Float
+    priceOut: Float
+    rOrderProduct: [ROrderProduct!]
+    remark: String
+    shelvesTypes: String
+    sort: Float
+    stock: Float
+    unit: String
+    updateTime: Timestamp
+    weight: Float
 }
 
 type Query {
-    userList(userListInput: UserListInput!): [User!]!
+    getDataConfig(dataConfigInput: DataConfigInput): DataConfig
+    getDictList(dictInput: DictInput): [Dict]
+    getDictTypeList: [DictTypeFirst]
+    orderList(orderInput: OrderInput): OrderPage
+    orderListTotal(orderInput: OrderInput): Float
+    userList(userListInput: UserListInput): UserPage
+    userListTotal(userListInput: UserListInput): Float
+}
+
+type ROrderProduct {
+    count: Float
+    createTime: Timestamp
+    id: String
+    isDelete: Float
+    name: String
+    orderId: String
+    orderInfo: OrderInfo
+    product: Product
+    productId: String
+    updateTime: Timestamp
+}
+
+type ROrderUser {
+    createTime: Timestamp
+    id: String
+    isDelete: Float
+    name: String
+    orderId: String
+    orderInfo: OrderInfo
+    updateTime: Timestamp
+    user: User
+    userId: String
 }
 
 type User {
-    createTime: Timestamp!
-    id: String!
-    isDelete: Float!
-    name: String!
-    password: String!
-    type: Float!
+    createTime: Timestamp
+    id: String
+    isDelete: Float
+    name: String
+    orderInfo: [OrderInfo!]
+    password: String
+    rOrderUser: [ROrderUser!]
+    type: Float
     updateTime: Timestamp
     userInfo: UserInfo
 }
 
+type UserAddress {
+    address: String
+    city: String
+    contactInformation: String
+    contactUserName: String
+    createTime: Timestamp
+    district: String
+    id: String
+    isDefault: Float
+    isDelete: Float
+    name: String
+    orderInfo: [OrderInfo]
+    province: String
+    updateTime: Timestamp
+    userId: String
+    zip: String
+}
+
 type UserInfo {
-    createTime: Timestamp!
-    email: String!
-    id: String!
-    isDelete: Float!
-    name: String!
-    phone: String!
-    updateTime: Timestamp!
-    userId: String!
+    createTime: Timestamp
+    email: String
+    id: String
+    isDelete: Float
+    name: String
+    phone: String
+    updateTime: Timestamp
+    user: User
+    userId: String
+}
+
+type UserPage {
+    list: [User]
+    total: Float
+}
+
+input DataConfigInput {
+    createTime: Timestamp
+    id: String
+    isDelete: Float
+    name: String
+    remark: String
+    type: String
+    updateTime: Timestamp
+    value: JSON
+}
+
+input DictInput {
+    dictTypeCode: String
+}
+
+input OrderInput {
+    address: String
+    city: String
+    district: String
+    endTime: Timestamp
+    number: String
+    page: Float
+    province: String
+    rows_per_page: Float
+    startTime: Timestamp
+    state: Float
+    userName: String
+    zip: String
 }
 
 input PageInput {
-    page: Float!
-    rows_per_page: Float!
+    page: Float
+    rows_per_page: Float
 }
 
 input UserListInput {
-    name: String
-    page: Float!
-    rows_per_page: Float!
+    email: String = ""
+    name: String = ""
+    page: Float
+    phone: String = ""
+    rows_per_page: Float
 }
 
 
 "The javascript `Date` as integer. Type represents date and time as number of milliseconds from start of UNIX epoch."
 scalar Timestamp
+
+"The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf)."
+scalar JSON

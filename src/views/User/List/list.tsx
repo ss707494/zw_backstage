@@ -14,10 +14,13 @@ import {getUserListDoc} from "@/common/graphqlTypes/graphql/doc"
 import {CusTextField} from "@/component/CusTextField"
 import {CusButton} from "@/component/CusButton"
 
+const SButton = styled(CusButton)({
+})
+
 const SearchBox = styled('div')({
   display: "grid",
   gridTemplateColumns: 'repeat(3, 340px)',
-  gridColumnGap: '8px',
+  gridColumnGap: '16px',
 })
 
 export const List = () => {
@@ -25,7 +28,6 @@ export const List = () => {
   const userListModel = useStoreModelByType__Graphql(listModel)
   const {state, actions, getLoad} = userListModel
   const {list} = state
-  console.log(list)
 
   useEffect(() => {
     actions.getList()
@@ -47,19 +49,19 @@ export const List = () => {
                 onChange={e => actions.setSearchParams({name: e.target.value})}
             />
             <CusTextField
-                label={'用户名'}
-                value={state.searchParams.name}
-                onChange={e => actions.setSearchParams({name: e.target.value})}
+                label={'手机'}
+                value={state.searchParams.phone}
+                onChange={e => actions.setSearchParams({phone: e.target.value})}
             />
             <CusTextField
-                label={'用户名'}
-                value={state.searchParams.name}
-                onChange={e => actions.setSearchParams({name: e.target.value})}
+                label={'邮箱'}
+                value={state.searchParams.email}
+                onChange={e => actions.setSearchParams({email: e.target.value})}
             />
-            <CusButton
+            <SButton
                 variant={"outlined"}
                 onClick={() => actions.getList()}
-            >搜索</CusButton>
+            >搜索</SButton>
           </SearchBox>
         </header>
         <main>

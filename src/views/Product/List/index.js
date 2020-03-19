@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { MenuItem, TableRow } from '@material-ui/core'
-import CircularProgress from "@material-ui/core/CircularProgress";
-import TableHead from "@material-ui/core/TableHead";
-import TableBody from "@material-ui/core/TableBody";
+import CircularProgress from "@material-ui/core/CircularProgress"
+import TableHead from "@material-ui/core/TableHead"
+import TableBody from "@material-ui/core/TableBody"
 import { CusSelect } from '@/component/CusSelect'
 import { Pagination, useInitState as useInitPageData } from '@/component/Pagination'
 import { EditModal, useInitState } from '../EditModal'
@@ -11,21 +11,21 @@ import { api } from '@/common/api'
 import { CusButton as Button } from '@/component/CusButton'
 import { CusTableCell as TableCell } from '@/component/CusTableCell'
 import { showConfirm } from "@/component/ConfirmDialog"
-import { SearchInput } from "@/component/SearchInput";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Radio from "@material-ui/core/Radio";
+import { SearchInput } from "@/component/SearchInput"
+import RadioGroup from "@material-ui/core/RadioGroup"
+import FormControlLabel from "@material-ui/core/FormControlLabel"
+import Radio from "@material-ui/core/Radio"
 import { ImgPreview } from "@/component/ImgPreview"
-import { CheckCircleRounded, RadioButtonUncheckedTwoTone } from '@material-ui/icons'
 import { S } from './style'
-import Link from "@material-ui/core/Link";
-import { categoryGraphql } from "@/views/Category/List";
-import { useMutationGraphql, useQueryGraphql } from "@/component/ApolloQuery";
-import { productGraphql, save_product } from "@/views/Product/List/productGraphql";
+import Link from "@material-ui/core/Link"
+import { categoryGraphql } from "@/views/Category/List"
+import { useMutationGraphql, useQueryGraphql } from "@/component/ApolloQuery"
+import { productGraphql, save_product } from "@/views/Product/List/productGraphql"
 import { dealImgUrl } from '@/component/ImgDealUrl/ImgDealUrl'
 import { dealNumberZero } from '@/common/utils.ts'
 import { addProductHistoryModel } from '@/views/Product/model/addProductHistory.ts'
-import {useStoreModel} from "@/common/ModelAction/useStore"
+import { useStoreModel, useStoreModelByType__Graphql } from "@/common/ModelAction/useStore"
+import { productEditModel } from '@/views/Product/EditModal/model'
 
 const KEYWORD_TYPE = {
   num: '1',
@@ -61,22 +61,30 @@ const useTypeObj = () => {
         typeTwo: '',
         res: '',
       }))
+      getTypeOptionTwo({
+        parent_id: 'abc123',
+        // ParentID: typeHelpObj.typeOne
+      })
     } else {
       getTypeOptionTwo({
         parent_id: typeHelpObj.typeOne,
         // ParentID: typeHelpObj.typeOne
       })
+      setTypeHelpObj(pre => ({
+        ...pre,
+        res: typeHelpObj.typeOne,
+      }))
     }
   }, [getTypeOptionTwo, typeHelpObj.typeOne])
-  React.useEffect(() => {
-    setTypeHelpObj(pre => ({
-      ...pre,
-      ...(!typeOptionTwo?.length ? {
-        res: pre.typeOne
-      } : {}),
-      typeTwo: typeOptionTwo?.[0]?.id || '',
-    }))
-  }, [typeOptionTwo])
+  // React.useEffect(() => {
+  //   setTypeHelpObj(pre => ({
+  //     ...pre,
+  //     ...(!typeOptionTwo?.length ? {
+  //       res: pre.typeOne
+  //     } : {}),
+  //     // typeTwo: typeOptionTwo?.[0]?.id || '',
+  //   }))
+  // }, [typeOptionTwo])
   React.useEffect(() => {
     if (!typeHelpObj.typeTwo) {
       setTypeHelpObj(pre => ({
@@ -84,22 +92,33 @@ const useTypeObj = () => {
         typeThree: '',
         res: pre.typeOne,
       }))
+      getTypeOptionThree({
+        parent_id: 'abc123',
+      })
     } else {
       getTypeOptionThree({
         parent_id: typeHelpObj.typeTwo
       })
+      setTypeHelpObj(pre => ({
+        ...pre,
+        res: typeHelpObj.typeTwo,
+      }))
     }
   }, [getTypeOptionThree, typeHelpObj.typeTwo])
+  // React.useEffect(() => {
+  //   setTypeHelpObj(pre => ({
+  //     ...pre,
+  //     ...(!typeOptionThree?.length ? {
+  //       res: pre.typeTwo
+  //     } : {}),
+  //     // typeThree: typeOptionThree?.[0]?.id || ''
+  //   }))
+  // }, [typeOptionThree])
   React.useEffect(() => {
     setTypeHelpObj(pre => ({
       ...pre,
-      ...(!typeOptionThree?.length ? {
-        res: pre.typeTwo
-      } : {}),
-      typeThree: typeOptionThree?.[0]?.id || ''
+      res: typeHelpObj.typeThree || pre.typeTwo || pre.typeOne,
     }))
-  }, [typeOptionThree])
-  React.useEffect(() => {
     setTypeHelpObj(pre => ({
       ...pre,
       res: typeHelpObj.typeThree || pre.typeTwo || pre.typeOne,
@@ -116,6 +135,11 @@ const useTypeObj = () => {
 }
 
 export const Product = ({ theme, match }) => {
+  const {actions, state} = useStoreModelByType__Graphql(productEditModel)
+  useEffect(() => {
+    actions.getDictList()
+  }, [actions])
+  const {shelvesTypeList} = state
   const {actions: {openEditClick}} = useStoreModel(addProductHistoryModel)
   const _is_group = ~~match?.params?.is_group ?? -1
   const pageState = useInitPageData()
@@ -332,7 +356,8 @@ export const Product = ({ theme, match }) => {
                   const _order = [
                     ['create_time desc', '按产品创建/修改时间'],
                     ['number asc', '商品编号'],
-                    ['stock asc', '库存倒序'],
+                    ['stock asc', '库存由低到高'],
+                    ['stock desc', '库存由高到低'],
                   ];
                   return <CusSelect
                       placeholder="选择排序"
@@ -360,7 +385,7 @@ export const Product = ({ theme, match }) => {
               : <S.Table theme={theme}>
                 <TableHead>
                   <TableRow>
-                    {['商品编号', '中文名称', '图片', '热门', '新品', '库存', '进货价格', '市场价格', '售卖价格', '重量', '单位']
+                    {['商品编号', '中文名称', '图片', '上架类型', '库存', '进货价格', '市场价格', '售卖价格', '重量', '单位']
                         .map(e => <TableCell key={`TableHead${e}`}>
                           {e}
                         </TableCell>)
@@ -397,10 +422,9 @@ export const Product = ({ theme, match }) => {
                       </S.ImgPreview>
                     </TableCell>
                     <TableCell>
-                      {e?.is_hot === 1 ? <CheckCircleRounded/> : <RadioButtonUncheckedTwoTone/>}
-                    </TableCell>
-                    <TableCell>
-                      {e?.is_new === 1 ? <CheckCircleRounded/> : <RadioButtonUncheckedTwoTone/>}
+                      {
+                        e?.shelvesTypes.split(',').map(v => shelvesTypeList.find(value => value.code === v)?.name).join(',')
+                      }
                     </TableCell>
                     <TableCell>
                       {e?.stock}
@@ -414,7 +438,10 @@ export const Product = ({ theme, match }) => {
                       <S.ActionTableCell>
                         <Button
                             color="secondary"
-                            onClick={editClick(e)}
+                            onClick={editClick({
+                              ...e,
+                              shelvesTypes: e.shelvesTypes?.split(','),
+                            })}
                             variant="contained"
                         >编辑</Button>
                         <Button

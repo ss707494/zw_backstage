@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { S } from './style'
-import { S as SText } from '@/component/CusTextField/style'
 import DialogTitle from "@material-ui/core/DialogTitle"
 import { CusTextField } from "@/component/CusTextField"
 import { CusSelectField } from "@/component/CusSelectField"
@@ -9,8 +8,6 @@ import { CusButton } from "@/component/CusButton"
 import { showMessage } from "@/component/Message"
 import { FormControl } from "@material-ui/core"
 import InputLabel from "@material-ui/core/InputLabel"
-import Checkbox from "@material-ui/core/Checkbox"
-import FormControlLabel from "@material-ui/core/FormControlLabel"
 import { ImgUpload } from "@/component/ImgUpload"
 import { fileUploadAjax, parseFloatForInput } from "@/common/utils"
 import { categoryGraphql } from "@/views/Category/List"
@@ -18,6 +15,8 @@ import { useMutationGraphql, useQueryGraphql } from "@/component/ApolloQuery"
 import { save_product } from "@/views/Product/List/productGraphql"
 import { pick } from "lodash"
 import { useParams } from 'react-router-dom'
+import { useStoreModelByType__Graphql } from '@/common/ModelAction/useStore'
+import { productEditModel } from '@/views/Product/EditModal/model'
 
 export const useLinkage = () => {
   const [data, setData] = useState({
@@ -103,6 +102,7 @@ export const EditModal = (
       refreshData = () => {
       }
     }) => {
+  const { state } = useStoreModelByType__Graphql(productEditModel)
   const routerParams = useParams()
   const is_group = ~~routerParams?.is_group ?? -1
 
@@ -140,7 +140,9 @@ export const EditModal = (
           'id', 'name', 'remark', 'is_hot', 'is_new', 'stock', 'unit',
           'weight', 'price_in', 'price_out', 'price_market', 'brand',
           'is_group', 'group_amount', 'group_precision', 'group_remark',
+          'groupAmountUnit',
         ]),
+        shelvesTypes: editData.shelvesTypes.filter(v => v).join(','),
         category_id: threeCode,
         imgs
       }
@@ -290,47 +292,49 @@ export const EditModal = (
                   name: e.target.value
                 })}
             />
-            <SText.TextFieldBox
-                as={FormControl}
+            <CusSelectField
+                multiple
+                label="上架类型"
+                value={editData.shelvesTypes || []}
+                onChange={e =>
+                    setEditData({
+                      ...editData,
+                      shelvesTypes: e.target.value,
+                    })}
             >
-              <InputLabel
-                  shrink
-                  htmlFor="tag"
-              >上架类型</InputLabel>
-              <FormControlLabel
-                  control={
-                    <Checkbox
-                        checked={!!editData.is_new || false}
-                        onChange={e => setEditData({
-                          ...editData,
-                          is_new: e.target.checked ? 1 : 0
-                        })}
-                    />
-                  }
-                  label="新品"
+              {state.shelvesTypeList?.map(e => (
+                  <MenuItem
+                      key={`unit${e.id}`}
+                      value={e.code}
+                  >{e.name}</MenuItem>
+              ))}
+            </CusSelectField>
+            <S.FieldTwoBox>
+              <CusTextField
+                  label="库存"
+                  type="number"
+                  value={editData.stock}
+                  onChange={e => setEditData({
+                    ...editData,
+                    stock: parseFloatForInput(e.target.value)
+                  })}
               />
-              <FormControlLabel
-                  control={
-                    <Checkbox
-                        checked={!!editData.is_hot ?? false}
-                        onChange={e => setEditData({
-                          ...editData,
-                          is_hot: e.target.checked ? 1 : 0
-                        })}
-                    />
-                  }
-                  label="热门"
-              />
-            </SText.TextFieldBox>
-            <CusTextField
-                label="库存"
-                type="number"
-                value={editData.stock}
-                onChange={e => setEditData({
-                  ...editData,
-                  stock: parseFloatForInput(e.target.value)
-                })}
-            />
+              <CusSelectField
+                  label="单位"
+                  value={editData.unit}
+                  onChange={e => setEditData({
+                    ...editData,
+                    unit: e.target.value
+                  })}
+              >
+                {state.packingUnitList?.map(e => (
+                    <MenuItem
+                        key={`unit${e.id}`}
+                        value={e.code}
+                    >{e.name}</MenuItem>
+                ))}
+              </CusSelectField>
+            </S.FieldTwoBox>
             <CusTextField
                 label="进货价格"
                 type="number"
@@ -384,36 +388,58 @@ export const EditModal = (
                     unit: e.target.value
                   })}
               >
-                {[
-                  ['g', '克/g']
-                ]?.map(e => (
+                {state.weightUnitList?.map(e => (
                     <MenuItem
-                        key={`unit${e[0]}`}
-                        value={e[0]}
-                    >{e[1]}</MenuItem>
+                        key={`unit${e.id}`}
+                        value={e.code}
+                    >{e.name}</MenuItem>
                 ))}
               </CusSelectField>
             </S.FieldTwoBox>
             {is_group === 1 ? (
                 <>
-                  <CusTextField
-                      label="拼团数量"
-                      type="number"
-                      value={editData.group_amount}
-                      onChange={e => setEditData({
-                        ...editData,
-                        group_amount: parseFloatForInput(e.target.value)
-                      })}
-                  />
-                  < CusTextField
+                  <S.FieldTwoBox>
+                    <CusTextField
+                        label="拆包数量"
+                        type="number"
+                        value={editData.group_amount}
+                        onChange={e => setEditData({
+                          ...editData,
+                          group_amount: parseFloatForInput(e.target.value)
+                        })}
+                    />
+                    <CusSelectField
+                        label="拆包单位"
+                        type="number"
+                        value={editData.groupAmountUnit}
+                        onChange={e => setEditData({
+                          ...editData,
+                          groupAmountUnit: e.target.value,
+                        })}
+                    >
+                      {state.unpackingUnitList?.map(e => (
+                          <MenuItem
+                              key={`unit${e.id}`}
+                              value={e.code}
+                          >{e.name}</MenuItem>
+                      ))}
+                    </CusSelectField>
+                  </S.FieldTwoBox>
+                  <CusSelectField
                       label="拼团精度"
-                      type="number"
-                      value={editData.group_precision}
+                      value={(editData.group_precision)}
                       onChange={e => setEditData({
                         ...editData,
-                        group_precision: parseFloatForInput(e.target.value)
+                        group_precision: (e.target.value),
                       })}
-                  />
+                  >
+                    {state.groupPrecisionList?.map(e => (
+                        <MenuItem
+                            key={`unit${e.id}`}
+                            value={e.code}
+                        >{e.name}</MenuItem>
+                    ))}
+                  </CusSelectField>
                   <CusTextField
                       label="拼团描述"
                       value={editData.group_remark}

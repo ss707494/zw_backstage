@@ -1,40 +1,21 @@
-import React, { useState } from "react";
-import { Dialog, TableRow } from "@material-ui/core";
-import { S } from "@/views/AddProduct/WaitListModal/style";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import { StyleTableBox } from "@/common/style/tableBox";
-import TableHead from "@material-ui/core/TableHead";
-import { CusTableCell as TableCell } from "@/component/CusTableCell";
-import TableBody from "@material-ui/core/TableBody";
+import React from "react"
+import {Dialog, TableRow, useTheme} from "@material-ui/core"
+import {S} from "@/views/AddProduct/WaitListModal/style"
+import DialogTitle from "@material-ui/core/DialogTitle"
+import {StyleTableBox} from "@/common/style/tableBox"
+import TableHead from "@material-ui/core/TableHead"
+import {CusTableCell as TableCell} from "@/component/CusTableCell"
+import TableBody from "@material-ui/core/TableBody"
+import {useStoreModelByType__Graphql} from "@/common/ModelAction/useStore"
+import {orderListModel} from "@/views/Order/List/model"
 
-export const useOrderProductModalInitState = () => {
-  const [open, setOpen] = useState(false)
-  const [editData, setEditData] = useState({})
-  const editClick = (item) => () => {
-    setEditData(item)
-    setOpen(true)
-  }
-  const handleClose = () => {
-    setEditData({})
-    setOpen(false)
-  }
-  return {
-    editClick,
-    open,
-    setOpen,
-    editData,
-    setEditData,
-    handleClose
-  }
-}
-
-export const OrderProductModal = (
-    {
-      theme,
-      open,
-      editData,
-      handleClose,
-    }) => {
+export const OrderProductModal = () => {
+  const theme = useTheme()
+  const listModel = useStoreModelByType__Graphql(orderListModel)
+  const {actions, state} = listModel
+  const {open, modalData} = state
+  const handleClose = actions.onClose
+  const productList = modalData.productList
 
   return (
       <Dialog
@@ -56,7 +37,7 @@ export const OrderProductModal = (
               </TableRow>
             </TableHead>
             <TableBody>
-              {editData?.productList?.map((addItem) => {
+              {productList?.map((addItem) => {
                 const e = addItem
                 return <TableRow
                     key={`TableBody${e?.id}`}>
@@ -65,9 +46,9 @@ export const OrderProductModal = (
                   <TableCell>
                     {e?.stock}
                   </TableCell>
-                  <TableCell>{e?.price_in}</TableCell>
-                  <TableCell>{e?.price_out}</TableCell>
-                  <TableCell>{e?.price_market}</TableCell>
+                  <TableCell>{e?.priceIn}</TableCell>
+                  <TableCell>{e?.priceOut}</TableCell>
+                  <TableCell>{e?.priceMarket}</TableCell>
                   <TableCell>{e?.weight}</TableCell>
                 </TableRow>;
               })

@@ -233,6 +233,7 @@ type Product {
     price_market: Float
     price_out: Float
     remark: String
+    shelvesTypes: String
     sort: Int
     stock: Float
     unit: String
@@ -581,6 +582,7 @@ input ProductInput {
     price_out: Float
     remark: String
     rows_per_page: Int
+    shelvesTypes: String
     sort: Int
     sort_type: String
     stock: Float
