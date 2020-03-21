@@ -21,9 +21,9 @@ export const StyleTableBox = {
   overflow: hidden;
   border: 1px solid rgba(224, 224, 224, 1);
   > thead {
-    background: ${({ theme }) => theme.palette.grey[800]};
+    background: ${({ theme }) => theme.palette.grey[400]};
     > tr > th {
-      color: ${({ theme }) => theme.palette.common.white};
+      color: ${({ theme }) => theme.palette.common.black};
     }
   }
 }

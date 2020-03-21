@@ -29,6 +29,7 @@ export const getUserListDoc = gql`
             userId
             phone
             email
+            userLevel
         }
     }
 `
@@ -128,22 +129,30 @@ export const getOrderListDoc = gql`
             }
             total
         }
+        getDataConfig (dataConfigInput: {
+            type: "OrderState"
+        }) {
+            id
+            name
+            type
+            value
+        }
     }
 `
 
 export const getDataConfigDoc = gql`
-  query ($data: DataConfigInput) {
-      getDataConfig (dataConfigInput: $data) {
-          id
-          name
-          createTime
-          updateTime
-          isDelete
-          type
-          value
-          remark
-      }
-  }
+    query ($data: DataConfigInput) {
+        getDataConfig (dataConfigInput: $data) {
+            id
+            name
+            createTime
+            updateTime
+            isDelete
+            type
+            value
+            remark
+        }
+    }
 `
 
 export const getDictListDoc = gql`
@@ -159,6 +168,15 @@ export const getDictListDoc = gql`
             code
             sort
             remark
+        }
+    }
+`
+
+export const saveUserListDoc = gql`
+    mutation($data: [UserItemInput]) {
+        saveUserList(userItemInput: $data) {
+            id
+            name
         }
     }
 `

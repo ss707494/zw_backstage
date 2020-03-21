@@ -18,10 +18,14 @@ export const orderListModel = mergeModel(mergeTwoModel(modalModelFactory('orderL
     province: '',
     state: 0,
     zip: '',
+    registerName: '',
     userName: '',
+    pickUpTime: null,
+    pickUpType: 0,
   } as Omit<OrderInput, 'rows_per_page' | 'page'>,
   list: [] as OrderInfo[],
   total: 0,
+  orderStateOption: {} as HelpObj<string>,
 }, {
   getList: async (value, option) => {
     const res = await option.query(getOrderListDoc, {
@@ -29,7 +33,10 @@ export const orderListModel = mergeModel(mergeTwoModel(modalModelFactory('orderL
       rows_per_page: option.data.rows_per_page,
       page: option.data.page,
     })
-    option.setData(fpMergePre(res?.orderList))
+    option.setData(fpMergePre({
+      ...res?.orderList,
+      orderStateOption: res?.getDataConfig?.value,
+    }))
   },
   setSearch: (value: OrderInput, option) => {
     option.setData(fpMergePre({searchParams: value}))

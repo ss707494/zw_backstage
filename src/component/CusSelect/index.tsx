@@ -4,6 +4,7 @@ import InputBase from "@material-ui/core/InputBase";
 import styled from "styled-components"
 import { withTheme } from '@material-ui/core/styles'
 import MenuItem from "@material-ui/core/MenuItem";
+import { SelectProps } from '@material-ui/core/Select/Select'
 
 // const BootstrapInput = withStyles(theme => ({
 //   root: {
@@ -50,7 +51,7 @@ const BootstrapInput = styled(InputBase)`
   }
 `
 
-export const CusSelect = withTheme(prop => (
+export const CusSelect:React.ComponentType<SelectProps> = withTheme((prop: any) => (
     <S.Box
         displayEmpty
         input={<BootstrapInput

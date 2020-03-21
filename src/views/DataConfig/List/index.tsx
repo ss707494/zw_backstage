@@ -11,6 +11,7 @@ import {ConfigFreight} from "@/views/DataConfig/ConfigFreight/ConfigFreight"
 import ConfigHelpDocumentation from "@/views/DataConfig/ConfigHelpDocumentation/ConfigHelpDocumentation"
 import {ConfigThemeSelect} from "@/views/DataConfig/ConfigThemeSelect/ConfigThemeSelect"
 import {ConfigHomeCarousel} from "@/views/DataConfig/ConfigHomeCarousel/ConfigHomeCarousel"
+import {ConfigOrderState} from '@/views/DataConfig/ConfigOrderState/orderState'
 
 const leftMenu: DictType[] = [
   {
@@ -41,6 +42,10 @@ const leftMenu: DictType[] = [
     name: '首页轮播图',
     code: DictTypeEnum.HomeCarousel,
   },
+  {
+    name: '订单状态设置',
+    code: DictTypeEnum.OrderState,
+  },
 ]
 
 const configCom: { [key: string]: any } = {
@@ -51,6 +56,7 @@ const configCom: { [key: string]: any } = {
   [DictTypeEnum.PromotionThemeSelect]: ConfigThemeSelect,
   [DictTypeEnum.PromotionFlashSale]: ConfigThemeSelect,
   [DictTypeEnum.HomeCarousel]: ConfigHomeCarousel,
+  [DictTypeEnum.OrderState]: ConfigOrderState,
 }
 
 export const DataConfig = () => {

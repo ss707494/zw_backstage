@@ -5,6 +5,30 @@ schema {
     mutation: Mutation
 }
 
+type Category {
+    categoryParent: Category
+    childCategories: [Category]
+    createTime: Timestamp
+    fullParentId: String
+    id: String
+    imgUrl: String
+    isDelete: Float
+    isEnable: Float
+    name: String
+    number: Float
+    parentCategory: Category
+    parentId: String
+    remark: String
+    sort: Float
+    updateTime: Timestamp
+    userId: String
+}
+
+type CategoryPage {
+    list: [Category]
+    total: Float
+}
+
 type DataConfig {
     createTime: Timestamp
     id: String
@@ -42,7 +66,9 @@ type DictTypeFirst {
 }
 
 type Mutation {
+    saveCategory(categoryItemInput: CategoryItemInput): Category
     saveDataConfig(dataConfigInput: DataConfigInput): DataConfig
+    saveUserList(userItemInput: [UserItemInput]): [User]
 }
 
 type OrderInfo {
@@ -58,6 +84,8 @@ type OrderInfo {
     number: String
     orderId: String
     paymentMethodCardId: String
+    pickUpTime: Timestamp
+    pickUpType: Float
     rOrderProduct: [ROrderProduct!]
     rOrderUser: ROrderUser
     saleTax: Float
@@ -85,6 +113,7 @@ type Product {
     categoryId: String
     createTime: Timestamp
     groupAmount: Float
+    groupAmountUnit: String
     groupPrecision: Float
     groupRemark: String
     id: String
@@ -95,6 +124,7 @@ type Product {
     isNew: Float
     name: String
     number: Float
+    packingUnit: String
     priceIn: Float
     priceMarket: Float
     priceOut: Float
@@ -109,6 +139,8 @@ type Product {
 }
 
 type Query {
+    getCategory(categoryInput: CategoryInput): Category
+    getCategoryList(categoryInput: CategoryInput): CategoryPage
     getDataConfig(dataConfigInput: DataConfigInput): DataConfig
     getDictList(dictInput: DictInput): [Dict]
     getDictTypeList: [DictTypeFirst]
@@ -184,11 +216,38 @@ type UserInfo {
     updateTime: Timestamp
     user: User
     userId: String
+    userLevel: String
 }
 
 type UserPage {
     list: [User]
     total: Float
+}
+
+input CategoryInput {
+    categoryId: String
+    orderByObject: [[String]] = []
+    page: Float = 0.0
+    rows_per_page: Float = 10.0
+}
+
+input CategoryItemInput {
+    categoryParent: CategoryItemInput
+    childCategories: [CategoryItemInput]
+    createTime: Timestamp
+    fullParentId: String
+    id: String
+    imgUrl: String
+    isDelete: Float
+    isEnable: Float
+    name: String
+    number: Float
+    parentCategory: CategoryItemInput
+    parentId: String
+    remark: String
+    sort: Float
+    updateTime: Timestamp
+    userId: String
 }
 
 input DataConfigInput {
@@ -204,6 +263,44 @@ input DataConfigInput {
 
 input DictInput {
     dictTypeCode: String
+    isDisable: Float
+}
+
+input OrderByAndPageInput {
+    orderByObject: [[String]] = []
+    page: Float = 0.0
+    rows_per_page: Float = 10.0
+}
+
+input OrderByInput {
+    orderByObject: [[String]]
+}
+
+input OrderInfoItemInput {
+    actuallyPaid: Float
+    addressId: String
+    couponDiscount: Float
+    createTime: Timestamp
+    discountProductTotal: Float
+    finishTime: Timestamp
+    id: String
+    isDelete: Float
+    name: String
+    number: String
+    orderId: String
+    paymentMethodCardId: String
+    pickUpTime: Timestamp
+    pickUpType: Float
+    rOrderProduct: [ROrderProductItemInput!]
+    rOrderUser: ROrderUserItemInput
+    saleTax: Float
+    state: Float
+    subtotal: Float
+    transportationCosts: Float
+    updateTime: Timestamp
+    user: UserItemInput
+    userAddress: UserAddressItemInput
+    vipDiscount: Float
 }
 
 input OrderInput {
@@ -212,9 +309,12 @@ input OrderInput {
     district: String
     endTime: Timestamp
     number: String
-    page: Float
+    page: Float = 0.0
+    pickUpTime: Timestamp
+    pickUpType: Float
     province: String
-    rows_per_page: Float
+    registerName: String
+    rows_per_page: Float = 10.0
     startTime: Timestamp
     state: Float
     userName: String
@@ -222,16 +322,115 @@ input OrderInput {
 }
 
 input PageInput {
-    page: Float
-    rows_per_page: Float
+    page: Float = 0.0
+    rows_per_page: Float = 10.0
+}
+
+input ProductItemInput {
+    brand: String
+    categoryId: String
+    createTime: Timestamp
+    groupAmount: Float
+    groupAmountUnit: String
+    groupPrecision: Float
+    groupRemark: String
+    id: String
+    isDelete: Float
+    isEnable: Float
+    isGroup: Float
+    isHot: Float
+    isNew: Float
+    name: String
+    number: Float
+    packingUnit: String
+    priceIn: Float
+    priceMarket: Float
+    priceOut: Float
+    rOrderProduct: [ROrderProductItemInput!]
+    remark: String
+    shelvesTypes: String
+    sort: Float
+    stock: Float
+    unit: String
+    updateTime: Timestamp
+    weight: Float
+}
+
+input ROrderProductItemInput {
+    count: Float
+    createTime: Timestamp
+    id: String
+    isDelete: Float
+    name: String
+    orderId: String
+    orderInfo: OrderInfoItemInput
+    product: ProductItemInput
+    productId: String
+    updateTime: Timestamp
+}
+
+input ROrderUserItemInput {
+    createTime: Timestamp
+    id: String
+    isDelete: Float
+    name: String
+    orderId: String
+    orderInfo: OrderInfoItemInput
+    updateTime: Timestamp
+    user: UserItemInput
+    userId: String
+}
+
+input UserAddressItemInput {
+    address: String
+    city: String
+    contactInformation: String
+    contactUserName: String
+    createTime: Timestamp
+    district: String
+    id: String
+    isDefault: Float
+    isDelete: Float
+    name: String
+    orderInfo: [OrderInfoItemInput]
+    province: String
+    updateTime: Timestamp
+    userId: String
+    zip: String
+}
+
+input UserInfoItemInput {
+    createTime: Timestamp
+    email: String
+    id: String
+    isDelete: Float
+    name: String
+    phone: String
+    updateTime: Timestamp
+    user: UserItemInput
+    userId: String
+    userLevel: String
+}
+
+input UserItemInput {
+    createTime: Timestamp
+    id: String
+    isDelete: Float
+    name: String
+    orderInfo: [OrderInfoItemInput!]
+    password: String
+    rOrderUser: [ROrderUserItemInput!]
+    type: Float
+    updateTime: Timestamp
+    userInfo: UserInfoItemInput
 }
 
 input UserListInput {
     email: String = ""
     name: String = ""
-    page: Float
+    page: Float = 0.0
     phone: String = ""
-    rows_per_page: Float
+    rows_per_page: Float = 10.0
 }
 
 

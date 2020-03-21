@@ -14,6 +14,7 @@ type AddHistory {
     name: String
     number: String
     product_id: String
+    state: Int
     supplement_id: String
     supplier: String
     update_time: Date
@@ -215,6 +216,7 @@ type Product {
     category_id: String
     count: Int
     create_time: Date
+    groupAmountUnit: String
     group_amount: Int
     group_info: GroupInfo
     group_precision: Int
@@ -229,6 +231,7 @@ type Product {
     name: String
     number: Int
     oneImgUrl: String
+    packingUnit: String
     price_in: Float
     price_market: Float
     price_out: Float
@@ -563,6 +566,7 @@ input ProductInput {
     brand: String
     category_id: String
     create_time: Date
+    groupAmountUnit: String
     group_amount: Int
     group_precision: Int
     group_remark: String
@@ -576,6 +580,7 @@ input ProductInput {
     name: String
     number: Int
     origin_category_id: String
+    packingUnit: String
     page: Int
     price_in: Float
     price_market: Float

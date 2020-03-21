@@ -5,7 +5,7 @@ import {StyleTableBox} from "@/common/style/tableBox"
 import {S} from "@/views/Order/List/style"
 import CircularProgress from "@material-ui/core/CircularProgress"
 import TableHead from "@material-ui/core/TableHead"
-import {styled, TableRow, useTheme} from "@material-ui/core"
+import {Checkbox, styled, TableRow, useTheme} from "@material-ui/core"
 import {CusTableCell as TableCell} from "@/component/CusTableCell"
 import TableBody from "@material-ui/core/TableBody"
 import {PaginationByModel} from "@/component/Pagination"
@@ -13,6 +13,10 @@ import {formatDate} from "@/common/utils"
 import {getUserListDoc} from "@/common/graphqlTypes/graphql/doc"
 import {CusTextField} from "@/component/CusTextField"
 import {CusButton} from "@/component/CusButton"
+import {dictAllListModel} from "@/views/Product/EditModal/model"
+import MenuItem from "@material-ui/core/MenuItem"
+import {CusSelect} from "@/component/CusSelect"
+import {showMessage} from '@/component/Message'
 
 const SButton = styled(CusButton)({
 })
@@ -23,11 +27,25 @@ const SearchBox = styled('div')({
   gridColumnGap: '16px',
 })
 
+const HeaderButton = styled('div')({
+  display: 'grid',
+  marginTop: '20px',
+  gridTemplateColumns: '180px 180px',
+  gridGap: '6px',
+  '&&& > .MenuLayout-MuiFormControl-root': {
+    marginBottom: 0,
+  }
+})
+
 export const List = () => {
+  const {actions: dictAllListAction, state: dictAllListState} = useStoreModelByType__Graphql(dictAllListModel)
+  useEffect(() => {
+    dictAllListAction.getDictList()
+  }, [dictAllListAction])
   const theme = useTheme()
   const userListModel = useStoreModelByType__Graphql(listModel)
   const {state, actions, getLoad} = userListModel
-  const {list} = state
+  const {list, actionUserLevel, selectIds} = state
 
   useEffect(() => {
     actions.getList()
@@ -65,11 +83,49 @@ export const List = () => {
           </SearchBox>
         </header>
         <main>
+          <HeaderButton>
+            <CusSelect
+                placeholder={'订单状态'}
+                value={actionUserLevel}
+                onChange={(v) => actions.setActionUserLevel(v.target.value)}
+            >
+              {dictAllListState.userLevelList?.map(e => (
+                  <MenuItem
+                      key={`userLevelList${e.id}`}
+                      value={`${e.code}`}
+                  >{e.name}</MenuItem>
+              ))}
+            </CusSelect>
+            <CusButton
+                onClick={async () => {
+                  if (await actions.saveUserLevel()) {
+                    showMessage({ message: '操作成功' })
+                    actions.getList()
+                  }
+                }}
+                variant={'outlined'}
+            >批量修改</CusButton>
+          </HeaderButton>
           {(getLoad(getUserListDoc)) ? <S.Loading><CircularProgress/></S.Loading>
               : <StyleTableBox.Table theme={theme}>
                 <TableHead>
                   <TableRow>
-                    {['账号', '邮箱', '手机', '用户名', '注册时间']
+                    <TableCell>
+                      {(() => {
+                        const isAll = list.every(item => selectIds.includes(item.id as string))
+                        return <Checkbox
+                            checked={isAll}
+                            indeterminate={!isAll && !!selectIds.length}
+                            onChange={event => {
+                              actions.setSelectIds({
+                                flag: event.target.checked,
+                                ids: list.map(value => value.id),
+                              })
+                            }}
+                        />
+                      })()}
+                    </TableCell>
+                    {['注册id', '用户等级', '邮箱', '手机', '用户名', '注册时间', '当月达人币', '下月达人币']
                         .map(e => <TableCell key={`TableHead${e}`}>
                           {e}
                         </TableCell>)
@@ -78,11 +134,26 @@ export const List = () => {
                 </TableHead>
                 <TableBody>
                   {list?.map(e => <TableRow key={`TableBody${e?.id}`}>
+                    <TableCell>
+                      <Checkbox
+                          checked={selectIds.includes(`${e?.id}`)}
+                          indeterminate={false}
+                          onChange={event => actions.setSelectIds({
+                            flag: event.target.checked,
+                            ids: [e.id],
+                          })}
+                      />
+                    </TableCell>
                     <TableCell>{e.name}</TableCell>
+                    <TableCell>
+                      {dictAllListState.userLevelList?.find(value => value.code === e.userInfo?.userLevel)?.name}
+                    </TableCell>
                     <TableCell>{e.userInfo?.email}</TableCell>
                     <TableCell>{e.userInfo?.phone}</TableCell>
                     <TableCell>{e.userInfo?.name}</TableCell>
                     <TableCell>{formatDate(new Date(e.createTime), 'yyyy/MM/dd HH:mm')}</TableCell>
+                    <TableCell>{0}</TableCell>
+                    <TableCell>{0}</TableCell>
                   </TableRow>)}
                 </TableBody>
               </StyleTableBox.Table>

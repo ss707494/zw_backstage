@@ -6,16 +6,16 @@ import {modalModelFactory} from "@/common/model/modal"
 import {configHelpDocumentationModel} from "@/views/DataConfig/ConfigHelpDocumentation/model"
 import {useStoreModel} from "@/common/ModelAction/useStore"
 
-export const EditProblemNamespace = 'editProblem'
+const editProblemModel = modalModelFactory('editProblem', {
+  problem: '',
+  answer: '',
+  sort: 0,
+  index: 0,
+})
 
 export const EditProblem = () => {
   const {actions} = useStoreModel(configHelpDocumentationModel)
-  const {state: editState, actions: editActions} = useStoreModel(modalModelFactory('editProblem', {
-    problem: '',
-    answer: '',
-    sort: 0,
-    index: 0,
-  }))
+  const {state: editState, actions: editActions} = useStoreModel(editProblemModel)
   const modalData = editState.modalData
   const setModalData = (editActions.setModal)
   const handleSave = () => {

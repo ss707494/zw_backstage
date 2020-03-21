@@ -87,7 +87,7 @@ export const fpRemove = (arr: any, index: number) => {
 }
 
 export const dealNumberZero = (length: number) => (num: number) => {
-  const _s = `${num}`
+  const _s = `${num ?? ''}`
   return Array(length - _s.length).fill('0').join('') + _s
 }
 

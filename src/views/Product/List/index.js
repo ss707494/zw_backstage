@@ -25,7 +25,7 @@ import { dealImgUrl } from '@/component/ImgDealUrl/ImgDealUrl'
 import { dealNumberZero } from '@/common/utils.ts'
 import { addProductHistoryModel } from '@/views/Product/model/addProductHistory.ts'
 import { useStoreModel, useStoreModelByType__Graphql } from "@/common/ModelAction/useStore"
-import { productEditModel } from '@/views/Product/EditModal/model'
+import { dictAllListModel } from '@/views/Product/EditModal/model'
 
 const KEYWORD_TYPE = {
   num: '1',
@@ -135,7 +135,7 @@ const useTypeObj = () => {
 }
 
 export const Product = ({ theme, match }) => {
-  const {actions, state} = useStoreModelByType__Graphql(productEditModel)
+  const {actions, state} = useStoreModelByType__Graphql(dictAllListModel)
   useEffect(() => {
     actions.getDictList()
   }, [actions])
@@ -433,7 +433,9 @@ export const Product = ({ theme, match }) => {
                     <TableCell>{e?.price_out}</TableCell>
                     <TableCell>{e?.price_market}</TableCell>
                     <TableCell>{e?.weight}</TableCell>
-                    <TableCell>{e?.unit}</TableCell>
+                    <TableCell>
+                      {state.weightUnitList?.find(v => v.code === e?.unit)?.name}
+                    </TableCell>
                     <TableCell>
                       <S.ActionTableCell>
                         <Button

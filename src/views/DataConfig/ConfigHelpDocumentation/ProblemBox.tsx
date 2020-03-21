@@ -40,11 +40,13 @@ const ProblemBoxStyle = styled.div`
 
 `
 
+const problemBoxModel = modalModelFactory('ConfigHelpDocumentation', {})
+
 export const ProblemBox = () => {
   const {state} = useStoreModel(configHelpDocumentationModel)
   const configData = state
   const actType = configData.actType
-  const {actions} = useStoreModel(modalModelFactory('ConfigHelpDocumentation', {}))
+  const {actions} = useStoreModel(problemBoxModel)
 
   const problemList: Problem[] = configData.problemListData?.[actType.code] ?? []
 

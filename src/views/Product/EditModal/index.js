@@ -16,7 +16,7 @@ import { save_product } from "@/views/Product/List/productGraphql"
 import { pick } from "lodash"
 import { useParams } from 'react-router-dom'
 import { useStoreModelByType__Graphql } from '@/common/ModelAction/useStore'
-import { productEditModel } from '@/views/Product/EditModal/model'
+import { dictAllListModel } from '@/views/Product/EditModal/model'
 
 export const useLinkage = () => {
   const [data, setData] = useState({
@@ -102,7 +102,7 @@ export const EditModal = (
       refreshData = () => {
       }
     }) => {
-  const { state } = useStoreModelByType__Graphql(productEditModel)
+  const { state } = useStoreModelByType__Graphql(dictAllListModel)
   const routerParams = useParams()
   const is_group = ~~routerParams?.is_group ?? -1
 
@@ -142,9 +142,10 @@ export const EditModal = (
           'is_group', 'group_amount', 'group_precision', 'group_remark',
           'groupAmountUnit',
         ]),
-        shelvesTypes: editData.shelvesTypes.filter(v => v).join(','),
+        shelvesTypes: editData.shelvesTypes?.filter?.(v => v)?.join(','),
         category_id: threeCode,
-        imgs
+        is_group,
+        imgs,
       }
     })
     if (save_product.flag) {
@@ -320,7 +321,7 @@ export const EditModal = (
                   })}
               />
               <CusSelectField
-                  label="单位"
+                  label="包装单位"
                   value={editData.unit}
                   onChange={e => setEditData({
                     ...editData,
@@ -372,7 +373,7 @@ export const EditModal = (
             />
             <S.FieldTwoBox>
               <CusTextField
-                  label="重量"
+                  label={is_group === 1 ? `拆包重量` : `重量`}
                   type="number"
                   value={editData.weight}
                   onChange={e => setEditData({

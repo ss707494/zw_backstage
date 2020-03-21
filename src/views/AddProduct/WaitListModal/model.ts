@@ -30,7 +30,7 @@ export const waitListModel = mergeModel(modalModelFactory('wait', {
       id: data.modalData.id,
       state: value.state ?? 1,
     })
-    if (res.save_product_supplement.flag) {
+    if (res.save_product_supplement?.flag) {
       showMessage({
         message: '操作成功'
       })

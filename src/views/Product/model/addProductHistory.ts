@@ -16,6 +16,7 @@ type HistoryItem = {
   product_id: string
   count: number
   amount: number
+  state: number
 }
 
 const add_history_list_by_product = gql`
@@ -33,6 +34,7 @@ const add_history_list_by_product = gql`
             product_id
             count
             amount
+            state
         }
     }
 `
