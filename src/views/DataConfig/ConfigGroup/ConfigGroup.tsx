@@ -1,24 +1,22 @@
-import React, {useEffect, useState} from "react";
-import {merge} from "lodash";
-import {useQueryGraphql} from "@/component/ApolloQuery";
-import {getDictItemListGraphql} from "@/views/Dictionary/List/dictionaryGraphql";
-import {
-  ConfigGroupStyleBox,
-  SettingBox,
-  GroupDiscountBox
-} from "@/views/DataConfig/ConfigGroup/ConfigGroupStyle";
-import {parseFloatForInput} from "@/common/utils";
-import {HeaderAction} from "@/views/DataConfig/component/HeaderAction/HeaderAction";
-import { Title } from "../component/Title/Title";
-import {TextField} from "@/views/DataConfig/component/TextField";
+import React, {useEffect} from "react"
+import {merge} from "lodash"
+import {useQueryGraphql} from "@/component/ApolloQuery"
+import {getDictItemListGraphql} from "@/views/Dictionary/List/dictionaryGraphql"
+import {ConfigGroupStyleBox, GroupDiscountBox, SettingBox} from "@/views/DataConfig/ConfigGroup/ConfigGroupStyle"
+import {parseFloatForInput} from "@/common/utils"
+import {HeaderAction} from "@/views/DataConfig/component/HeaderAction/HeaderAction"
+import {Title} from "../component/Title/Title"
+import {TextField} from "@/views/DataConfig/component/TextField"
+import {useStoreModelByType__Graphql} from '@/common/ModelAction/useStore'
+import {configDataModel} from '@/views/DataConfig/List/model'
 
-export const ConfigGroup = ({dataConfig = {}}: any) => {
+export const ConfigGroup = () => {
   const [getDictItemList, {dict_item_list: dictItemList},] = useQueryGraphql(getDictItemListGraphql)
-  const [configData, setConfigData] = useState<any>({})
+  const {state, actions} = useStoreModelByType__Graphql(configDataModel)
+  const {dataConfig} = state
+  const {value: configData} = dataConfig
+  const {setDataConfig: setConfigData} = actions
 
-  useEffect(() => {
-    setConfigData(dataConfig?.value)
-  }, [dataConfig.value])
   useEffect(() => {
     if (!dataConfig?.type) return
     getDictItemList({
@@ -31,8 +29,6 @@ export const ConfigGroup = ({dataConfig = {}}: any) => {
   return (
       <ConfigGroupStyleBox>
         <HeaderAction
-            dataConfig={dataConfig}
-            configData={configData}
         />
         <main>
           <Title>成团折扣</Title>

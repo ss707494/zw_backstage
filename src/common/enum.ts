@@ -7,6 +7,7 @@ export enum DictTypeEnum {
   PromotionFlashSale = 'PromotionFlashSale',
   HomeCarousel = 'HomeCarousel',
   OrderState = 'OrderState',
+  SelfAddress = 'SelfAddress',
 }
 
 

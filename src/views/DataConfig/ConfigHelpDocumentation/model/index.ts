@@ -1,5 +1,4 @@
-import {fpMerge, fpSet} from "@/common/utils"
-import _ from "lodash"
+import {fpMerge} from "@/common/utils"
 import {modelFactory} from "@/common/ModelAction/modelUtil"
 
 export interface ConfigHelpDocumentationModel {
@@ -14,19 +13,10 @@ export const configHelpDocumentationModel = modelFactory('configHelpDocumentatio
   typeList: [],
   list: [],
   problemListData: {},
-  ssObj: {},
 } as ConfigHelpDocumentationModel, {
   setActType: (value, {setData}) => {
     return setData(data => fpMerge(data, {
       actType: value,
     }))
   },
-  setConfig: (value, {setData}) => {
-    return setData(data => fpMerge(data, value))
-  },
-  addProblem: (value, {setData}) => setData(data => fpSet(data, ['problemListData', data.actType.code], preData  => [
-    ...preData ?? [],
-    value
-  ])),
-  editProblem: (value, {setData}) => setData(data => fpSet(data, ['problemListData', data.actType.code, value?.index], _.pick(value, ['answer', 'sort', 'problem']))),
 })

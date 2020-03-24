@@ -4,7 +4,7 @@ import Button from "@material-ui/core/Button"
 import {StyleTableBox} from "@/common/style/tableBox"
 import {PaginationByModel} from "@/component/Pagination"
 import CircularProgress from "@material-ui/core/CircularProgress"
-import {MenuItem, styled, TableRow, TextField, useTheme} from "@material-ui/core"
+import {Checkbox, MenuItem, styled, TableRow, TextField, useTheme} from "@material-ui/core"
 import {CusTableCell as TableCell} from "@/component/CusTableCell"
 import TableHead from "@material-ui/core/TableHead"
 import TableBody from "@material-ui/core/TableBody"
@@ -16,6 +16,10 @@ import {OrderProductModal} from "@/views/Order/DetailModal"
 import {KeyboardDatePicker, KeyboardDateTimePicker} from "@material-ui/pickers"
 import {CusButton} from "@/component/CusButton"
 import {OrderState, orderStateKeys} from 'ss_common/enum'
+import {HeaderButton} from '@/common/style/HeaderButton'
+import {CusSelect} from '@/component/CusSelect'
+import {showMessage} from '@/component/Message'
+import {dictAllListModel} from '@/views/Dictionary/dictAllListModel'
 
 const SearchBox = styled('div')({
   display: "grid",
@@ -31,7 +35,12 @@ export const OrderList = () => {
   useEffect(() => {
     actions.getList()
   }, [actions])
-  const {searchParams} = state
+  const {searchParams, orderStateSelected} = state
+
+  const {actions: dictAllListActions, state: dictAllListState} = useStoreModelByType__Graphql(dictAllListModel)
+  useEffect(() => {
+    dictAllListActions.getDictList()
+  }, [dictAllListActions])
 
   return (
       <StyleTableBox.Box
@@ -43,7 +52,6 @@ export const OrderList = () => {
             <section>您可以进行管理</section>
             <main
             >
-              {searchParams.startTime?.toString()}
             </main>
           </StyleTableBox.HeaderBox>
           <SearchBox>
@@ -160,14 +168,14 @@ export const OrderList = () => {
                 }}
             >
               <MenuItem
-                  value={0}>
+                  value={''}>
                 全部
               </MenuItem>
-              {[[1, '自提'], [2, '配送']].map(value => (
+              {dictAllListState?.deliveryType?.map(value => (
                   <MenuItem
-                      key={`orderStateKeys_${value[1]}`}
-                      value={value[0]}>
-                    {value[1]}
+                      key={`dictAllListState_${value.code}`}
+                      value={value.code ?? ''}>
+                    {value.name}
                   </MenuItem>
               ))}
             </TextField>
@@ -177,13 +185,64 @@ export const OrderList = () => {
             >
               搜索
             </CusButton>
+            <CusButton
+                variant={'outlined'}
+                color={'default'}
+                onClick={() => {
+                  actions.clearSearch()
+                  actions.getList()
+                }}
+            >
+              重置
+            </CusButton>
           </SearchBox>
         </header>
         <main>
+          <HeaderButton>
+            <CusSelect
+                placeholder={'订单状态'}
+                value={orderStateSelected}
+                onChange={(v) => actions.setOrderStateSelected(v.target.value)}
+            >
+              {orderStateKeys.map(value => (
+                  <MenuItem
+                      key={`orderStateKeys_orderStateSelected_${value}`}
+                      // @ts-ignore
+                      value={OrderState[value]}>
+                    {state.orderStateOption[value]}
+                  </MenuItem>
+              ))}
+            </CusSelect>
+            <CusButton
+                disabled={!state.selectItems.length || !orderStateSelected}
+                onClick={async () => {
+                  if (await actions.saveOrderState()) {
+                    showMessage({message: '操作成功'})
+                    actions.getList()
+                  }
+                }}
+                variant={'outlined'}
+            >批量修改</CusButton>
+          </HeaderButton>
           {(getLoad(getOrderListDoc)) ? <S.Loading><CircularProgress/></S.Loading>
               : <StyleTableBox.Table theme={theme}>
                 <TableHead>
                   <TableRow>
+                    <TableCell>
+                      {(() => {
+                        const filterList = state.list.filter(value => ![OrderState.Finish, OrderState.Cancel].includes(value.state as number)).map(value => value.id)
+                        return <Checkbox
+                            checked={actions.checkAll(filterList)}
+                            indeterminate={actions.checkIndeterminate(filterList)}
+                            onChange={event => {
+                              actions.setSelectItems({
+                                flag: event.target.checked,
+                                items: filterList,
+                              })
+                            }}
+                        />
+                      })()}
+                    </TableCell>
                     {['订单编号', '创建时间', '订单状态', '金额', '抵扣达人币', '新增达人币', '注册id', '用户名', '城市', '州', '邮政编码', '取货方式', '取货日期', '订单详情']
                         .map(e => <TableCell key={`TableHead${e}`}>
                           {e}
@@ -193,22 +252,61 @@ export const OrderList = () => {
                 </TableHead>
                 <TableBody>
                   {state.list?.map(e => <TableRow key={`TableBody${e?.id}`}>
+                    <TableCell>
+                      <Checkbox
+                          disabled={[OrderState.Finish, OrderState.Cancel].includes(e.state as number)}
+                          checked={state.selectItems.includes(`${e?.id}`)}
+                          indeterminate={false}
+                          onChange={event => actions.setSelectItems({
+                            flag: event.target.checked,
+                            items: [e.id],
+                          })}
+                      />
+                      {/*{![OrderState.Finish, OrderState.Cancel].includes(e.state as number) ? */}
+                      {/*    : <span/>*/}
+                      {/*}*/}
+                    </TableCell>
                     <TableCell>{e?.number}</TableCell>
                     <TableCell>{formatDate(new Date(e.createTime), 'yyyy/MM/dd HH:mm')}</TableCell>
                     <TableCell>
-                      {state.orderStateOption[OrderState?.[e?.state ?? 1]]}
+                      <CusSelect
+                          disabled={[OrderState.Finish, OrderState.Cancel].includes(e.state as number)}
+                          variant={'outlined'}
+                          placeholder={'订单状态'}
+                          value={e?.state}
+                          onChange={async (v) => {
+                            if (await actions.saveOneOrderState({
+                              id: e.id,
+                              state: v.target.value,
+                            })) {
+                              showMessage({message: '操作成功'})
+                              actions.getList()
+                            }
+                          }}
+                      >
+                        {orderStateKeys.map(value => (
+                            <MenuItem
+                                key={`list_orderStateKeys_orderStateSelected_${value}`}
+                                // @ts-ignore
+                                value={OrderState[value]}>
+                              {state.orderStateOption[value]}
+                            </MenuItem>
+                        ))}
+                      </CusSelect>
+                      {/*{state.orderStateOption[OrderState?.[e?.state ?? 1]]}*/}
                     </TableCell>
                     <TableCell>{e?.subtotal}</TableCell>
-                    {/* todo */}
-                    <TableCell>{0}</TableCell>
-                    <TableCell>{0}</TableCell>
+                    <TableCell>{e.deductCoin}</TableCell>
+                    <TableCell>{e.generateCoin}</TableCell>
                     <TableCell>{}</TableCell>
                     <TableCell>{e.user?.name}</TableCell>
                     <TableCell>{e?.userAddress?.city}</TableCell>
                     <TableCell>{e?.userAddress?.province}</TableCell>
                     <TableCell>{e?.userAddress?.zip}</TableCell>
-                    <TableCell>{}</TableCell>
-                    <TableCell>{!e?.finishTime ? '' : formatDate(new Date(e?.finishTime), 'yyyy/MM/dd HH:mm')}</TableCell>
+                    <TableCell>
+                      {dictAllListState?.deliveryType?.find(value => value.code === e?.pickUpType)?.name}
+                    </TableCell>
+                    <TableCell>{!e?.pickUpTime ? '' : formatDate(new Date(e?.pickUpTime), 'yyyy/MM/dd HH:mm')}</TableCell>
                     {/*<TableCell>{JSON.stringify(e)}</TableCell>*/}
                     <TableCell>
                       <StyleTableBox.ActionTableCell>
@@ -217,15 +315,13 @@ export const OrderList = () => {
                             onClick={() => {
                               actions.openEditClick({
                                 data: {
+                                  orderDetail: e,
                                   productList: e?.rOrderProduct?.map(v => ({
                                     ...v,
                                     ...v.product,
                                   })),
                                 },
                               })
-                              // orderProductModalOpen({
-                              //   productList: e?.product
-                              // })()
                             }}
                             variant="contained"
                         >详情</Button>

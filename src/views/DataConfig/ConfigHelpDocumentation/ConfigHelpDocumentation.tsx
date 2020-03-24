@@ -1,19 +1,20 @@
-import React, {useCallback, useEffect} from "react";
-import {HeaderAction} from "@/views/DataConfig/component/HeaderAction/HeaderAction";
-import {Tab, Tabs} from "@material-ui/core";
-import {AddCircleOutline} from "@material-ui/icons";
-import {fpMerge} from "@/common/utils";
-import {AddType} from "@/views/DataConfig/ConfigHelpDocumentation/AddType";
-import {useCommonModalState} from "@/common/useHooks";
-import styled from "styled-components";
-import {grey} from "@material-ui/core/colors";
-import {CusButton} from "@/component/CusButton";
-import _ from "lodash";
-import {ProblemBox} from "@/views/DataConfig/ConfigHelpDocumentation/ProblemBox";
+import React, {useCallback, useEffect} from "react"
+import {HeaderAction} from "@/views/DataConfig/component/HeaderAction/HeaderAction"
+import {Tab, Tabs} from "@material-ui/core"
+import {AddCircleOutline} from "@material-ui/icons"
+import {fpMerge} from "@/common/utils"
+import {AddType} from "@/views/DataConfig/ConfigHelpDocumentation/AddType"
+import {useCommonModalState} from "@/common/useHooks"
+import styled from "styled-components"
+import {grey} from "@material-ui/core/colors"
+import {CusButton} from "@/component/CusButton"
+import _ from "lodash"
+import {ProblemBox} from "@/views/DataConfig/ConfigHelpDocumentation/ProblemBox"
 import {
-  configHelpDocumentationModel
-} from "@/views/DataConfig/ConfigHelpDocumentation/model";
-import {useStoreModel} from "@/common/ModelAction/useStore"
+  configHelpDocumentationModel,
+} from "@/views/DataConfig/ConfigHelpDocumentation/model"
+import {useStoreModel, useStoreModelByType__Graphql} from "@/common/ModelAction/useStore"
+import {configDataModel} from '@/views/DataConfig/List/model'
 
 const Box = styled.div`
   display: grid;
@@ -28,59 +29,57 @@ const MainBox = styled.main`
   padding: 20px;
 `
 
-export const ConfigHelpDocumentation = ({dataConfig = {}}: any) => {
+export const ConfigHelpDocumentation = () => {
+  const {state: configState, actions: configActions} = useStoreModelByType__Graphql(configDataModel)
+  const {dataConfig} = configState
+
   const addTypeModalState = useCommonModalState()
   const {state, actions} = useStoreModel(configHelpDocumentationModel)
   const configData = state
   const {actType} = configData
   const setActType = useCallback((actions.setActType), [])
-  const setConfigData = useCallback((actions.setConfig), [])
+  const setConfigData = configActions.setDataConfig
   useEffect(() => {
-    if (dataConfig?.value) {
-      setConfigData(dataConfig?.value)
-    }
     if (dataConfig?.value?.typeList?.length) {
-      setActType(dataConfig?.value?.typeList[0])
+      setActType(dataConfig?.value?.typeList?.[0])
     }
-  }, [dataConfig.value, setActType, setConfigData])
+  }, [dataConfig.value, setActType])
 
   const tabsChange = (item: DictType) => () => {
     setActType(item)
   }
   const addTypeList = () => {
     addTypeModalState.openClick({
-      isEdit: false
+      isEdit: false,
     })()
   }
   const addTypeListAction = (modalData: any) => {
-    setConfigData(fpMerge(configData, {
+    setConfigData(fpMerge(dataConfig?.value, {
       typeList: [
         ...configData?.typeList ?? [],
         _.pick(modalData, ['name', 'code', 'sort']),
-      ]
+      ],
     }))
   }
   const editTypeAction = (modalData: any) => {
-    setConfigData(fpMerge(configData, {
+    setConfigData(fpMerge(dataConfig?.value, {
       typeList: [
-        ...configData?.typeList.map((v: any) => {
+        ...dataConfig?.value?.typeList.map((v: any) => {
           if (v.code !== actType?.code) return v
           return modalData
         }) ?? [],
-      ]
+      ],
     }))
     setActType(modalData)
   }
   return (
       <Box>
         <HeaderAction
-            dataConfig={dataConfig}
-            configData={_.pick(configData, ['typeList', 'problemListData'])}
         />
         <TabsBox
             value={actType?.code || 'add'}
         >
-          {configData?.typeList?.map((item: DictType) => <Tab
+          {dataConfig?.value?.typeList?.map((item: DictType) => <Tab
               key={`configData?.typeList${item.code}`}
               value={item.code}
               label={item.name}
@@ -115,6 +114,6 @@ export const ConfigHelpDocumentation = ({dataConfig = {}}: any) => {
         />
       </Box>
   )
-};
+}
 
 export default ConfigHelpDocumentation

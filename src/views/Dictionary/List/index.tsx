@@ -17,8 +17,11 @@ import {useCommonModalState} from "@/common/useHooks";
 import {DictAddModal} from "@/views/Dictionary/AddModal";
 import {showConfirm} from "@/component/ConfirmDialog";
 import {contentWithLeftBox as S} from "@/common/style/contentWithLeftBox";
+import {EditDictTypeFirstModal, editDictTypeFirstModel} from "../EditDictTypeFirst/EditDictTypeFirst"
+import {useStoreModelByType__Graphql} from '@/common/ModelAction/useStore'
 
 export const Dictionary = ({theme}: { theme: any }) => {
+  const {actions} = useStoreModelByType__Graphql(editDictTypeFirstModel)
   const commonModalState = useCommonModalState()
   const [getDictTypeList, {dict_type_list: dictTypeList}, ] = useQueryGraphql(getDictTypeListGraphql)
   const [getDictItemList, {dict_item_list: dictItemList}, dictItemListLoad] = useQueryGraphql(getDictItemListGraphql)
@@ -48,6 +51,10 @@ export const Dictionary = ({theme}: { theme: any }) => {
     _getDictTypeList()
   }, [_getDictTypeList])
 
+  React.useEffect(() => {
+    actions.setRefresh(_getDictTypeList)
+  }, [_getDictTypeList, actions])
+
   return (
       <S.Box>
         <S.LeftBox>
@@ -65,6 +72,12 @@ export const Dictionary = ({theme}: { theme: any }) => {
                     {e.name}
                   </S.LeftCard>
           )}
+          <CusButton
+              style={{marginTop: '20px'}}
+              onClick={()=> actions.openClick({})}
+          >
+            添加分类
+          </CusButton>
         </S.LeftBox>
         <S.RightBox>
           <header>
@@ -164,6 +177,7 @@ export const Dictionary = ({theme}: { theme: any }) => {
               })
             }}
         />
+        <EditDictTypeFirstModal/>
       </S.Box>
   );
 }

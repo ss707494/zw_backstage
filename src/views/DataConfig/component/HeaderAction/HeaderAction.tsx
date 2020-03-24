@@ -1,10 +1,11 @@
-import React from "react";
-import {CusButton} from "@/component/CusButton";
-import {dealNonBooleanProps} from "@/common/utils";
-import styled from "styled-components";
-import {useMutationGraphql} from "@/component/ApolloQuery";
-import {gql} from "apollo-boost";
-import {showMessage} from "@/component/Message";
+import React from "react"
+import {CusButton} from "@/component/CusButton"
+import styled from "styled-components"
+import {gql} from "apollo-boost"
+import {showMessage} from "@/component/Message"
+import {useStoreModelByType__Graphql} from '@/common/ModelAction/useStore'
+import {configDataModel} from '@/views/DataConfig/List/model'
+import {saveDataConfig} from '@/common/graphqlTypes/graphql/doc'
 
 export const setDataConfigGraphql = gql`
     mutation($data: DataConfigInput) {
@@ -19,29 +20,20 @@ const HeaderActionBox = styled.div`
   margin-bottom: 18px;
 `
 
-export const HeaderAction = ({dataConfig, configData}: {dataConfig: DataConfig; configData: object}) => {
-  const [setDataConfig, , setDataConfigLoading] = useMutationGraphql(setDataConfigGraphql)
+export const HeaderAction = () => {
+  const {actions, getLoad} = useStoreModelByType__Graphql(configDataModel)
+  // const [setDataConfig, , setDataConfigLoading] = useMutationGraphql(setDataConfigGraphql)
 
   return (
       <HeaderActionBox>
         <CusButton
-            loading={dealNonBooleanProps(setDataConfigLoading)}
+            loading={getLoad(saveDataConfig)}
             variant={"contained"}
             color={"primary"}
             onClick={async () => {
-              const {
-                set_data_config: {
-                  flag,
-                  msg,
-                }
-              } = await setDataConfig({
-                data: {
-                  type: dataConfig.type,
-                  value: configData,
-                }
-              })
-              if (flag) {
-                showMessage({ message: msg || '操作成功' })
+              const res = await actions.saveDataConfig()
+              if (res) {
+                showMessage({ message: '操作成功' })
               }
             }}
         >保存</CusButton>

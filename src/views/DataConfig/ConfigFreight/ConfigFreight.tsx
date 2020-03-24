@@ -1,10 +1,12 @@
-import React, {useEffect, useState} from "react";
-import {HeaderAction} from "@/views/DataConfig/component/HeaderAction/HeaderAction";
-import {Title} from "../component/Title/Title";
-import {TextField} from "@/views/DataConfig/component/TextField";
-import {fpMerge, fpRemove, fpSet} from "@/common/utils";
-import {CusButton} from "@/component/CusButton";
-import styled from "styled-components";
+import React from "react"
+import {HeaderAction} from "@/views/DataConfig/component/HeaderAction/HeaderAction"
+import {Title} from "../component/Title/Title"
+import {TextField} from "@/views/DataConfig/component/TextField"
+import {fpMerge, fpRemove, fpSet} from "@/common/utils"
+import {CusButton} from "@/component/CusButton"
+import styled from "styled-components"
+import {useStoreModelByType__Graphql} from '@/common/ModelAction/useStore'
+import {configDataModel} from '@/views/DataConfig/List/model'
 
 const Box = styled("div")`
   > main {
@@ -22,19 +24,16 @@ const TableStyle = styled('div')`
   }
 `
 
-export const ConfigFreight = ({dataConfig = {}}: any) => {
-  const [configData, setConfigData] = useState<any>({})
-
-  useEffect(() => {
-    setConfigData(dataConfig?.value)
-  }, [dataConfig.value])
+export const ConfigFreight = () => {
+  const {state, actions} = useStoreModelByType__Graphql(configDataModel)
+  const {dataConfig} = state
+  const {setDataConfig} = actions
+  const {value} = dataConfig
+  // const [configData, setConfigData] = useState<any>({})
 
   return (
       <Box>
-        <HeaderAction
-            dataConfig={dataConfig}
-            configData={configData}
-        />
+        <HeaderAction />
         <main>
           <Title>运费</Title>
           <TableStyle>
@@ -44,14 +43,14 @@ export const ConfigFreight = ({dataConfig = {}}: any) => {
             <main>订单金额-最大</main>
             <main>运费</main>
           </TableStyle>
-          {configData?.freightList?.map((e: any, i: number) => <TableStyle
+          {value?.freightList?.map((e: any, i: number) => <TableStyle
               key={`configData?.freightList_${i}`}
           >
             <header>
               <CusButton
                   variant={"contained"}
                   onClick={() => {
-                    setConfigData(fpSet(configData, 'freightList', fpRemove(configData?.freightList, i)))
+                    setDataConfig(fpSet(value, 'freightList', fpRemove(value?.freightList, i)))
                   }}
               >删除</CusButton>
             </header>
@@ -60,16 +59,19 @@ export const ConfigFreight = ({dataConfig = {}}: any) => {
                   label={''}
                   value={e?.name}
                   onChange={(event: any) => {
-                    setConfigData(fpSet(configData, ['freightList', i, 'name'], (event.target.value)))
+                    setDataConfig(fpSet(value, ['freightList', i, 'name'], (event.target.value)))
                   }}
               />
             </aside>
-            {['orderMin', 'orderMax', 'freightPay'].map((key) => <main key={`freightListData_${key}`}>
+            <main style={{paddingLeft: 20}}>
+              {i === 0 ? 0 : value?.freightList[i - 1].orderMax}
+            </main>
+            {['orderMax', 'freightPay'].map((key) => <main key={`freightListData_${key}`}>
               <TextField
                   label={''}
                   value={e?.[key]}
                   onChange={(event: any) => {
-                    setConfigData(fpSet(configData, ['freightList', i, key], (event.target.value)))
+                    setDataConfig(fpSet(value, ['freightList', i, key], (event.target.value)))
                   }}
               />
             </main>)
@@ -80,9 +82,9 @@ export const ConfigFreight = ({dataConfig = {}}: any) => {
             <CusButton
                 variant={"contained"}
                 onClick={() => {
-                  setConfigData(fpMerge(configData, {
+                  setDataConfig(fpMerge(value, {
                     freightList: [
-                      ...configData?.freightList ?? [],
+                      ...value?.freightList ?? [],
                       {}
                     ]
                   }))

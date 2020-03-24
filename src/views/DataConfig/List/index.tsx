@@ -1,8 +1,6 @@
 import React, {useCallback, useEffect} from "react"
 import {contentWithLeftBox as S} from "@/common/style/contentWithLeftBox"
 import {ConfigGroup} from "@/views/DataConfig/ConfigGroup/ConfigGroup"
-import {useQueryGraphql} from "@/component/ApolloQuery"
-import {getDataConfigGraphql} from "@/views/DataConfig/configGroup"
 import {DictTypeEnum} from "@/common/enum"
 import {ConfigUserLevel} from "@/views/DataConfig/ConfigUserLevel/ConfigUserLevel"
 import {useParams} from "react-router-dom"
@@ -11,7 +9,11 @@ import {ConfigFreight} from "@/views/DataConfig/ConfigFreight/ConfigFreight"
 import ConfigHelpDocumentation from "@/views/DataConfig/ConfigHelpDocumentation/ConfigHelpDocumentation"
 import {ConfigThemeSelect} from "@/views/DataConfig/ConfigThemeSelect/ConfigThemeSelect"
 import {ConfigHomeCarousel} from "@/views/DataConfig/ConfigHomeCarousel/ConfigHomeCarousel"
-import {ConfigOrderState} from '@/views/DataConfig/ConfigOrderState/orderState'
+import {ConfigOrderState} from '@/views/DataConfig/ConfigOrderState/OrderState'
+import {useStoreModelByType__Graphql} from '@/common/ModelAction/useStore'
+import {configDataModel} from '@/views/DataConfig/List/model'
+import {getDataConfigDoc} from '@/common/graphqlTypes/graphql/doc'
+import {ConfigSelfAddress} from '@/views/DataConfig/ConfigSelfAddress/ConfigSelfAddress'
 
 const leftMenu: DictType[] = [
   {
@@ -21,6 +23,10 @@ const leftMenu: DictType[] = [
   {
     name: '用户等级设置',
     code: DictTypeEnum.UserLevel,
+  },
+  {
+    name: '自取地址设置',
+    code: DictTypeEnum.SelfAddress,
   },
   {
     name: '运费设置',
@@ -57,21 +63,22 @@ const configCom: { [key: string]: any } = {
   [DictTypeEnum.PromotionFlashSale]: ConfigThemeSelect,
   [DictTypeEnum.HomeCarousel]: ConfigHomeCarousel,
   [DictTypeEnum.OrderState]: ConfigOrderState,
+  [DictTypeEnum.SelfAddress]: ConfigSelfAddress,
 }
 
 export const DataConfig = () => {
   const routerParams = useParams<any>()
   const activeCode = routerParams?.dictType
   // const [activeCode, setActiveCode] = React.useState(leftMenu[0].code)
-  const [getDataConfig, {data_config: dataConfig}, loading] = useQueryGraphql(getDataConfigGraphql)
+  // const [getDataConfig, {data_config: dataConfig}, loading] = useQueryGraphql(getDataConfigGraphql)
+  const {state, actions, getLoad} = useStoreModelByType__Graphql(configDataModel)
+  const {dataConfig} = state
+  const loading = !!getLoad(getDataConfigDoc)
+
 
   useEffect(() => {
-    getDataConfig({
-      data: {
-        type: activeCode,
-      }
-    })
-  }, [activeCode, getDataConfig])
+    actions.getDataConfig(activeCode)
+  }, [actions, activeCode])
 
   const changeActiveCode = useCallback((newCode: string) => () => {
     if (!loading) {

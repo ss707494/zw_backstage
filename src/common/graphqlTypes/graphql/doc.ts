@@ -4,10 +4,37 @@ export const getUserListDoc = gql`
     query refactored643($data: UserListInput!) {
         userList(userListInput: $data) {
             list {
+                orderCoinNextMonth
+                orderCoinCurrentMonth
                 ...userInfo
                 ...UserFields
+                ...orderInfo
             }
             total
+        }
+    }
+    fragment orderInfo on User{
+        orderInfo{
+            id
+            name
+            createTime
+            updateTime
+            isDelete
+            number
+            state
+            actuallyPaid
+            addressId
+            paymentMethodCardId
+            subtotal
+            couponDiscount
+            vipDiscount
+            transportationCosts
+            saleTax
+            orderId
+            discountProductTotal
+            finishTime
+            pickUpTime
+            pickUpType
         }
     }
     fragment UserFields on User {
@@ -54,6 +81,10 @@ export const getOrderListDoc = gql`
         orderId
         discountProductTotal
         finishTime
+        pickUpTime
+        pickUpType
+        deductCoin
+        generateCoin
     }
     fragment ProductFields on Product {
         id
@@ -105,6 +136,7 @@ export const getOrderListDoc = gql`
                     orderId
                     productId
                     count
+                    dealPrice
                     product {
                         ...ProductFields
                     }
@@ -126,6 +158,22 @@ export const getOrderListDoc = gql`
                     contactInformation
                     contactUserName
                 }
+                userPayCard {
+                    id
+                    name
+                    createTime
+                    updateTime
+                    isDelete
+                    userId
+                    number
+                    code
+                    userName
+                    addressDetail
+                    zipCode
+                    city
+                    contact
+                    isDefault
+                }
             }
             total
         }
@@ -143,6 +191,21 @@ export const getOrderListDoc = gql`
 export const getDataConfigDoc = gql`
     query ($data: DataConfigInput) {
         getDataConfig (dataConfigInput: $data) {
+            id
+            name
+            createTime
+            updateTime
+            isDelete
+            type
+            value
+            remark
+        }
+    }
+`
+
+export const saveDataConfig = gql`
+    mutation ($data: DataConfigInput) {
+        saveDataConfig (dataConfigInput: $data) {
             id
             name
             createTime
@@ -179,4 +242,47 @@ export const saveUserListDoc = gql`
             name
         }
     }
+`
+
+export const saveOrderListDoc = gql`
+    mutation($data: [OrderInfoItemInput]){
+        saveOrderList(orderInfoItemInput: $data){
+            id
+            name
+            createTime
+            updateTime
+            isDelete
+            number
+            state
+            actuallyPaid
+            addressId
+            paymentMethodCardId
+            subtotal
+            couponDiscount
+            vipDiscount
+            transportationCosts
+            saleTax
+            orderId
+            discountProductTotal
+            finishTime
+            pickUpTime
+            pickUpType
+        }
+    }
+`
+
+export const saveDictTypeFirstDco = gql`
+  mutation($data: [DictTypeFirstItemInput]) {
+      saveDictTypeFirst(dictTypeFirstItemInput: $data) {
+          id
+          name
+          createTime
+          updateTime
+          isDelete
+          parentCode
+          code
+          sort
+          remark
+      }
+  }
 `

@@ -117,6 +117,24 @@ export function mergeTwoModel<A, B extends ModelActionObjHelp<any, A>, C, D exte
   }
 }
 
+export const mergeThreeModel = <A extends FetchObj, T extends ModelActionObjHelp<any, A>, B extends FetchObj, O extends ModelActionObjHelp<any, B>, C extends FetchObj, P extends ModelActionObjHelp<any, C>>(modelA: ModelData<A, T>, modelB: ModelData<B, O>, modelC: ModelData<C, P>): {
+  name: string
+  state: A & B & C
+  actions: T & O & P & {
+    [key in keyof T]: ModelAction
+  } & {
+    [key in keyof O]: ModelAction
+  } & {
+    [key in keyof P]: ModelAction
+  }
+} => {
+  return mergeTwoModel(mergeTwoModel(modelA, modelB), modelC)
+}
+
+export const mergeListModel = (modelList: ModelData<any, any>[]) => {
+  return modelList.slice(1).reduce((acc, model) => mergeTwoModel(acc, model), modelList[0])
+}
+
 // const model = modelFactory({}, {
 //   ss: {
 //     eee: (value: string, option) => {

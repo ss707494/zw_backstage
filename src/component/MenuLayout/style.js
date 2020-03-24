@@ -70,6 +70,7 @@ S.MenuList = styled(Paper)`
 
 S.MenuMain = styled('div')`
   display: grid;
+  overflow-y: auto;
 `
 
 S.Link = styled(Link)`

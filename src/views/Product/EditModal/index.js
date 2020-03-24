@@ -16,7 +16,7 @@ import { save_product } from "@/views/Product/List/productGraphql"
 import { pick } from "lodash"
 import { useParams } from 'react-router-dom'
 import { useStoreModelByType__Graphql } from '@/common/ModelAction/useStore'
-import { dictAllListModel } from '@/views/Product/EditModal/model'
+import { dictAllListModel } from '@/views/Dictionary/dictAllListModel'
 
 export const useLinkage = () => {
   const [data, setData] = useState({

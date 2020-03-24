@@ -29,8 +29,6 @@ export const ConfigUserLevel = ({dataConfig = {}}: any) => {
   return (
       <div>
         <HeaderAction
-            dataConfig={dataConfig}
-            configData={configData}
         />
         <MainBox>
           <Title>用户折扣</Title>

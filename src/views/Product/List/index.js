@@ -25,7 +25,7 @@ import { dealImgUrl } from '@/component/ImgDealUrl/ImgDealUrl'
 import { dealNumberZero } from '@/common/utils.ts'
 import { addProductHistoryModel } from '@/views/Product/model/addProductHistory.ts'
 import { useStoreModel, useStoreModelByType__Graphql } from "@/common/ModelAction/useStore"
-import { dictAllListModel } from '@/views/Product/EditModal/model'
+import { dictAllListModel } from '@/views/Dictionary/dictAllListModel'
 
 const KEYWORD_TYPE = {
   num: '1',

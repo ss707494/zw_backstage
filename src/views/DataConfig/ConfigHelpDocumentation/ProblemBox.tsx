@@ -2,10 +2,12 @@ import {CusButton} from "@/component/CusButton"
 import React from "react"
 import styled from "styled-components"
 import {grey} from "@material-ui/core/colors"
-import {EditProblem} from "@/views/DataConfig/ConfigHelpDocumentation/EditProblem"
-import {modalModelFactory} from "@/common/model/modal"
+import {EditProblem, editProblemModel} from "@/views/DataConfig/ConfigHelpDocumentation/EditProblem"
 import {configHelpDocumentationModel} from "@/views/DataConfig/ConfigHelpDocumentation/model"
-import {useStoreModel} from "@/common/ModelAction/useStore"
+import {useStoreModel, useStoreModelByType__Graphql} from "@/common/ModelAction/useStore"
+import {configDataModel} from '@/views/DataConfig/List/model'
+import {fpRemove, fpSet} from '@/common/utils'
+import {showConfirm} from '@/component/ConfirmDialog'
 
 const ProblemBoxStyle = styled.div`
   display: grid;
@@ -40,15 +42,15 @@ const ProblemBoxStyle = styled.div`
 
 `
 
-const problemBoxModel = modalModelFactory('ConfigHelpDocumentation', {})
-
 export const ProblemBox = () => {
-  const {state} = useStoreModel(configHelpDocumentationModel)
-  const configData = state
-  const actType = configData.actType
-  const {actions} = useStoreModel(problemBoxModel)
+  const {state: configState, actions: configActions} = useStoreModelByType__Graphql(configDataModel)
+  const {dataConfig} = configState
 
-  const problemList: Problem[] = configData.problemListData?.[actType.code] ?? []
+  const {state} = useStoreModel(configHelpDocumentationModel)
+  const actType = state.actType
+  const {actions} = useStoreModel(editProblemModel)
+
+  const problemList: Problem[] = dataConfig.value?.problemListData?.[actType.code] ?? []
 
   const addOne = () => {
     (actions.openClick)({})
@@ -56,18 +58,29 @@ export const ProblemBox = () => {
   const editOne = (item: any) => {
     (actions.openClick)(item)
   }
+  const deleteOne = ({index}: {index: number}) => {
+    showConfirm({
+      message: `确定删除吗?`,
+      callBack: async (res) => {
+        if (!res) return
+        configActions.setDataConfig(fpSet(dataConfig.value, ['problemListData', actType.code], preData => fpRemove(preData, index)))
+      }
+    })
+
+  }
+
   return (
       <ProblemBoxStyle>
+        {['操作', '问题', '答案', '排序'].map(value => <div
+            key={`${value}`}
+            style={{textAlign: 'center'}}
+        >{value}</div>)}
         {problemList.map((v, index) => (<React.Fragment key={`problemList.map_${v.answer}`}>
-          {['操作', '问题', '答案', '排序'].map(value => <div
-              key={`${value}`}
-              style={{textAlign: 'center'}}
-          >{value}</div>)}
           <aside>
             <CusButton
                 variant={"outlined"}
                 color={"primary"}
-                onClick={() => editOne({...v, index})}
+                onClick={() => deleteOne({index})}
             >删除</CusButton>
             <CusButton
                 variant={"outlined"}

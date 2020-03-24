@@ -44,6 +44,7 @@ type Dict {
     code: String
     createTime: Timestamp
     dictTypeCode: String
+    dictTypeFirst: DictTypeFirst
     id: String
     isDelete: Float
     isDisable: Float
@@ -56,6 +57,7 @@ type Dict {
 type DictTypeFirst {
     code: String
     createTime: Timestamp
+    dict: Dict
     id: String
     isDelete: Float
     name: String
@@ -68,6 +70,8 @@ type DictTypeFirst {
 type Mutation {
     saveCategory(categoryItemInput: CategoryItemInput): Category
     saveDataConfig(dataConfigInput: DataConfigInput): DataConfig
+    saveDictTypeFirst(dictTypeFirstItemInput: [DictTypeFirstItemInput]): [DictTypeFirst]
+    saveOrderList(orderInfoItemInput: [OrderInfoItemInput]): [OrderInfo]
     saveUserList(userItemInput: [UserItemInput]): [User]
 }
 
@@ -76,8 +80,10 @@ type OrderInfo {
     addressId: String
     couponDiscount: Float
     createTime: Timestamp
+    deductCoin: Float
     discountProductTotal: Float
     finishTime: Timestamp
+    generateCoin: Float
     id: String
     isDelete: Float
     name: String
@@ -85,7 +91,7 @@ type OrderInfo {
     orderId: String
     paymentMethodCardId: String
     pickUpTime: Timestamp
-    pickUpType: Float
+    pickUpType: String
     rOrderProduct: [ROrderProduct!]
     rOrderUser: ROrderUser
     saleTax: Float
@@ -95,6 +101,7 @@ type OrderInfo {
     updateTime: Timestamp
     user: User
     userAddress: UserAddress
+    userPayCard: UserPayCard
     vipDiscount: Float
 }
 
@@ -153,6 +160,7 @@ type Query {
 type ROrderProduct {
     count: Float
     createTime: Timestamp
+    dealPrice: Float
     id: String
     isDelete: Float
     name: String
@@ -180,6 +188,8 @@ type User {
     id: String
     isDelete: Float
     name: String
+    orderCoinCurrentMonth: Float
+    orderCoinNextMonth: Float
     orderInfo: [OrderInfo!]
     password: String
     rOrderUser: [ROrderUser!]
@@ -224,6 +234,24 @@ type UserPage {
     total: Float
 }
 
+type UserPayCard {
+    addressDetail: String
+    city: String
+    code: String
+    contact: String
+    createTime: Timestamp
+    id: String
+    isDefault: Float
+    isDelete: Float
+    name: String
+    number: String
+    orderInfo: [OrderInfo]
+    updateTime: Timestamp
+    userId: String
+    userName: String
+    zipCode: String
+}
+
 input CategoryInput {
     categoryId: String
     orderByObject: [[String]] = []
@@ -266,6 +294,33 @@ input DictInput {
     isDisable: Float
 }
 
+input DictItemInput {
+    code: String
+    createTime: Timestamp
+    dictTypeCode: String
+    dictTypeFirst: DictTypeFirstItemInput
+    id: String
+    isDelete: Float
+    isDisable: Float
+    name: String
+    remark: String
+    sort: Float
+    updateTime: Timestamp
+}
+
+input DictTypeFirstItemInput {
+    code: String
+    createTime: Timestamp
+    dict: DictItemInput
+    id: String
+    isDelete: Float
+    name: String
+    parentCode: String
+    remark: String
+    sort: Float
+    updateTime: Timestamp
+}
+
 input OrderByAndPageInput {
     orderByObject: [[String]] = []
     page: Float = 0.0
@@ -281,8 +336,10 @@ input OrderInfoItemInput {
     addressId: String
     couponDiscount: Float
     createTime: Timestamp
+    deductCoin: Float
     discountProductTotal: Float
     finishTime: Timestamp
+    generateCoin: Float
     id: String
     isDelete: Float
     name: String
@@ -290,7 +347,7 @@ input OrderInfoItemInput {
     orderId: String
     paymentMethodCardId: String
     pickUpTime: Timestamp
-    pickUpType: Float
+    pickUpType: String
     rOrderProduct: [ROrderProductItemInput!]
     rOrderUser: ROrderUserItemInput
     saleTax: Float
@@ -300,6 +357,7 @@ input OrderInfoItemInput {
     updateTime: Timestamp
     user: UserItemInput
     userAddress: UserAddressItemInput
+    userPayCard: UserPayCardItemInput
     vipDiscount: Float
 }
 
@@ -311,7 +369,7 @@ input OrderInput {
     number: String
     page: Float = 0.0
     pickUpTime: Timestamp
-    pickUpType: Float
+    pickUpType: String
     province: String
     registerName: String
     rows_per_page: Float = 10.0
@@ -359,6 +417,7 @@ input ProductItemInput {
 input ROrderProductItemInput {
     count: Float
     createTime: Timestamp
+    dealPrice: Float
     id: String
     isDelete: Float
     name: String
@@ -417,6 +476,8 @@ input UserItemInput {
     id: String
     isDelete: Float
     name: String
+    orderCoinCurrentMonth: Float = 0.0
+    orderCoinNextMonth: Float = 0.0
     orderInfo: [OrderInfoItemInput!]
     password: String
     rOrderUser: [ROrderUserItemInput!]
@@ -431,6 +492,24 @@ input UserListInput {
     page: Float = 0.0
     phone: String = ""
     rows_per_page: Float = 10.0
+}
+
+input UserPayCardItemInput {
+    addressDetail: String
+    city: String
+    code: String
+    contact: String
+    createTime: Timestamp
+    id: String
+    isDefault: Float
+    isDelete: Float
+    name: String
+    number: String
+    orderInfo: [OrderInfoItemInput]
+    updateTime: Timestamp
+    userId: String
+    userName: String
+    zipCode: String
 }
 
 

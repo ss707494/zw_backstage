@@ -1,14 +1,15 @@
 import {User, UserListInput} from "@/common/graphqlTypes/types"
 import {fpMergePre} from "@/common/utils"
-import {dealDealPageModel} from "@/component/Pagination"
+import {pageModel} from "@/component/Pagination"
 import {getUserListDoc, saveUserListDoc} from "@/common/graphqlTypes/graphql/doc"
+import {mergeModel, mergeTwoModel} from '@/common/ModelAction/modelUtil'
+import {listSelectModel} from '@/common/model/listSelect'
 
-export const listModel = dealDealPageModel('userListModel', {
+export const listModel = mergeModel(mergeTwoModel(listSelectModel, pageModel), 'userListModel', {
   list: [] as User[],
   total: 0 as number,
   searchParams: {} as Omit<UserListInput, 'rows_per_page' | 'page'>,
   actionUserLevel: '',
-  selectIds: [] as string[],
 }, {
   getList: async (value, option) => {
     const res = await option.query<UserListInput>(getUserListDoc, {
@@ -22,29 +23,12 @@ export const listModel = dealDealPageModel('userListModel', {
   setActionUserLevel: (value: string, {setData}) => setData(fpMergePre({
     actionUserLevel: value,
   })),
-  setSelectIds: (value: { flag: boolean, ids: string[] }, {data, setData}) => {
-    const {flag, ids} = value
-    if (flag) {
-      setData(fpMergePre({
-        selectIds: [
-            ...data.selectIds.filter(value1 => !ids.includes(value1)),
-            ...ids,
-        ],
-      }))
-    } else {
-      setData(fpMergePre({
-        selectIds: data.selectIds.filter(value1 => !ids.includes(value1)),
-      }))
-    }
-  },
   async saveUserLevel(value, option) {
-    const res = await option.mutate(saveUserListDoc, option.data.selectIds.map(value1 => ({
+    return await option.mutate(saveUserListDoc, option.data.selectItems.map(value1 => ({
       id: value1,
       userInfo: {
         userLevel: option.data.actionUserLevel,
       },
     })))
-    console.log(res)
-    return res
   },
 })

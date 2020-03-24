@@ -1,15 +1,16 @@
 import React, {useEffect} from "react"
-import {ConfigThemeSelectTs, themeSelectModel} from "@/views/DataConfig/ConfigThemeSelect/model/config"
 import {HeaderAction} from "@/views/DataConfig/component/HeaderAction/HeaderAction"
 import styled from "styled-components"
 import {CusButton} from "@/component/CusButton"
 import {editThemeModel} from "@/views/DataConfig/ConfigThemeSelect/model/editTheme"
-import {EditModal} from "@/views/DataConfig/ConfigThemeSelect/EditModal"
+import {ConfigThemeSelectTs, EditModal} from "@/views/DataConfig/ConfigThemeSelect/EditModal"
 import {grey} from "@material-ui/core/colors"
 import {dealImgUrl} from "@/component/ImgDealUrl/ImgDealUrl"
 import {SelectProduct, selectProductModel} from "@/views/DataConfig/ConfigThemeSelect/SelectProduct"
-import {fpMerge} from "@/common/utils"
-import {useStoreModel} from "@/common/ModelAction/useStore"
+import {fpRemove, fpSet} from "@/common/utils"
+import {useStoreModel, useStoreModelByType__Graphql} from "@/common/ModelAction/useStore"
+import {configDataModel} from '@/views/DataConfig/List/model'
+import {showConfirm} from '@/component/ConfirmDialog'
 
 const Box = styled.div`
   display: grid;
@@ -45,40 +46,41 @@ const ImgBox = styled.section`
 
 const findIndex = (list: any[], item: any) => list.findIndex(con => con.title === item.title)
 
-export const ConfigThemeSelect = ({dataConfig = {}}: any) => {
-  const {state: {configData}, actions} = useStoreModel(themeSelectModel)
+export const ConfigThemeSelect = () => {
+  const {state: configState, actions: configActions} = useStoreModelByType__Graphql(configDataModel)
+  const dataConfig = configState.dataConfig
+
+  // const {state: {configData}, actions} = useStoreModel(themeSelectModel)
   const {actions: editModalActions} = useStoreModel(editThemeModel)
 
   const selectProductModelData = useStoreModel(selectProductModel)
   const {actions: actionsSel} = selectProductModelData
 
+  // useEffect(() => {
+  //   if (dataConfig?.value) {
+  //     (actions.setConfigData)(fpMerge(themeSelectModel.state.configData, dataConfig.value))
+  //   }
+  // }, [actions, dataConfig.value])
   useEffect(() => {
-    if (dataConfig?.value) {
-      (actions.setConfigData)(fpMerge(dataConfig.value, themeSelectModel.state.configData))
-    }
-  }, [actions, dataConfig.value])
-  useEffect(() => {
-    (actionsSel.setDealOut)(async (data) => {
-      (actions.setListSelectProduct)(data)
+    (actionsSel.setDealOut)(async ({selectList, index}: { selectList: string[]; index: number }) => {
+      // (actions.setListSelectProduct)(data)
+      configActions.setDataConfig(fpSet(dataConfig.value, ['list', index, 'selectProductList'], selectList))
       return true
     })
-  }, [actions, actionsSel])
+  }, [actionsSel, configActions, dataConfig.value])
   return (
       <div>
-        <HeaderAction
-            dataConfig={dataConfig}
-            configData={configData}
-        />
+        <HeaderAction />
         <Box>
           {['操作', '主题名称', '描述', '图片', '有效日期'].map(v => (<header key={`header_${v}`}>{v}</header>))}
-          {configData.list?.map((v: ConfigThemeSelectTs) => (
+          {dataConfig?.value?.list?.map((v: ConfigThemeSelectTs) => (
               <React.Fragment key={`configData.list_${v.title}`}>
                 <aside>
                   <CusButton
                       variant={"outlined"}
                       onClick={() => (editModalActions.openEditClick)({
                         data: v,
-                        index: findIndex(configData.list, v),
+                        index: findIndex(dataConfig?.value?.list, v),
                       })}
                   >
                     编辑
@@ -86,6 +88,15 @@ export const ConfigThemeSelect = ({dataConfig = {}}: any) => {
                   <CusButton
                       variant={"outlined"}
                       color={"primary"}
+                      onClick={() => {
+                        showConfirm({
+                          message: `确定删除吗?`,
+                          callBack: async (res) => {
+                            if (!res) return
+                            configActions.setDataConfig(fpSet(dataConfig.value, 'list', fpRemove(dataConfig.value?.list, findIndex(dataConfig?.value?.list, v))))
+                          }
+                        })
+                      }}
                   >
                     删除
                   </CusButton>
@@ -94,7 +105,7 @@ export const ConfigThemeSelect = ({dataConfig = {}}: any) => {
                       variant={"outlined"}
                       onClick={() => (selectProductModelData.actions.openClick)({
                         open: true,
-                        index: findIndex(configData.list, v),
+                        index: findIndex(dataConfig?.value?.list, v),
                         selectList: v.selectProductList ?? [],
                       })}
                   >

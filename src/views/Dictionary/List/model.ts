@@ -14,5 +14,4 @@ export const dictModel = modelFactory('dictModel', {
       dictList: res?.getDictList,
     }))
   },
-
 })

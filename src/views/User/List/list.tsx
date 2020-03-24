@@ -1,4 +1,5 @@
 import React, {useEffect} from "react"
+import {history} from "@/common/history";
 import {useStoreModelByType__Graphql} from "@/common/ModelAction/useStore"
 import {listModel} from "@/views/User/List/model"
 import {StyleTableBox} from "@/common/style/tableBox"
@@ -13,28 +14,21 @@ import {formatDate} from "@/common/utils"
 import {getUserListDoc} from "@/common/graphqlTypes/graphql/doc"
 import {CusTextField} from "@/component/CusTextField"
 import {CusButton} from "@/component/CusButton"
-import {dictAllListModel} from "@/views/Product/EditModal/model"
 import MenuItem from "@material-ui/core/MenuItem"
 import {CusSelect} from "@/component/CusSelect"
 import {showMessage} from '@/component/Message'
+import {HeaderButton} from "@/common/style/HeaderButton"
+import {orderListModel} from '@/views/Order/List/model'
+import {addMonths, startOfMonth} from 'date-fns'
+import {OrderState} from 'ss_common/enum'
+import { dictAllListModel } from "@/views/Dictionary/dictAllListModel";
 
-const SButton = styled(CusButton)({
-})
+const SButton = styled(CusButton)({})
 
 const SearchBox = styled('div')({
   display: "grid",
   gridTemplateColumns: 'repeat(3, 340px)',
   gridColumnGap: '16px',
-})
-
-const HeaderButton = styled('div')({
-  display: 'grid',
-  marginTop: '20px',
-  gridTemplateColumns: '180px 180px',
-  gridGap: '6px',
-  '&&& > .MenuLayout-MuiFormControl-root': {
-    marginBottom: 0,
-  }
 })
 
 export const List = () => {
@@ -43,9 +37,10 @@ export const List = () => {
     dictAllListAction.getDictList()
   }, [dictAllListAction])
   const theme = useTheme()
+  const orderModel = useStoreModelByType__Graphql(orderListModel)
   const userListModel = useStoreModelByType__Graphql(listModel)
   const {state, actions, getLoad} = userListModel
-  const {list, actionUserLevel, selectIds} = state
+  const {list, actionUserLevel, selectItems} = state
 
   useEffect(() => {
     actions.getList()
@@ -85,7 +80,7 @@ export const List = () => {
         <main>
           <HeaderButton>
             <CusSelect
-                placeholder={'订单状态'}
+                placeholder={'人员等级'}
                 value={actionUserLevel}
                 onChange={(v) => actions.setActionUserLevel(v.target.value)}
             >
@@ -99,7 +94,7 @@ export const List = () => {
             <CusButton
                 onClick={async () => {
                   if (await actions.saveUserLevel()) {
-                    showMessage({ message: '操作成功' })
+                    showMessage({message: '操作成功'})
                     actions.getList()
                   }
                 }}
@@ -111,21 +106,18 @@ export const List = () => {
                 <TableHead>
                   <TableRow>
                     <TableCell>
-                      {(() => {
-                        const isAll = list.every(item => selectIds.includes(item.id as string))
-                        return <Checkbox
-                            checked={isAll}
-                            indeterminate={!isAll && !!selectIds.length}
-                            onChange={event => {
-                              actions.setSelectIds({
-                                flag: event.target.checked,
-                                ids: list.map(value => value.id),
-                              })
-                            }}
-                        />
-                      })()}
+                      <Checkbox
+                          checked={actions.checkAll(list.map(value => value.id))}
+                          indeterminate={actions.checkIndeterminate(list.map(value => value.id))}
+                          onChange={event => {
+                            actions.setSelectItems({
+                              flag: event.target.checked,
+                              items: list.map(value => value.id),
+                            })
+                          }}
+                      />
                     </TableCell>
-                    {['注册id', '用户等级', '邮箱', '手机', '用户名', '注册时间', '当月达人币', '下月达人币']
+                    {['注册id', '用户等级', '邮箱', '手机', '用户名', '注册时间', '当月达人币', '下月达人币', '订单记录']
                         .map(e => <TableCell key={`TableHead${e}`}>
                           {e}
                         </TableCell>)
@@ -136,11 +128,11 @@ export const List = () => {
                   {list?.map(e => <TableRow key={`TableBody${e?.id}`}>
                     <TableCell>
                       <Checkbox
-                          checked={selectIds.includes(`${e?.id}`)}
+                          checked={selectItems.includes(`${e?.id}`)}
                           indeterminate={false}
-                          onChange={event => actions.setSelectIds({
+                          onChange={event => actions.setSelectItems({
                             flag: event.target.checked,
-                            ids: [e.id],
+                            items: [e.id],
                           })}
                       />
                     </TableCell>
@@ -152,8 +144,50 @@ export const List = () => {
                     <TableCell>{e.userInfo?.phone}</TableCell>
                     <TableCell>{e.userInfo?.name}</TableCell>
                     <TableCell>{formatDate(new Date(e.createTime), 'yyyy/MM/dd HH:mm')}</TableCell>
-                    <TableCell>{0}</TableCell>
-                    <TableCell>{0}</TableCell>
+                    <TableCell>
+                      <CusButton
+                          variant={'text'}
+                          onClick={() => {
+                            orderModel.actions.setSearch({
+                              registerName: e.name,
+                              startTime: startOfMonth(addMonths(new Date(), -1)),
+                              endTime: startOfMonth(addMonths(new Date(), 1)),
+                              state: OrderState.Finish,
+                            })
+                            history.push(`/order`)
+                          }}
+                      >
+                        {e.orderCoinCurrentMonth}
+                      </CusButton>
+                    </TableCell>
+                    <TableCell>
+                      <CusButton
+                          variant={'text'}
+                          onClick={() => {
+                            orderModel.actions.setSearch({
+                              registerName: e.name,
+                              startTime: startOfMonth(new Date()),
+                              endTime: startOfMonth(addMonths(new Date(), 1)),
+                              state: OrderState.Finish,
+                            })
+                            history.push(`/order`)
+                          }}
+                      >
+                        {e.orderCoinNextMonth}
+                      </CusButton>
+                    </TableCell>
+                    <TableCell>
+                      <CusButton
+                          variant={'text'}
+                          onClick={() => {
+                            orderModel.actions.setSearch({
+                              registerName: e.name,
+                              state: OrderState.Finish,
+                            })
+                            history.push(`/order`)
+                          }}
+                      >查看</CusButton>
+                    </TableCell>
                   </TableRow>)}
                 </TableBody>
               </StyleTableBox.Table>

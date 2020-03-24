@@ -1,9 +1,10 @@
-import React, {useEffect} from "react"
-import {homeCarousel} from "@/views/DataConfig/ConfigHomeCarousel/model/HomeCarousel"
+import React from "react"
 import {HeaderAction} from "@/views/DataConfig/component/HeaderAction/HeaderAction"
 import styled, {css} from "styled-components"
 import {ImgUpload} from "@/component/ImgUpload"
-import {useStoreModel} from "@/common/ModelAction/useStore"
+import {useStoreModelByType__Graphql} from "@/common/ModelAction/useStore"
+import {configDataModel} from '@/views/DataConfig/List/model'
+import {fileUploadAjax, fpSet} from '@/common/utils'
 
 const Box = styled.div`
   width: 100%;
@@ -14,38 +15,47 @@ const Box = styled.div`
 
 `
 
-export const ConfigHomeCarousel = ({dataConfig = {}}: any) => {
-  // eslint-disable-next-line no-undef
-  const {state: {configData}, actions} = useStoreModel(homeCarousel)
-  const {imgList} = configData
+const getUploadUrl = async (file: any) => {
+  return (await fileUploadAjax({}, [file], '/api/fileUpload'))?.data?.files?.[0]?.url ?? ''
+}
+const setOneImg = async ({index, file}: {
+  index: number
+  file: any
+}, pre: any) => {
+  return fpSet(pre, ['imgList', index], (await getUploadUrl(file)))
+}
+const addOne = async (file: any, pre: any) => {
+  return fpSet(pre, ['imgList'], [
+    ...pre.imgList,
+    (await getUploadUrl(file)),
+  ])
+}
 
-  useEffect(() => {
-    if (dataConfig?.value) {
-      (actions.setConfigData)(dataConfig.value)
-    }
-  }, [actions, actions.setConfigData, dataConfig.value])
+
+export const ConfigHomeCarousel = () => {
+  const {state, actions} = useStoreModelByType__Graphql(configDataModel)
+  const {dataConfig} = state
+  const {value} = dataConfig
 
   return (
       <div>
         <HeaderAction
-            dataConfig={dataConfig}
-            configData={configData}
         />
         <Box>
-          {imgList?.map((value: string, index: number) => <ImgUpload
-              key={`imgList_${value}`}
+          {value?.imgList?.map((src: string, index: number) => <ImgUpload
+              key={`imgList_${src}`}
               mainCss={css`width: 320px; height: 200px`.toString()}
-              initSrc={value}
-              onChange={(file: any) => {
-                (actions.setOneImg)({index, file})
+              initSrc={src}
+              onChange={async (file: any) => {
+                actions.setDataConfig(await setOneImg({index, file}, value))
               }}
           />)}
           <ImgUpload
               mainCss={css`width: 320px; height: 200px`.toString()}
               initSrc={''}
               noSetSrc={true}
-              onChange={(file: any) => {
-                (actions.addOne)(file)
+              onChange={async (file: any) => {
+                actions.setDataConfig(await addOne(file, value))
               }}
           />
         </Box>

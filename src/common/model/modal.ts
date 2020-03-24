@@ -24,7 +24,7 @@ export const modalModelFactory = <T>(name: string, initData: T) => modelFactory(
     isEdit: value.index,
   })),
   onClose: (value, {setData}) => setData(pre => fpMerge(fpSet(pre, 'modalData', {}), {
-    modalData: {},
+    modalData: initData,
     open: false,
   })),
   setModal: (value, {setData}) => setData(data => fpMerge(data, {
