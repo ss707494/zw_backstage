@@ -63,7 +63,6 @@ export const useInitState = () => {
     }
     // 存在父类id
     // if (newItem.full_parent_id) {
-    //   console.log(oneList)
     //   const gradeArr = newItem.full_parent_id.split(',');
     //   if (gradeArr.length === 3) {
     //   } else {
@@ -100,7 +99,6 @@ export const EditModal = (
   const handleUploadChange = file => {
     setImgFile(file)
   }
-  // console.log(imgFile)
 
   const [updateData, , updateLoading] = useMutationGraphql(save_category)
 

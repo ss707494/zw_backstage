@@ -39,6 +39,11 @@ export const OrderList = () => {
 
   const {actions: dictAllListActions, state: dictAllListState} = useStoreModelByType__Graphql(dictAllListModel)
   useEffect(() => {
+    return () => {
+      actions.clearSearch()
+    }
+  }, [actions])
+  useEffect(() => {
     dictAllListActions.getDictList()
   }, [dictAllListActions])
 
@@ -171,7 +176,7 @@ export const OrderList = () => {
                   value={''}>
                 全部
               </MenuItem>
-              {dictAllListState?.deliveryType?.map(value => (
+              {dictAllListState?.deliveryTypeList?.map(value => (
                   <MenuItem
                       key={`dictAllListState_${value.code}`}
                       value={value.code ?? ''}>
@@ -243,7 +248,7 @@ export const OrderList = () => {
                         />
                       })()}
                     </TableCell>
-                    {['订单编号', '创建时间', '订单状态', '金额', '抵扣达人币', '新增达人币', '注册id', '用户名', '城市', '州', '邮政编码', '取货方式', '取货日期', '订单详情']
+                    {['订单编号', '创建时间', '订单状态', '金额', '抵扣达人币', '新增达人币', '注册id', '用户名', '城市', '州', '邮政编码', '取货方式', '取货日期', '完成日期', '订单详情']
                         .map(e => <TableCell key={`TableHead${e}`}>
                           {e}
                         </TableCell>)
@@ -304,9 +309,10 @@ export const OrderList = () => {
                     <TableCell>{e?.userAddress?.province}</TableCell>
                     <TableCell>{e?.userAddress?.zip}</TableCell>
                     <TableCell>
-                      {dictAllListState?.deliveryType?.find(value => value.code === e?.pickUpType)?.name}
+                      {dictAllListState?.deliveryTypeList?.find(value => value.code === e?.pickUpType)?.name}
                     </TableCell>
                     <TableCell>{!e?.pickUpTime ? '' : formatDate(new Date(e?.pickUpTime), 'yyyy/MM/dd HH:mm')}</TableCell>
+                    <TableCell>{!e?.finishTime ? '' : formatDate(new Date(e?.finishTime), 'yyyy/MM/dd HH:mm')}</TableCell>
                     {/*<TableCell>{JSON.stringify(e)}</TableCell>*/}
                     <TableCell>
                       <StyleTableBox.ActionTableCell>

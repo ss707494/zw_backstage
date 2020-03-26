@@ -11,14 +11,45 @@ import {orderListModel} from "@/views/Order/List/model"
 import styled from 'styled-components'
 import {dictAllListModel} from '@/views/Dictionary/dictAllListModel'
 import {OrderState} from 'ss_common/enum'
+import {green, grey} from '@material-ui/core/colors'
+import printJs from 'print-js'
+import {CusButton} from '@/component/CusButton'
+import {PrintRounded} from '@material-ui/icons'
+import html2canvas from 'html2canvas'
 
-const DetailBox = styled('div')`
+const OrderInfo = styled('div')`
   display: grid;
-  grid-template-columns: repeat(3, 100px minmax(200px, max-content));
+  grid-template-columns: 120px max-content;
+  grid-auto-rows: min-content;
   > * {
     padding: 8px;
   }
 `
+const SendInfo = styled(OrderInfo)`
+`
+const UserInfo = styled(OrderInfo)`
+`
+const Table = styled(StyleTableBox.Table)`
+  thead tr th,
+  tbody tr td {
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+`
+
+const DetailBox = styled('div')`
+  display: grid;
+  grid-template-columns: repeat(3, minmax(200px, max-content));
+  > * {
+    padding: 8px;
+  }
+`
+const TopAction = styled('div')`
+  position: absolute;
+  right: 30px;
+  top: 30px;
+`
+
 
 export const OrderProductModal = () => {
   const {actions: dictAllListActions, state: dictAllListState} = useStoreModelByType__Graphql(dictAllListModel)
@@ -39,31 +70,66 @@ export const OrderProductModal = () => {
           open={open}
           onClose={handleClose}
       >
-        <DialogTitle>订单详情列表</DialogTitle>
-        <S.Content>
+        <DialogTitle>订单详情</DialogTitle>
+        <S.Content
+            id={'orderDetail'}
+        >
+          <TopAction
+              id={'ignoreElement'}
+          >
+            <CusButton
+                variant={'contained'}
+                onClick={() => {
+                  html2canvas(window.document.querySelector("#orderDetail") as HTMLElement, {
+                    ignoreElements: (e) => (e.id === 'ignoreElement'),
+                  }).then((canvas: any) => {
+                    const dataUrl = canvas.toDataURL()
+                    const imageFoo = document.createElement('img')
+                    imageFoo.src = dataUrl
+                    printJs({
+                      printable: dataUrl,
+                      type: 'image',
+                    })
+                  })
+                }}
+            >
+              <PrintRounded/>
+              打印</CusButton>
+          </TopAction>
           <DetailBox>
-            {[
-              ['订单号', orderDetail.number],
-              ['运送方式', dictAllListState?.deliveryType?.find(value => value.code === orderDetail?.pickUpType)?.name],
-              ['订单状态', orderStateOption[OrderState[orderDetail?.state ?? 0]]],
-              ['地址信息', orderDetail?.userAddress?.address],
-              ['信用卡信息', orderDetail.userPayCard?.number],
-              ['累计达人币', orderDetail.generateCoin],
-              ['运费', orderDetail.transportationCosts],
-              ['优惠折扣', orderDetail.couponDiscount],
-              ['达人币抵用', orderDetail.deductCoin],
-              ['消费税', orderDetail.saleTax],
-              ['订单总额', orderDetail.subtotal],
-              ['实际支付', orderDetail.actuallyPaid],
-            ].map(value => <React.Fragment key={`orderDetail_${value[0]}`}>
-              <aside>{value[0]}</aside>
-              <section>{value[1]}</section>
-            </React.Fragment>)}
+            <OrderInfo>
+              <aside>订单号</aside>
+              <main>{orderDetail.number}</main>
+              <aside>创建日期</aside>
+              <main>{orderDetail.createTime}</main>
+              <aside>订单状态</aside>
+              <main>{orderStateOption[OrderState[orderDetail?.state ?? 0]]}</main>
+            </OrderInfo>
+            <SendInfo>
+              <aside>{'运送方式'}</aside>
+              <main>{dictAllListState?.deliveryTypeList?.find(value => value.code === orderDetail?.pickUpType)?.name}</main>
+              <aside>{'运送地址'}</aside>
+              <main>{orderDetail?.userAddress?.combineAddress}</main>
+              <aside>{'邮编'}</aside>
+              <main>{orderDetail?.userAddress?.zip}</main>
+              <aside>{'电话'}</aside>
+              <main>{orderDetail?.user?.userInfo?.phone}</main>
+              <aside>{'邮件'}</aside>
+              <main>{orderDetail?.user?.userInfo?.email}</main>
+            </SendInfo>
+            <UserInfo>
+              <aside>{'姓名'}</aside>
+              <main>{orderDetail?.user?.userInfo?.name}</main>
+              <aside>{'支付方式'}</aside>
+              <main>{'信用卡'}</main>
+              <aside>{'支付信用卡'}</aside>
+              <main>{orderDetail.userPayCard?.number}</main>
+            </UserInfo>
           </DetailBox>
-          <StyleTableBox.Table theme={theme}>
+          <Table theme={theme}>
             <TableHead>
               <TableRow>
-                {['商品编号', '中文名称', '售卖价格', '购买数量']
+                {['商品编号', '中文名称', '售卖价格', '购买数量', '合计']
                     .map(e => <TableCell key={`TableHead${e}`}>
                       {e}
                     </TableCell>)
@@ -79,11 +145,55 @@ export const OrderProductModal = () => {
                   <TableCell>{e?.name}</TableCell>
                   <TableCell>{e?.dealPrice}</TableCell>
                   <TableCell>{e?.count}</TableCell>
+                  <TableCell>{(e?.count ?? 0) * (e?.dealPrice ?? 0)}</TableCell>
                 </TableRow>
-              })
-              }
+              })}
+              <TableRow>
+                <TableCell colSpan={3}/>
+                <TableCell>产品总计</TableCell>
+                <TableCell>{orderDetail.subtotal}</TableCell>
+              </TableRow>
+              <TableRow
+                  style={{background: grey[200]}}
+              >
+                <TableCell>优惠名称</TableCell>
+                <TableCell colSpan={3}/>
+                <TableCell>折扣金额</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell colSpan={3}/>
+                <TableCell>折扣合计</TableCell>
+                <TableCell>{0}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell colSpan={3}/>
+                <TableCell>达人币抵扣</TableCell>
+                <TableCell>{orderDetail.deductCoin}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell colSpan={3}/>
+                <TableCell>消费税</TableCell>
+                <TableCell>{orderDetail.saleTax}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell colSpan={3}/>
+                <TableCell>运费</TableCell>
+                <TableCell>{orderDetail.transportationCosts}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell colSpan={3}/>
+                <TableCell>实际支付</TableCell>
+                <TableCell>{orderDetail.actuallyPaid}</TableCell>
+              </TableRow>
+              <TableRow
+                  style={{background: green[100]}}
+              >
+                <TableCell colSpan={3}/>
+                <TableCell>获得达人币</TableCell>
+                <TableCell>{orderDetail.generateCoin}</TableCell>
+              </TableRow>
             </TableBody>
-          </StyleTableBox.Table>
+          </Table>
           <footer>
           </footer>
         </S.Content>

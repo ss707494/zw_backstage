@@ -4,10 +4,10 @@ import {getDictListDoc} from "@/common/graphqlTypes/graphql/doc"
 import {fpMergePre} from "@/common/utils"
 
 const keys = [
-  'addOneDictTypeFirst', 'shelvesTypeList',
-  'weightUnitList', 'groupPrecisionList',
-  'unpackingUnitList', 'packingUnitList',
-  'userLevelList', 'deliveryType'
+  'addOneDictTypeFirst', 'shelvesType',
+  'weightUnit', 'groupPrecision',
+  'unpackingUnit', 'packingUnit',
+  'userLevel', 'deliveryType'
 ]
 export const dictAllListModel = modelFactory('dictModel', {
   shelvesTypeList: [] as Dict[],
@@ -16,7 +16,8 @@ export const dictAllListModel = modelFactory('dictModel', {
   unpackingUnitList: [] as Dict[],
   packingUnitList: [] as Dict[],
   userLevelList: [] as Dict[],
-  deliveryType: [] as Dict[],
+  deliveryTypeList: [] as Dict[],
+  addOneDictTypeFirstList: [] as Dict[],
 }, {
   getDictList: async (value, option) => {
     if (!option.data.shelvesTypeList.length) {
@@ -25,7 +26,7 @@ export const dictAllListModel = modelFactory('dictModel', {
       })
       option.setData(fpMergePre(keys.reduce((previousValue, currentValue) => ({
         ...previousValue,
-        [currentValue]: res?.getDictList?.filter((d: Dict) => d.dictTypeCode?.toLowerCase() === currentValue.toLowerCase())
+        [`${currentValue}List`]: res?.getDictList?.filter((d: Dict) => d.dictTypeCode?.toLowerCase() === currentValue.toLowerCase())
       }), {})))
     }
   },

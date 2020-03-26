@@ -33,8 +33,6 @@ const upload = async (file: any) => {
 export const ConfigSelfAddress = () => {
   const {state, actions} = useStoreModelByType__Graphql(configDataModel)
   const {dataConfig} = state
-  console.log(actions)
-  console.log(dataConfig)
   const configValue = dataConfig.value
   const addOne = () => {
     actions.setDataConfig(fpMerge(configValue, {

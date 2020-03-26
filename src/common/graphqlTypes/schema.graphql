@@ -153,8 +153,8 @@ type Query {
     getDictTypeList: [DictTypeFirst]
     orderList(orderInput: OrderInput): OrderPage
     orderListTotal(orderInput: OrderInput): Float
+    userInfo: User
     userList(userListInput: UserListInput): UserPage
-    userListTotal(userListInput: UserListInput): Float
 }
 
 type ROrderProduct {
@@ -201,6 +201,7 @@ type User {
 type UserAddress {
     address: String
     city: String
+    combineAddress: String
     contactInformation: String
     contactUserName: String
     createTime: Timestamp
@@ -254,9 +255,9 @@ type UserPayCard {
 
 input CategoryInput {
     categoryId: String
-    orderByObject: [[String]] = []
-    page: Float = 0.0
-    rows_per_page: Float = 10.0
+    orderByObject: [[String]]
+    page: Float
+    rows_per_page: Float
 }
 
 input CategoryItemInput {
@@ -322,9 +323,9 @@ input DictTypeFirstItemInput {
 }
 
 input OrderByAndPageInput {
-    orderByObject: [[String]] = []
-    page: Float = 0.0
-    rows_per_page: Float = 10.0
+    orderByObject: [[String]]
+    page: Float
+    rows_per_page: Float
 }
 
 input OrderByInput {
@@ -367,12 +368,12 @@ input OrderInput {
     district: String
     endTime: Timestamp
     number: String
-    page: Float = 0.0
+    page: Float
     pickUpTime: Timestamp
     pickUpType: String
     province: String
     registerName: String
-    rows_per_page: Float = 10.0
+    rows_per_page: Float
     startTime: Timestamp
     state: Float
     userName: String
@@ -380,8 +381,8 @@ input OrderInput {
 }
 
 input PageInput {
-    page: Float = 0.0
-    rows_per_page: Float = 10.0
+    page: Float
+    rows_per_page: Float
 }
 
 input ProductItemInput {
@@ -443,6 +444,7 @@ input ROrderUserItemInput {
 input UserAddressItemInput {
     address: String
     city: String
+    combineAddress: String
     contactInformation: String
     contactUserName: String
     createTime: Timestamp
@@ -476,8 +478,8 @@ input UserItemInput {
     id: String
     isDelete: Float
     name: String
-    orderCoinCurrentMonth: Float = 0.0
-    orderCoinNextMonth: Float = 0.0
+    orderCoinCurrentMonth: Float
+    orderCoinNextMonth: Float
     orderInfo: [OrderInfoItemInput!]
     password: String
     rOrderUser: [ROrderUserItemInput!]
@@ -487,11 +489,11 @@ input UserItemInput {
 }
 
 input UserListInput {
-    email: String = ""
-    name: String = ""
-    page: Float = 0.0
-    phone: String = ""
-    rows_per_page: Float = 10.0
+    email: String
+    name: String
+    page: Float
+    phone: String
+    rows_per_page: Float
 }
 
 input UserPayCardItemInput {

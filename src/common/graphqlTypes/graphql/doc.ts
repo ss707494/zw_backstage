@@ -119,6 +119,17 @@ export const getOrderListDoc = gql`
         isDelete
         password
         type
+        userInfo {
+            createTime
+            email
+            id
+            isDelete
+            name
+            phone
+            updateTime
+            userId
+            userLevel
+        }
     }
 
     query ($data: OrderInput) {
@@ -157,6 +168,7 @@ export const getOrderListDoc = gql`
                     userId
                     contactInformation
                     contactUserName
+                    combineAddress
                 }
                 userPayCard {
                     id

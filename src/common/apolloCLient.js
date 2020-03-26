@@ -23,9 +23,9 @@ export const wrapperApollo = (el) => {
         ...headers,
         // 后台万能权限
         Authorization: getToken(),
-        refreshtoken: getToken('refreshtoken'),
-      }
-    }));
+        // refreshtoken: getToken('refreshtoken'),
+      },
+    }))
   }
 
   const onError = ({ graphQLErrors, networkError }) => {
@@ -40,11 +40,11 @@ export const wrapperApollo = (el) => {
 
     if (networkError) {
       const errMsg = networkError.bodyText ?? networkError.result.error ?? ''
-      ssLog(`[Network error]: ${errMsg}`);
+      ssLog(`[Network error]: ${errMsg}`)
       if (networkError.statusCode === 401) {
         if (errMsg.includes('first') && getToken('refreshtoken')) {
           axios.post('/api/getTokenRefresh', {
-            refreshtoken: getToken('refreshtoken')
+            refreshtoken: getToken('refreshtoken'),
           }).then(res => {
             if (res.data?.token) {
               setToken(res.data.token)
@@ -76,7 +76,7 @@ export const wrapperApollo = (el) => {
     onError,
     // response,
     // link: createHttpLink({ uri: "/sdfsf" }),
-  });
+  })
 
   return (
       <ApolloProvider client={client}>
@@ -100,12 +100,13 @@ export const getClient = () => {
         ...headers,
         // 后台万能权限
         Authorization: getToken(),
-        refreshtoken: getToken('refreshtoken'),
-      }
-    }));
+      },
+    }))
   }
 
-  const onError = ({ graphQLErrors, networkError }) => {
+  const onError = ({ response, operation, graphQLErrors, networkError }) => {
+    console.log(response)
+    console.log(operation)
     if (graphQLErrors) {
       graphQLErrors.forEach(({ message, locations, path }) => {
         ssLog(
@@ -117,11 +118,11 @@ export const getClient = () => {
 
     if (networkError) {
       const errMsg = networkError.bodyText ?? networkError.result.error ?? ''
-      ssLog(`[Network error]: ${errMsg}`);
+      ssLog(`[Network error]: ${errMsg}`)
       if (networkError.statusCode === 401) {
         if (errMsg.includes('first') && getToken('refreshtoken')) {
           axios.post('/api/getTokenRefresh', {
-            refreshtoken: getToken('refreshtoken')
+            refreshtoken: getToken('refreshtoken'),
           }).then(res => {
             if (res.data?.token) {
               setToken(res.data.token)
@@ -151,7 +152,7 @@ export const getClient = () => {
     uri: '/type__graphql/api',
     request,
     onError,
-  });
+  })
 }
 
 

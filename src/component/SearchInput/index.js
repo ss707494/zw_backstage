@@ -17,7 +17,6 @@ export const SearchInput = prop => {
         <InputBase
             {...prop}
             value={prop.value || ''}
-            // onKeyUp={e => console.log(e.keyCode)}
         >
         </InputBase>
       </S.Box>
