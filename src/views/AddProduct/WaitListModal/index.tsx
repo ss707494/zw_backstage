@@ -13,6 +13,7 @@ import {waitListModel} from '@/views/AddProduct/WaitListModal/model'
 
 export const dealWaitItem = (item: any) => ({
   ...item.product,
+  lastOutAmount: item.lastOutAmount,
   addNumber: item.count,
   addPrice: item.amount,
   addSupplier: item.supplier,
@@ -46,7 +47,7 @@ export const WaitListModal = () => {
           <StyleTableBox.Table theme={theme}>
             <TableHead>
               <TableRow>
-                {['商品编号', '是否拼团', '中文名称', '库存', '进货价格', '市场价格', '售卖价格', '重量']
+                {['商品编号', '是否拼团', '中文名称', '库存', '市场价格', '售卖价格', '订单销售价格']
                     .map(e => <TableCell key={`TableHead${e}`}>
                       {e}
                     </TableCell>)
@@ -63,13 +64,10 @@ export const WaitListModal = () => {
                 <TableCell>{e?.number}</TableCell>
                 <TableCell>{e?.is_group ? '是' : '否'}</TableCell>
                 <TableCell>{e?.name}</TableCell>
-                <TableCell>
-                  {e?.stock}
-                </TableCell>
-                <TableCell>{e?.price_in}</TableCell>
-                <TableCell>{e?.price_out}</TableCell>
+                <TableCell>{e?.stock}</TableCell>
                 <TableCell>{e?.price_market}</TableCell>
-                <TableCell>{e?.weight}</TableCell>
+                <TableCell>{e?.price_out}</TableCell>
+                <TableCell>{e?.lastOutAmount}</TableCell>
                 <TableCell>
                   <S.TextFieldBox
                       label=""

@@ -188,6 +188,7 @@ type User {
     id: String
     isDelete: Float
     name: String
+    orderAmountCurrentYear: Float
     orderCoinCurrentMonth: Float
     orderCoinNextMonth: Float
     orderInfo: [OrderInfo!]
@@ -478,6 +479,7 @@ input UserItemInput {
     id: String
     isDelete: Float
     name: String
+    orderAmountCurrentYear: Float
     orderCoinCurrentMonth: Float
     orderCoinNextMonth: Float
     orderInfo: [OrderInfoItemInput!]
@@ -493,6 +495,7 @@ input UserListInput {
     name: String
     page: Float
     phone: String
+    registerName: String
     rows_per_page: Float
 }
 

@@ -11,6 +11,7 @@ type AddHistory {
     create_time: Date
     id: String
     is_delete: Int
+    lastOutAmount: Float
     name: String
     number: String
     product_id: String
@@ -26,6 +27,7 @@ type AddItem {
     create_time: Date
     id: String
     is_delete: Int
+    lastOutAmount: Float
     name: String
     product: Product
     product_id: String

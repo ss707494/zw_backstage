@@ -13,7 +13,7 @@ import {listModel} from "@/views/AddProduct/List/model"
 import {productSupplementListGraphql} from "@/views/AddProduct/List/addProductGraphql"
 import {waitListModel} from "@/views/AddProduct/WaitListModal/model"
 import {dealWaitItem, WaitListModal} from "@/views/AddProduct/WaitListModal"
-import {ProductSupplementString} from 'ss_common/enum'
+import {ProductSupplement, ProductSupplementString} from 'ss_common/enum'
 import {CusButton} from "@/component/CusButton"
 import {productGraphql} from "@/views/Product/List/productGraphql"
 
@@ -50,7 +50,10 @@ export const AddProduct = () => {
                     const waitList = await actions.getAddProductList({})
                     waitActions.openEditClick({
                       data: {
-                        waitList,
+                        waitList: waitList.map((v: any) => ({
+                          ...v,
+                          lastOutAmount: v.price_out,
+                        })),
                       }
                     })
                   }}
@@ -91,14 +94,13 @@ export const AddProduct = () => {
                             }}
                             variant="contained"
                         >编辑</CusButton>
-                        <CusButton
+                        {e?.state === ProductSupplement.Pending && <CusButton
                             color="secondary"
                             onClick={() => {
-                              if (e.addItemList.length) {
-                              }
                             }}
                             variant="contained"
-                        >详情</CusButton>
+                        >删除</CusButton>}
+
                       </StyleTableBox.ActionTableCell>
                     </TableCell>
                   </TableRow>)}

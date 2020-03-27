@@ -6,6 +6,7 @@ export const getUserListDoc = gql`
             list {
                 orderCoinNextMonth
                 orderCoinCurrentMonth
+                orderAmountCurrentYear
                 ...userInfo
                 ...UserFields
                 ...orderInfo

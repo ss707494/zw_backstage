@@ -17,6 +17,7 @@ type HistoryItem = {
   count: number
   amount: number
   state: number
+  lastOutAmount: number
 }
 
 const add_history_list_by_product = gql`
@@ -35,6 +36,7 @@ const add_history_list_by_product = gql`
             count
             amount
             state
+            lastOutAmount
         }
     }
 `

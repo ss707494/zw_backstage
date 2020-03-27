@@ -28,6 +28,7 @@ const SearchBox = styled('div')({
   gridGap: '16px',
 })
 
+const disableStates: number[] = []
 export const OrderList = () => {
   const theme = useTheme()
   const listModel = useStoreModelByType__Graphql(orderListModel)
@@ -235,7 +236,7 @@ export const OrderList = () => {
                   <TableRow>
                     <TableCell>
                       {(() => {
-                        const filterList = state.list.filter(value => ![OrderState.Finish, OrderState.Cancel].includes(value.state as number)).map(value => value.id)
+                        const filterList = state.list.filter(value => !disableStates.includes(value.state as number)).map(value => value.id)
                         return <Checkbox
                             checked={actions.checkAll(filterList)}
                             indeterminate={actions.checkIndeterminate(filterList)}
@@ -259,7 +260,7 @@ export const OrderList = () => {
                   {state.list?.map(e => <TableRow key={`TableBody${e?.id}`}>
                     <TableCell>
                       <Checkbox
-                          disabled={[OrderState.Finish, OrderState.Cancel].includes(e.state as number)}
+                          disabled={disableStates.includes(e.state as number)}
                           checked={state.selectItems.includes(`${e?.id}`)}
                           indeterminate={false}
                           onChange={event => actions.setSelectItems({
@@ -275,7 +276,7 @@ export const OrderList = () => {
                     <TableCell>{formatDate(new Date(e.createTime), 'yyyy/MM/dd HH:mm')}</TableCell>
                     <TableCell>
                       <CusSelect
-                          disabled={[OrderState.Finish, OrderState.Cancel].includes(e.state as number)}
+                          disabled={disableStates.includes(e.state as number)}
                           variant={'outlined'}
                           placeholder={'订单状态'}
                           value={e?.state}
@@ -303,8 +304,8 @@ export const OrderList = () => {
                     <TableCell>{e?.subtotal}</TableCell>
                     <TableCell>{e.deductCoin}</TableCell>
                     <TableCell>{e.generateCoin}</TableCell>
-                    <TableCell>{}</TableCell>
                     <TableCell>{e.user?.name}</TableCell>
+                    <TableCell>{e.user?.userInfo?.name}</TableCell>
                     <TableCell>{e?.userAddress?.city}</TableCell>
                     <TableCell>{e?.userAddress?.province}</TableCell>
                     <TableCell>{e?.userAddress?.zip}</TableCell>

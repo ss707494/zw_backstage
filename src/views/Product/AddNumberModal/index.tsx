@@ -35,7 +35,7 @@ export const AddNumberModal = () => {
           <Table>
             <TableHead>
               <TableRow>
-                {['补货日期', '补货单号', '补货数量', '补货单价']
+                {['补货日期', '补货时销售价格', '补货单号', '补货数量', '补货单价']
                     .map(e => <TableCell key={`TableHead${e}`}>
                       {e}
                     </TableCell>)
@@ -45,6 +45,7 @@ export const AddNumberModal = () => {
             <TableBody>
               {historyList.map(value => <TableRow key={`historyList${value.id}`}>
                 <TableCell>{formatDate(new Date(value.create_time), 'yyyy/MM/dd HH:mm')}</TableCell>
+                <TableCell>{value.lastOutAmount}</TableCell>
                 <TableCell>{value.number}</TableCell>
                 <TableCell>{value.count}</TableCell>
                 <TableCell>{value.amount}</TableCell>

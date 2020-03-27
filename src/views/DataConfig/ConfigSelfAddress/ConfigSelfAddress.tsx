@@ -13,6 +13,7 @@ interface SelfAddress {
   address: string
   phone: string
   openTime: string
+  isDisabled: boolean
 }
 
 const Box = styled('div')({
@@ -47,7 +48,7 @@ export const ConfigSelfAddress = () => {
       list: fpRemove(configValue.list, index),
     }))
   }
-  const setEditData = (index: number) => (key: string) => (value: string) => {
+  const setEditData = (index: number) => (key: string) => (value: string | boolean) => {
     actions.setDataConfig(fpSet(configValue, ['list', index, key], value))
   }
 
@@ -62,10 +63,18 @@ export const ConfigSelfAddress = () => {
               <React.Fragment key={`configValue_${index}`}>
                 <main>
                   <CusButton
+                      style={{marginRight: 8}}
                       variant={'outlined'}
                       onClick={() => deleteOne(index)}
                   >
                     删除
+                  </CusButton>
+                  <CusButton
+                      color={item.isDisabled ? 'secondary' : 'primary'}
+                      variant={'outlined'}
+                      onClick={() => setEditData(index)('isDisabled')(!item.isDisabled)}
+                  >
+                    {item.isDisabled ? '启用' : '停用'}
                   </CusButton>
                 </main>
                 <main>

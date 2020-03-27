@@ -49,6 +49,7 @@ export const productSupplementListGraphql = gql`
                 count
                 amount
                 supplier
+                lastOutAmount
                 product {
                     id
                     number

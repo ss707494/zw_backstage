@@ -27,7 +27,7 @@ const SButton = styled(CusButton)({})
 
 const SearchBox = styled('div')({
   display: "grid",
-  gridTemplateColumns: 'repeat(3, 340px)',
+  gridTemplateColumns: 'repeat(4, minmax(200px, max-content))',
   gridColumnGap: '16px',
 })
 
@@ -56,6 +56,11 @@ export const List = () => {
             <section>您可以进行管理</section>
           </StyleTableBox.HeaderBox>
           <SearchBox>
+            <CusTextField
+                label={'注册id'}
+                value={state.searchParams.registerName}
+                onChange={e => actions.setSearchParams({registerName: e.target.value})}
+            />
             <CusTextField
                 label={'用户名'}
                 value={state.searchParams.name}
@@ -117,7 +122,7 @@ export const List = () => {
                           }}
                       />
                     </TableCell>
-                    {['注册id', '用户等级', '邮箱', '手机', '用户名', '注册时间', '当月达人币', '下月达人币', '订单记录']
+                    {['注册id', '用户等级', '当年累计消费', '邮箱', '手机', '用户名', '注册时间', '当月达人币', '下月达人币', '订单记录']
                         .map(e => <TableCell key={`TableHead${e}`}>
                           {e}
                         </TableCell>)
@@ -140,6 +145,7 @@ export const List = () => {
                     <TableCell>
                       {dictAllListState.userLevelList?.find(value => value.code === e.userInfo?.userLevel)?.name}
                     </TableCell>
+                    <TableCell>{e.orderAmountCurrentYear}</TableCell>
                     <TableCell>{e.userInfo?.email}</TableCell>
                     <TableCell>{e.userInfo?.phone}</TableCell>
                     <TableCell>{e.userInfo?.name}</TableCell>
@@ -182,7 +188,6 @@ export const List = () => {
                           onClick={() => {
                             orderModel.actions.setSearch({
                               registerName: e.name,
-                              state: OrderState.Finish,
                             })
                             history.push(`/order`)
                           }}

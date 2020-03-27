@@ -38,7 +38,7 @@ export const ConfigFreight = () => {
           <Title>运费</Title>
           <TableStyle>
             <header>操作</header>
-            <aside>名称</aside>
+            {/*<aside>名称</aside>*/}
             <main>订单金额-最小</main>
             <main>订单金额-最大</main>
             <main>运费</main>
@@ -54,15 +54,15 @@ export const ConfigFreight = () => {
                   }}
               >删除</CusButton>
             </header>
-            <aside>
-              <TextField
-                  label={''}
-                  value={e?.name}
-                  onChange={(event: any) => {
-                    setDataConfig(fpSet(value, ['freightList', i, 'name'], (event.target.value)))
-                  }}
-              />
-            </aside>
+            {/*<aside>*/}
+            {/*  <TextField*/}
+            {/*      label={''}*/}
+            {/*      value={e?.name}*/}
+            {/*      onChange={(event: any) => {*/}
+            {/*        setDataConfig(fpSet(value, ['freightList', i, 'name'], (event.target.value)))*/}
+            {/*      }}*/}
+            {/*  />*/}
+            {/*</aside>*/}
             <main style={{paddingLeft: 20}}>
               {i === 0 ? 0 : value?.freightList[i - 1].orderMax}
             </main>
