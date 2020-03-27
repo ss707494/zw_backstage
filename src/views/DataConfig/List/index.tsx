@@ -14,6 +14,9 @@ import {useStoreModelByType__Graphql} from '@/common/ModelAction/useStore'
 import {configDataModel} from '@/views/DataConfig/List/model'
 import {getDataConfigDoc} from '@/common/graphqlTypes/graphql/doc'
 import {ConfigSelfAddress} from '@/views/DataConfig/ConfigSelfAddress/ConfigSelfAddress'
+import {CusButton} from '@/component/CusButton'
+import {AddOneConfigModal, addOneConfigModalModel} from '@/views/DataConfig/List/AddOneConfigModal'
+import {ConfigAppModule} from '@/views/DataConfig/ConfigAppModule/ConfigAppModule'
 
 const leftMenu: DictType[] = [
   {
@@ -52,6 +55,10 @@ const leftMenu: DictType[] = [
     name: '订单状态设置',
     code: DictTypeEnum.OrderState,
   },
+  {
+    name: 'App模块设置',
+    code: DictTypeEnum.AppModule,
+  },
 ]
 
 const configCom: { [key: string]: any } = {
@@ -64,9 +71,11 @@ const configCom: { [key: string]: any } = {
   [DictTypeEnum.HomeCarousel]: ConfigHomeCarousel,
   [DictTypeEnum.OrderState]: ConfigOrderState,
   [DictTypeEnum.SelfAddress]: ConfigSelfAddress,
+  [DictTypeEnum.AppModule]: ConfigAppModule,
 }
 
 export const DataConfig = () => {
+  const {actions: addOneConfigModalModelActions} = useStoreModelByType__Graphql(addOneConfigModalModel)
   const routerParams = useParams<any>()
   const activeCode = routerParams?.dictType
   // const [activeCode, setActiveCode] = React.useState(leftMenu[0].code)
@@ -104,11 +113,18 @@ export const DataConfig = () => {
                     {e.name}
                   </S.LeftCard>
           )}
+          <CusButton
+              style={{marginTop: '20px'}}
+              onClick={()=> addOneConfigModalModelActions.openClick({})}
+          >
+            添加配置项
+          </CusButton>
         </S.LeftBox>
         <S.RightBox
         >
           {(configCom[activeCode]?.({dataConfig}) ?? <div/>)}
         </S.RightBox>
+        <AddOneConfigModal/>
       </S.Box>
   )
 }

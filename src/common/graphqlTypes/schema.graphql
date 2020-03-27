@@ -69,7 +69,7 @@ type DictTypeFirst {
 
 type Mutation {
     saveCategory(categoryItemInput: CategoryItemInput): Category
-    saveDataConfig(dataConfigInput: DataConfigInput): DataConfig
+    saveDataConfig(dataConfigInput: DataConfigItemInput): DataConfig
     saveDictTypeFirst(dictTypeFirstItemInput: [DictTypeFirstItemInput]): [DictTypeFirst]
     saveOrderList(orderInfoItemInput: [OrderInfoItemInput]): [OrderInfo]
     saveUserList(userItemInput: [UserItemInput]): [User]
@@ -148,7 +148,7 @@ type Product {
 type Query {
     getCategory(categoryInput: CategoryInput): Category
     getCategoryList(categoryInput: CategoryInput): CategoryPage
-    getDataConfig(dataConfigInput: DataConfigInput): DataConfig
+    getDataConfig(dataConfigInput: DataConfigItemInput): DataConfig
     getDictList(dictInput: DictInput): [Dict]
     getDictTypeList: [DictTypeFirst]
     orderList(orderInput: OrderInput): OrderPage
@@ -280,7 +280,7 @@ input CategoryItemInput {
     userId: String
 }
 
-input DataConfigInput {
+input DataConfigItemInput {
     createTime: Timestamp
     id: String
     isDelete: Float

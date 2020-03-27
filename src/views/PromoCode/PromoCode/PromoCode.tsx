@@ -1,19 +1,19 @@
-import React, {useEffect} from "react";
-import {CusButton} from "@/component/CusButton";
-import {S} from "@/views/Order/List/style";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import TableHead from "@material-ui/core/TableHead";
-import {TableBody, TableRow} from "@material-ui/core";
-import {CusTableCell as TableCell} from "@/component/CusTableCell";
-import {StyleTableBox} from "@/common/style/tableBox";
-import {PromoCodeTypeEnum} from "ss_common";
-import {useMutationSimpleData, useQuerySimpleData} from "@/component/ApolloQuery";
-import {promo_code_list, save_promo_code} from "@/views/PromoCode/graphql";
-import {EditModal} from "@/views/PromoCode/EditModal/EditModal";
-import {useCommonModalState} from "@/common/useHooks";
-import {formatDate} from "@/common/utils";
-import styled from "styled-components";
-import {showConfirm} from "@/component/ConfirmDialog";
+import React, {useEffect} from "react"
+import {CusButton} from "@/component/CusButton"
+import {S} from "@/views/Order/List/style"
+import CircularProgress from "@material-ui/core/CircularProgress"
+import TableHead from "@material-ui/core/TableHead"
+import {TableBody, TableRow} from "@material-ui/core"
+import {CusTableCell as TableCell} from "@/component/CusTableCell"
+import {StyleTableBox} from "@/common/style/tableBox"
+import {PromoCodeTypeEnum} from "ss_common"
+import {useMutationSimpleData, useQuerySimpleData} from "@/component/ApolloQuery"
+import {promo_code_list, save_promo_code} from "@/views/PromoCode/graphql"
+import {EditModal} from "@/views/PromoCode/EditModal/EditModal"
+import {useCommonModalState} from "@/common/useHooks"
+import {formatDate} from "@/common/utils"
+import styled from "styled-components"
+import {DiscountConditionEnum, DiscountTypeEnum} from 'ss_common/enum'
 
 const ImgBox = styled.img`
   max-width: 90px;
@@ -70,40 +70,38 @@ export const PromoCodeTable = ({promoCodeType, theme}: any) => {
                     <TableCell>
                       {promoCodeType === PromoCodeTypeEnum.PromoCode ? e?.code : e?.reuse_times}
                     </TableCell>
-                    <TableCell>{e?.discount_type}</TableCell>
-                    <TableCell>{e?.discount_condition}</TableCell>
-                    <TableCell>{e?.category_data?.name}</TableCell>
+                    <TableCell>
+                      {`${e?.discount_type === DiscountTypeEnum.Percentage ? '百分比' : '金额'}折扣,减${e?.discount_amount}${e?.discount_type === DiscountTypeEnum.Percentage ? '%' : '元'}`}
+                    </TableCell>
+                    <TableCell>{e?.discount_condition === DiscountConditionEnum.No ? '无条件' : `订单金额满${e?.discount_condition_amount}元`}</TableCell>
+                    <TableCell>{e?.category_data?.name ?? '无限制'}</TableCell>
                     <TableCell>
                       <ImgBox
                           src={`${process.env.REACT_APP_PRE_IMG_DOMAIN}${e?.img_url}`}
                           alt=""/>
                     </TableCell>
-                    <TableCell>{formatDate(new Date(e?.effective_date_start), 'yyyy/MM/dd HH:mm')}</TableCell>
-                    <TableCell>{formatDate(new Date(e?.effective_date_end), 'yyyy/MM/dd HH:mm')}</TableCell>
+                    <TableCell>{formatDate(new Date(e?.effective_date_start), 'yyyy/MM/dd')}</TableCell>
+                    <TableCell>{formatDate(new Date(e?.effective_date_end), 'yyyy/MM/dd')}</TableCell>
                     <TableCell>{e?.remark}</TableCell>
                     <TableCell>
                       <CusButton
+                          style={{marginRight: '10px'}}
                           variant={"outlined"}
                           onClick={commonModalState.openClick({...e})}
                       >编辑</CusButton>
                       <CusButton
+                          color={e.isDisable ? 'secondary' : 'primary'}
                           variant={"outlined"}
-                          onClick={() => {
-                            showConfirm({
-                              message: `确定删除该选项吗`,
-                              callBack: async res => {
-                                if (!res) return
-                                await savePromoCode({
-                                  id: e?.id,
-                                  is_delete: 1,
-                                })
-                                getPromoCodeList({
-                                  promo_code_type: promoCodeType,
-                                })
-                              }
+                          onClick={async () => {
+                            await savePromoCode({
+                              id: e?.id,
+                              isDisable: e?.isDisable ? 0 : 1,
+                            })
+                            getPromoCodeList({
+                              promo_code_type: promoCodeType,
                             })
                           }}
-                      >删除</CusButton>
+                      >{e?.isDisable ? '启用' : '停用'}</CusButton>
                     </TableCell>
                   </TableRow>)}
                 </TableBody>

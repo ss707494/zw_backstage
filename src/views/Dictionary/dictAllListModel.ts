@@ -7,7 +7,8 @@ const keys = [
   'addOneDictTypeFirst', 'shelvesType',
   'weightUnit', 'groupPrecision',
   'unpackingUnit', 'packingUnit',
-  'userLevel', 'deliveryType'
+  'userLevel', 'deliveryType',
+  'discountType',
 ]
 export const dictAllListModel = modelFactory('dictModel', {
   shelvesTypeList: [] as Dict[],
@@ -18,6 +19,7 @@ export const dictAllListModel = modelFactory('dictModel', {
   userLevelList: [] as Dict[],
   deliveryTypeList: [] as Dict[],
   addOneDictTypeFirstList: [] as Dict[],
+  discountTypeList: [] as Dict[],
 }, {
   getDictList: async (value, option) => {
     if (!option.data.shelvesTypeList.length) {

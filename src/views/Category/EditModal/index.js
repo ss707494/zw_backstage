@@ -49,7 +49,7 @@ export const useInitState = () => {
     setEditData(newItem)
     setOpen(true)
     await getOne({
-      parent_id: ''
+      parent_id: 'root'
     })
     if (newItem?.p3_id) {
       setLinkData({

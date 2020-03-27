@@ -1,5 +1,4 @@
 import React, {useEffect} from "react"
-import {HeaderAction} from "@/views/DataConfig/component/HeaderAction/HeaderAction"
 import styled from "styled-components"
 import {CusButton} from "@/component/CusButton"
 import {editThemeModel} from "@/views/DataConfig/ConfigThemeSelect/model/editTheme"
@@ -7,10 +6,10 @@ import {ConfigThemeSelectTs, EditModal} from "@/views/DataConfig/ConfigThemeSele
 import {grey} from "@material-ui/core/colors"
 import {dealImgUrl} from "@/component/ImgDealUrl/ImgDealUrl"
 import {SelectProduct, selectProductModel} from "@/views/DataConfig/ConfigThemeSelect/SelectProduct"
-import {fpRemove, fpSet} from "@/common/utils"
+import {formatDate, fpSet} from "@/common/utils"
 import {useStoreModel, useStoreModelByType__Graphql} from "@/common/ModelAction/useStore"
 import {configDataModel} from '@/views/DataConfig/List/model'
-import {showConfirm} from '@/component/ConfirmDialog'
+import {useParams} from 'react-router-dom'
 
 const Box = styled.div`
   display: grid;
@@ -47,6 +46,8 @@ const ImgBox = styled.section`
 const findIndex = (list: any[], item: any) => list.findIndex(con => con.title === item.title)
 
 export const ConfigThemeSelect = () => {
+  const routerParams = useParams<any>()
+  const activeCode = routerParams?.dictType
   const {state: configState, actions: configActions} = useStoreModelByType__Graphql(configDataModel)
   const dataConfig = configState.dataConfig
 
@@ -63,14 +64,14 @@ export const ConfigThemeSelect = () => {
   // }, [actions, dataConfig.value])
   useEffect(() => {
     (actionsSel.setDealOut)(async ({selectList, index}: { selectList: string[]; index: number }) => {
-      // (actions.setListSelectProduct)(data)
       configActions.setDataConfig(fpSet(dataConfig.value, ['list', index, 'selectProductList'], selectList))
+      await configActions.saveDataConfig()
+      await configActions.getDataConfig(activeCode)
       return true
     })
-  }, [actionsSel, configActions, dataConfig.value])
+  }, [actionsSel, activeCode, configActions, dataConfig.value])
   return (
       <div>
-        <HeaderAction />
         <Box>
           {['操作', '主题名称', '描述', '图片', '有效日期'].map(v => (<header key={`header_${v}`}>{v}</header>))}
           {dataConfig?.value?.list?.map((v: ConfigThemeSelectTs) => (
@@ -87,19 +88,13 @@ export const ConfigThemeSelect = () => {
                   </CusButton>
                   <CusButton
                       variant={"outlined"}
-                      color={"primary"}
-                      onClick={() => {
-                        showConfirm({
-                          message: `确定删除吗?`,
-                          callBack: async (res) => {
-                            if (!res) return
-                            configActions.setDataConfig(fpSet(dataConfig.value, 'list', fpRemove(dataConfig.value?.list, findIndex(dataConfig?.value?.list, v))))
-                          }
-                        })
+                      color={v.isDisabled ? 'secondary' : 'primary'}
+                      onClick={async () => {
+                        configActions.setDataConfig(fpSet(dataConfig.value, ['list', findIndex(dataConfig?.value?.list, v), 'isDisabled'], preData => preData ? 0 : 1))
+                        await configActions.saveDataConfig()
+                        await configActions.getDataConfig(activeCode)
                       }}
-                  >
-                    删除
-                  </CusButton>
+                  >{v.isDisabled ? '启用' : '停用'}</CusButton>
                   <CusButton
                       style={{gridColumn: '1 / 3'}}
                       variant={"outlined"}
@@ -119,7 +114,7 @@ export const ConfigThemeSelect = () => {
                       src={dealImgUrl(v.imgUrl)}
                       alt=""/>
                 </ImgBox>
-                <section>{`${v.startTime}`}-{`${v.endTime}`}</section>
+                <section>{`${formatDate(v.startTime, 'yyyy/MM/dd HH:mm')}`}-{`${formatDate(v.endTime, 'yyyy/MM/dd HH:mm')}`}</section>
               </React.Fragment>
           ))}
           <footer>

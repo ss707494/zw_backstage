@@ -8,6 +8,7 @@ export enum DictTypeEnum {
   HomeCarousel = 'HomeCarousel',
   OrderState = 'OrderState',
   SelfAddress = 'SelfAddress',
+  AppModule = 'AppModule',
 }
 
 

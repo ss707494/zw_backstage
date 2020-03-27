@@ -19,6 +19,7 @@ export const promo_code_list = gql`
             remark
             img_url
             product_category
+            isDisable
             category_data {
                 id
                 name

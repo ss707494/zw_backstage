@@ -1,19 +1,20 @@
-import React, {useEffect, useState} from "react";
-import {Dialog, DialogContent, DialogTitle, FormControl, MenuItem} from "@material-ui/core";
-import {CusTextField} from "@/component/CusTextField";
-import {useMutationSimpleData} from "@/component/ApolloQuery";
-import {save_promo_code} from "@/views/PromoCode/graphql";
-import {CusSelectField} from "@/component/CusSelectField";
-import {DiscountConditionEnum, DiscountTypeEnum, PromoCodeTypeEnum} from "ss_common/enum";
-import styled from "styled-components";
-import {useLinkage} from "@/views/Product/EditModal";
-import InputLabel from "@material-ui/core/InputLabel";
-import {ImgUpload} from "@/component/ImgUpload";
-import {S as SText} from "@/component/CusTextField/style";
-import {KeyboardDateTimePicker} from "@material-ui/pickers";
-import {CusButton} from "@/component/CusButton";
-import {fileUploadAjax, parseFloatForInput} from "@/common/utils";
-import {showMessage} from "@/component/Message";
+import React, {useEffect, useState} from "react"
+import {Dialog, DialogContent, DialogTitle, FormControl, InputAdornment, MenuItem} from "@material-ui/core"
+import {CusTextField} from "@/component/CusTextField"
+import {useMutationSimpleData} from "@/component/ApolloQuery"
+import {save_promo_code} from "@/views/PromoCode/graphql"
+import {CusSelectField} from "@/component/CusSelectField"
+import {DiscountConditionEnum, DiscountTypeEnum, PromoCodeTypeEnum} from "ss_common/enum"
+import styled from "styled-components"
+import {useLinkage} from "@/views/Product/EditModal"
+import InputLabel from "@material-ui/core/InputLabel"
+import {ImgUpload} from "@/component/ImgUpload"
+import {S as SText} from "@/component/CusTextField/style"
+import {KeyboardDatePicker} from "@material-ui/pickers"
+import {CusButton} from "@/component/CusButton"
+import {fileUploadAjax, parseFloatForInput} from "@/common/utils"
+import {showMessage} from "@/component/Message"
+import {endOfDay} from 'date-fns'
 
 const FormBox = styled('form')`
   display: grid;
@@ -71,7 +72,7 @@ export const EditModal = ({
   }
   useEffect(() => {
     getOne({
-      parent_id: ''
+      parent_id: 'root'
     })
   }, [getOne])
   useEffect(() => {
@@ -96,7 +97,7 @@ export const EditModal = ({
     }
   }, [modalData.category_data, modalData.id, open, setLinkData]);
   const handleSubmit = async () => {
-    if (imgFile) {
+    if (imgFile?.size) {
       const uploadRes = await fileUploadAjax({}, [imgFile], '/api/fileUpload')
       modalData.img_url = uploadRes?.data?.files?.[0]?.url ?? ''
     }
@@ -183,16 +184,18 @@ export const EditModal = ({
                 ))}
               </CusSelectField>
               <CusTextField
-                  label={'折扣' + modalData?.discount_type === DiscountTypeEnum.Percentage ? '百分比' : '金额'}
+                  label={'折扣' + (modalData?.discount_type === DiscountTypeEnum.Percentage ? '百分比' : '金额')}
                   value={modalData?.discount_amount}
                   onChange={(e: any) => setModalData({
                     ...modalData,
                     discount_amount: parseFloatForInput(e.target.value)
                   })}
+                  InputProps={{
+                    endAdornment: <InputAdornment position="end">{modalData?.discount_type === DiscountTypeEnum.Percentage ? '%' : '元'}</InputAdornment>,
+                  }}
               />
             </OneRowBox>
             <OneRowBox>
-
               <CusSelectField
                   label="使用条件"
                   value={modalData?.discount_condition}
@@ -281,8 +284,8 @@ export const EditModal = ({
                 as={FormControl}>
               <InputLabel
               >有效日期</InputLabel>
-              <KeyboardDateTimePicker
-                  format={'yyyy/MM/dd HH:mm'}
+              <KeyboardDatePicker
+                  format={'yyyy/MM/dd'}
                   value={modalData?.effective_date_start}
                   onChange={(date) => setModalData({
                     ...modalData,
@@ -293,12 +296,12 @@ export const EditModal = ({
             <TextFieldBoxStyle as={FormControl}>
               <InputLabel
               > ~</InputLabel>
-              <KeyboardDateTimePicker
-                  format={'yyyy/MM/dd HH:mm'}
+              <KeyboardDatePicker
+                  format={'yyyy/MM/dd'}
                   value={modalData?.effective_date_end}
                   onChange={(date) => setModalData({
                     ...modalData,
-                    effective_date_end: date
+                    effective_date_end: endOfDay(date ?? 0)
                   })}
               />
             </TextFieldBoxStyle>

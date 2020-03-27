@@ -1,20 +1,10 @@
 import React from "react"
 import {CusButton} from "@/component/CusButton"
 import styled from "styled-components"
-import {gql} from "apollo-boost"
 import {showMessage} from "@/component/Message"
 import {useStoreModelByType__Graphql} from '@/common/ModelAction/useStore'
 import {configDataModel} from '@/views/DataConfig/List/model'
 import {saveDataConfig} from '@/common/graphqlTypes/graphql/doc'
-
-export const setDataConfigGraphql = gql`
-    mutation($data: DataConfigInput) {
-        set_data_config(dataConfigInput: $data) {
-            flag
-            msg
-        }
-    }
-`
 
 const HeaderActionBox = styled.div`
   margin-bottom: 18px;
@@ -22,7 +12,6 @@ const HeaderActionBox = styled.div`
 
 export const HeaderAction = () => {
   const {actions, getLoad} = useStoreModelByType__Graphql(configDataModel)
-  // const [setDataConfig, , setDataConfigLoading] = useMutationGraphql(setDataConfigGraphql)
 
   return (
       <HeaderActionBox>

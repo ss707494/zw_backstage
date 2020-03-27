@@ -202,7 +202,7 @@ export const getOrderListDoc = gql`
 `
 
 export const getDataConfigDoc = gql`
-    query ($data: DataConfigInput) {
+    query ($data: DataConfigItemInput) {
         getDataConfig (dataConfigInput: $data) {
             id
             name
@@ -217,7 +217,7 @@ export const getDataConfigDoc = gql`
 `
 
 export const saveDataConfig = gql`
-    mutation ($data: DataConfigInput) {
+    mutation ($data: DataConfigItemInput) {
         saveDataConfig (dataConfigInput: $data) {
             id
             name

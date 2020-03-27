@@ -103,7 +103,7 @@ export const Category = ({ theme }) => {
   }, [getList])
   React.useEffect(() => {
     getTypeOptionOne({
-      parent_id: ''
+      parent_id: 'root'
     })
   }, [getTypeOptionOne])
   React.useEffect(() => {

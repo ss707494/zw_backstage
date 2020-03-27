@@ -1,37 +1,35 @@
+import {Dialog, DialogContent, TextField} from '@material-ui/core'
 import React from 'react'
 import {mergeModel} from '@/common/ModelAction/modelUtil'
 import {modalModelFactory} from '@/common/model/modal'
 import {useStoreModelByType__Graphql} from '@/common/ModelAction/useStore'
-import {Dialog, DialogContent, TextField} from '@material-ui/core'
 import {CusButton} from '@/component/CusButton'
-import {DictTypeFirst} from '@/common/graphqlTypes/types'
-import {saveDictTypeFirstDco} from '@/common/graphqlTypes/graphql/doc'
+import {saveDataConfig} from '@/common/graphqlTypes/graphql/doc'
 import {showMessage} from '@/component/Message'
-import {fpMergePre} from '@/common/utils'
-import {pick} from 'lodash'
+import {omit} from 'lodash'
 
-export const editDictTypeFirstModel = mergeModel(modalModelFactory('editDictTypeFirstModel', {
+export const addOneConfigModalModel = mergeModel(modalModelFactory('AddOneConfig', {
   name: '',
-  code: '',
+  type: '',
+  value: {},
+  remark: '',
   verification: '',
-  sort: '',
-}), 'dictTypeFirs', {
-  refresh: Function,
-}, {
-  setRefresh: (value, option) => option.setData(fpMergePre({refresh: value})),
-  addOneDictTypeFirst: async (value: DictTypeFirst, option) => {
-    return await option.mutate(saveDictTypeFirstDco, [value])
+}), 'AddOneConfigModalModel', {}, {
+  addOne: async (value, option) => {
+    return await option.mutate(saveDataConfig, {
+      ...omit(option.data.modalData, ['verification']),
+    })
   },
 })
 
-export const EditDictTypeFirstModal = () => {
-  const {state, actions, getLoad} = useStoreModelByType__Graphql(editDictTypeFirstModel)
+export const AddOneConfigModal = () => {
+  const {state, actions} = useStoreModelByType__Graphql(addOneConfigModalModel)
   const {modalData} = state
 
   return (
       <Dialog
           open={state.open}
-          onClose={() => actions.onClose({})}
+          onClose={() => actions.onClose()}
       >
         <DialogContent>
           <TextField
@@ -57,20 +55,10 @@ export const EditDictTypeFirstModal = () => {
           <TextField
               fullWidth
               label={'code'}
-              value={modalData.code}
+              value={modalData.type}
               onChange={e => {
                 actions.setModal({
-                  code: e.target.value,
-                })
-              }}
-          />
-          <TextField
-              fullWidth
-              label={'sort'}
-              value={modalData.sort}
-              onChange={e => {
-                actions.setModal({
-                  sort: e.target.value,
+                  type: e.target.value,
                 })
               }}
           />
@@ -78,7 +66,6 @@ export const EditDictTypeFirstModal = () => {
               style={{marginTop: '20px'}}
           >
             <CusButton
-                loading={getLoad(saveDictTypeFirstDco)}
                 color="primary"
                 variant="contained"
                 fullWidth
@@ -86,10 +73,9 @@ export const EditDictTypeFirstModal = () => {
                   if (modalData.verification !== 'dw123') {
                     return showMessage({message: '验证码错误', msg_type: 'error'})
                   }
-                  if (await actions.addOneDictTypeFirst(pick(modalData, ['name', 'code', 'sort']))) {
+                  if (await actions.addOne()) {
                     showMessage({message: '操作成功'})
                     actions.onClose({})
-                    state.refresh()
                   }
                 }}
             >

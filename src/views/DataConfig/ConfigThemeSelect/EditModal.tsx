@@ -24,6 +24,7 @@ export declare type ConfigThemeSelectTs = {
   startTime: any
   endTime: any
   selectProductList?: string[]
+  isDisabled: number
 }
 
 const FullTextField:React.ComponentType<TextFieldProps> = (props) => <TextField
@@ -140,6 +141,7 @@ export const EditModal = () => {
                   configThemeSelect: state.modalData,
                   index: state.isEdit,
                 }, dataConfig.value))
+                await configActions.saveDataConfig()
                 actions.onClose({})
               }}
           >保存</CusButton>

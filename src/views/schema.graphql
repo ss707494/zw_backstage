@@ -281,6 +281,7 @@ type PromoCode {
     effective_date_start: Date
     id: String
     img_url: String
+    isDisable: Int
     is_delete: Int
     name: String
     product_category: String
@@ -632,6 +633,7 @@ input PromoCodeInput {
     effective_date_start: Date
     id: String
     img_url: String
+    isDisable: Int
     is_delete: Int
     name: String
     product_category: String

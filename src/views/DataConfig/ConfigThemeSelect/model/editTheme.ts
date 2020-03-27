@@ -8,6 +8,7 @@ const _modalModel = modalModelFactory('themeModal', {
   imgUrl: '',
   startTime: null,
   endTime: null,
+  isDisabled: 0,
 })
 
 export const editThemeModel = mergeModel(_modalModel, 'editThemeModel', {

@@ -54,7 +54,7 @@ export const useInitState = () => {
   const editClick = (item) => async () => {
     setOpen(true)
     await getOne({
-      parent_id: ''
+      parent_id: 'root'
     })
     const newItem = dealItemToForm(item)
     // 存在类型

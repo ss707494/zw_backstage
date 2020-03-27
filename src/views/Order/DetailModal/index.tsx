@@ -16,6 +16,7 @@ import printJs from 'print-js'
 import {CusButton} from '@/component/CusButton'
 import {PrintRounded} from '@material-ui/icons'
 import html2canvas from 'html2canvas'
+import {dealMoney, formatDate} from '@/common/utils'
 
 const OrderInfo = styled('div')`
   display: grid;
@@ -101,7 +102,7 @@ export const OrderProductModal = () => {
               <aside>订单号</aside>
               <main>{orderDetail.number}</main>
               <aside>创建日期</aside>
-              <main>{orderDetail.createTime}</main>
+              <main>{formatDate(new Date(orderDetail?.createTime), 'yyyy/MM/dd HH:mm')}</main>
               <aside>订单状态</aside>
               <main>{orderStateOption[OrderState[orderDetail?.state ?? 0]]}</main>
             </OrderInfo>
@@ -143,15 +144,15 @@ export const OrderProductModal = () => {
                     key={`TableBody${e?.id}`}>
                   <TableCell>{e?.number}</TableCell>
                   <TableCell>{e?.name}</TableCell>
-                  <TableCell>{e?.dealPrice}</TableCell>
+                  <TableCell>{dealMoney(e?.dealPrice)}</TableCell>
                   <TableCell>{e?.count}</TableCell>
-                  <TableCell>{(e?.count ?? 0) * (e?.dealPrice ?? 0)}</TableCell>
+                  <TableCell>{dealMoney((e?.count ?? 0) * (e?.dealPrice ?? 0))}</TableCell>
                 </TableRow>
               })}
               <TableRow>
                 <TableCell colSpan={3}/>
                 <TableCell>产品总计</TableCell>
-                <TableCell>{orderDetail.subtotal}</TableCell>
+                <TableCell>{dealMoney(orderDetail.subtotal)}</TableCell>
               </TableRow>
               <TableRow
                   style={{background: grey[200]}}
@@ -163,34 +164,35 @@ export const OrderProductModal = () => {
               <TableRow>
                 <TableCell colSpan={3}/>
                 <TableCell>折扣合计</TableCell>
-                <TableCell>{0}</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell colSpan={3}/>
-                <TableCell>达人币抵扣</TableCell>
-                <TableCell>{orderDetail.deductCoin}</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell colSpan={3}/>
-                <TableCell>消费税</TableCell>
-                <TableCell>{orderDetail.saleTax}</TableCell>
+                <TableCell>{dealMoney(0, '-')}</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell colSpan={3}/>
                 <TableCell>运费</TableCell>
-                <TableCell>{orderDetail.transportationCosts}</TableCell>
+                <TableCell>{dealMoney(orderDetail.transportationCosts, '-')}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell colSpan={3}/>
+                <TableCell>达人币抵扣</TableCell>
+                <TableCell>{dealMoney(orderDetail.deductCoin, '-')}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell colSpan={3}/>
+                <TableCell>消费税</TableCell>
+                <TableCell>{dealMoney(orderDetail.saleTax, '-')}</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell colSpan={3}/>
                 <TableCell>实际支付</TableCell>
-                <TableCell>{orderDetail.actuallyPaid}</TableCell>
+                <TableCell>{dealMoney(orderDetail.actuallyPaid)}</TableCell>
               </TableRow>
               <TableRow
                   style={{background: green[100]}}
               >
-                <TableCell colSpan={3}/>
+                <TableCell colSpan={2}/>
+                <TableCell>{dictAllListState.userLevelList?.find(value => value.code === orderDetail.user?.userInfo?.userLevel)?.name}</TableCell>
                 <TableCell>获得达人币</TableCell>
-                <TableCell>{orderDetail.generateCoin}</TableCell>
+                <TableCell>{dealMoney(orderDetail.generateCoin)}</TableCell>
               </TableRow>
             </TableBody>
           </Table>

@@ -24,7 +24,7 @@ export const fileUploadAjax = (data: any, files: any, url: string, option?: any)
   }
   // @ts-ignore
   return axios.post(url, formData, {
-    ...option
+    ...option,
   })
 }
 
@@ -52,7 +52,7 @@ export const fpSet = <E = any>(origin: any, path: any, value: SetData<E>) => {
 
 export const delay = (time: number) => (new Promise(resolve => setTimeout(resolve, time)))
 
-export const fpSetPre:<T extends object>(path: PropertyPath, newValue: SetData) => (origin: T) => T = (path: any, value) => (origin) => {
+export const fpSetPre: <T extends object>(path: PropertyPath, newValue: SetData) => (origin: T) => T = (path: any, value) => (origin) => {
   let newData = cloneDeep(origin)
   if (_.isFunction(value)) {
     const oldData = _.get(origin, path)
@@ -91,10 +91,39 @@ export const dealNumberZero = (length: number) => (num: number) => {
   return Array(length - _s.length).fill('0').join('') + _s
 }
 
-export const formatDate = format
+export const formatDate = (date: any = '', formatString: string) => {
+  if (!date) {
+    return ''
+  }
+  if (_.isString(date)) {
+    return format(new Date(date), formatString)
+  }
+  return (isNaN(date)) ? '' : format(date, formatString)
+}
 
 export const dealNonBooleanProps = (value: any) => !!value ? 1 : 0
 
-export default {
-  getObjectURL
+export const formatMoney = (amount: any, decimalCount = 2, decimal = ".", thousands = ",") => {
+  try {
+    decimalCount = Math.abs(decimalCount);
+    decimalCount = isNaN(decimalCount) ? 2 : decimalCount;
+
+    const negativeSign = amount < 0 ? "-" : "";
+
+    let i = parseInt(amount = Math.abs(Number(amount) || 0).toFixed(decimalCount)).toString();
+    let j = (i.length > 3) ? i.length % 3 : 0;
+
+    // @ts-ignore
+    return negativeSign + (j ? i.substr(0, j) + thousands : '') + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousands) + (decimalCount ? decimal + Math.abs(amount - i).toFixed(decimalCount).slice(2) : "");
+  } catch (e) {
+    console.log(e)
+  }
 }
+
+export const dealMoney = (amount: any, pre = '') => `${pre}$ ${formatMoney(amount)}`
+
+export default {
+  getObjectURL,
+}
+
+
