@@ -2,12 +2,13 @@ import React from "react"
 import {HeaderAction} from "@/views/DataConfig/component/HeaderAction/HeaderAction"
 import {configDataModel} from '@/views/DataConfig/List/model'
 import {useStoreModelByType__Graphql} from '@/common/ModelAction/useStore'
-import {styled, TextareaAutosize} from '@material-ui/core'
+import {styled, TextField} from '@material-ui/core'
 import {CusButton} from '@/component/CusButton'
 import {ImgUpload} from '@/component/ImgUpload'
 import {fileUploadAjax, fpMerge, fpRemove, fpSet} from '@/common/utils'
+import {AddressInfoDialog, AddressModal, AddressModalModel} from '@/views/DataConfig/ConfigSelfAddress/AddressModal'
 
-interface SelfAddress {
+interface SelfAddress extends AddressInfoDialog {
   name: string
   imgUrl: string
   address: string
@@ -18,12 +19,12 @@ interface SelfAddress {
 
 const Box = styled('div')({
   display: 'grid',
-  gridTemplateColumns: '10fr 10fr 8fr repeat(3, 12fr)',
+  gridTemplateColumns: '10fr 30fr repeat(3, 12fr)',
   '& > * ': {
     padding: 10,
   },
 })
-const Text = styled(TextareaAutosize)({
+const Text = styled(TextField)({
   width: '98%',
 })
 
@@ -31,7 +32,14 @@ const upload = async (file: any) => {
   return (await fileUploadAjax({}, [file], '/api/fileUpload'))?.data?.files?.[0]?.url ?? ''
 }
 
+const EditAddressBox = styled('main')({
+  display: 'grid',
+  justifyItems: 'flex-start',
+  alignContent: 'space-between',
+})
+
 export const ConfigSelfAddress = () => {
+  const {actions: addressModalModelActions} = useStoreModelByType__Graphql(AddressModalModel)
   const {state, actions} = useStoreModelByType__Graphql(configDataModel)
   const {dataConfig} = state
   const configValue = dataConfig.value
@@ -56,7 +64,7 @@ export const ConfigSelfAddress = () => {
       <div>
         <HeaderAction/>
         <Box>
-          {['操作', '名称', '图片', '地址', '电话', '营业时间'].map(value => (<section key={`action_${value}`}>
+          {['操作', '地址', '电话', '营业时间', '图片'].map(value => (<section key={`action_${value}`}>
             {value}
           </section>))}
           {configValue?.list?.map((item: SelfAddress, index: number) => (
@@ -77,11 +85,34 @@ export const ConfigSelfAddress = () => {
                     {item.isDisabled ? '启用' : '停用'}
                   </CusButton>
                 </main>
+                <EditAddressBox>
+                  <section>
+                    <header>{item.fullName}</header>
+                    <main>{item.apartment} {item.streetAddress}</main>
+                    <footer>{item.city} {item.province} {item.zip}</footer>
+                  </section>
+                  <CusButton
+                      variant={'outlined'}
+                      onClick={async () => {
+                        const res = await addressModalModelActions.openClickPromise({...item})
+                        actions.setDataConfig(fpSet(configValue, ['list', index], preData => ({
+                          ...preData,
+                          ...res,
+                        })))
+                        addressModalModelActions.onClose()
+                      }}
+                  >编辑地址</CusButton>
+                </EditAddressBox>
                 <main>
                   <Text
-                      rows={6}
-                      value={item.name}
-                      onChange={event => setEditData(index)('name')(event.target.value)}
+                      value={item.phone}
+                      onChange={event => setEditData(index)('phone')(event.target.value)}
+                  />
+                </main>
+                <main>
+                  <Text
+                      value={item.openTime}
+                      onChange={event => setEditData(index)('openTime')(event.target.value)}
                   />
                 </main>
                 <main>
@@ -92,27 +123,6 @@ export const ConfigSelfAddress = () => {
                       }}
                   />
                 </main>
-                <main>
-                  <Text
-                      rows={6}
-                      value={item.address}
-                      onChange={event => setEditData(index)('address')(event.target.value)}
-                  />
-                </main>
-                <main>
-                  <Text
-                      rows={6}
-                      value={item.phone}
-                      onChange={event => setEditData(index)('phone')(event.target.value)}
-                  />
-                </main>
-                <main>
-                  <Text
-                      rows={6}
-                      value={item.openTime}
-                      onChange={event => setEditData(index)('openTime')(event.target.value)}
-                  />
-                </main>
               </React.Fragment>
           ))}
           <CusButton
@@ -120,6 +130,7 @@ export const ConfigSelfAddress = () => {
               onClick={() => addOne()}
           >新增</CusButton>
         </Box>
+        <AddressModal/>
       </div>
   )
 }

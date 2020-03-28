@@ -140,7 +140,7 @@ export const EditModal = (
           'id', 'name', 'remark', 'is_hot', 'is_new', 'stock', 'unit',
           'weight', 'price_in', 'price_out', 'price_market', 'brand',
           'is_group', 'group_amount', 'group_precision', 'group_remark',
-          'groupAmountUnit',
+          'groupAmountUnit', 'packingUnit',
         ]),
         shelvesTypes: editData.shelvesTypes?.filter?.(v => v)?.join(','),
         category_id: threeCode,
@@ -322,15 +322,15 @@ export const EditModal = (
               />
               <CusSelectField
                   label="包装单位"
-                  value={editData.unit}
+                  value={editData.packingUnit}
                   onChange={e => setEditData({
                     ...editData,
-                    unit: e.target.value
+                    packingUnit: e.target.value
                   })}
               >
                 {state.packingUnitList?.map(e => (
                     <MenuItem
-                        key={`unit${e.id}`}
+                        key={`packingUnit${e.id}`}
                         value={e.code}
                     >{e.name}</MenuItem>
                 ))}

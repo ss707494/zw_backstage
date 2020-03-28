@@ -11,7 +11,7 @@ import {useStoreModel, useStoreModelByType__Graphql} from "@/common/ModelAction/
 import {configDataModel} from '@/views/DataConfig/List/model'
 import {useParams} from 'react-router-dom'
 
-const Box = styled.div`
+export const Box = styled.div`
   display: grid;
   grid-template-columns: minmax(150px, max-content) repeat(2, minmax(200px, 500px)) 240px 450px;
   > * {
@@ -35,7 +35,7 @@ const Box = styled.div`
     grid-gap: 10px;
   }
 `
-const ImgBox = styled.section`
+export const ImgBox = styled.section`
   justify-content: center;
   > img {
     max-width: 200px;
@@ -50,20 +50,12 @@ export const ConfigThemeSelect = () => {
   const activeCode = routerParams?.dictType
   const {state: configState, actions: configActions} = useStoreModelByType__Graphql(configDataModel)
   const dataConfig = configState.dataConfig
-
-  // const {state: {configData}, actions} = useStoreModel(themeSelectModel)
   const {actions: editModalActions} = useStoreModel(editThemeModel)
-
   const selectProductModelData = useStoreModel(selectProductModel)
   const {actions: actionsSel} = selectProductModelData
 
-  // useEffect(() => {
-  //   if (dataConfig?.value) {
-  //     (actions.setConfigData)(fpMerge(themeSelectModel.state.configData, dataConfig.value))
-  //   }
-  // }, [actions, dataConfig.value])
   useEffect(() => {
-    (actionsSel.setDealOut)(async ({selectList, index}: { selectList: string[]; index: number }) => {
+    actionsSel.setDealOut(async ({selectList, index}: { selectList: string[]; index: number }) => {
       configActions.setDataConfig(fpSet(dataConfig.value, ['list', index, 'selectProductList'], selectList))
       await configActions.saveDataConfig()
       await configActions.getDataConfig(activeCode)
@@ -114,7 +106,7 @@ export const ConfigThemeSelect = () => {
                       src={dealImgUrl(v.imgUrl)}
                       alt=""/>
                 </ImgBox>
-                <section>{`${formatDate(v.startTime, 'yyyy/MM/dd HH:mm')}`}-{`${formatDate(v.endTime, 'yyyy/MM/dd HH:mm')}`}</section>
+                <section>{`${formatDate(v.startTime, 'yyyy/MM/dd')}`}-{`${formatDate(v.endTime, 'yyyy/MM/dd')}`}</section>
               </React.Fragment>
           ))}
           <footer>

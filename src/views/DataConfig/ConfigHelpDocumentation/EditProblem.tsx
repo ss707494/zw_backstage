@@ -7,12 +7,14 @@ import {configHelpDocumentationModel} from "@/views/DataConfig/ConfigHelpDocumen
 import {useStoreModel, useStoreModelByType__Graphql} from "@/common/ModelAction/useStore"
 import _ from 'lodash'
 import {configDataModel} from '@/views/DataConfig/List/model'
+import { useParams } from "react-router-dom";
+import {saveDataConfig} from '@/common/graphqlTypes/graphql/doc'
 
 export const editProblemModel = modalModelFactory('editProblem', {
   problem: '',
   answer: '',
   sort: 0,
-  index: 0,
+  index: -1,
 })
 
 const editProblem = (pre: any, modalData: any, actType: any) => {
@@ -24,20 +26,25 @@ const addProblem = (pre: any, modalData: any, actType: any) => fpSet(pre, ['prob
 ])
 
 export const EditProblem = () => {
-  const {state: configState, actions: configActions} = useStoreModelByType__Graphql(configDataModel)
+  const routerParams = useParams<any>()
+  const activeCode = routerParams?.dictType
+
+  const {state: configState, actions: configActions, getLoad} = useStoreModelByType__Graphql(configDataModel)
 
   const {state} = useStoreModel(configHelpDocumentationModel)
   const {state: editState, actions: editActions} = useStoreModel(editProblemModel)
   const modalData = editState.modalData
   const setModalData = (editActions.setModal)
-  const handleSave = () => {
+  const handleSave = async () => {
     if (modalData?.problem && modalData?.answer && modalData?.sort) {
       if (modalData?.index > -1) {
         configActions.setDataConfig(editProblem(configState.dataConfig.value, modalData, state.actType))
       } else {
         configActions.setDataConfig(addProblem(configState.dataConfig.value, modalData, state.actType))
       }
-      (editActions.onClose)({})
+      await configActions.saveDataConfig()
+      await configActions.getDataConfig(activeCode)
+      editActions.onClose({})
     }
   }
 
@@ -78,6 +85,7 @@ export const EditProblem = () => {
         <DialogActions>
           <CusButton
               fullWidth
+              loading={getLoad(saveDataConfig)}
               variant={"contained"}
               color={"primary"}
               onClick={handleSave}

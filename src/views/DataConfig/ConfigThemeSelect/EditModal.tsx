@@ -12,10 +12,11 @@ import {editThemeModel} from "@/views/DataConfig/ConfigThemeSelect/model/editThe
 import {CusButton} from "@/component/CusButton"
 import {ImgUpload} from "@/component/ImgUpload"
 import styled from "styled-components"
-import {KeyboardDateTimePicker} from "@material-ui/pickers"
+import {KeyboardDatePicker} from "@material-ui/pickers"
 import {useStoreModel, useStoreModelByType__Graphql} from "@/common/ModelAction/useStore"
 import {fileUploadAjax, fpMerge, fpSet} from '@/common/utils'
 import {configDataModel} from '@/views/DataConfig/List/model'
+import {endOfDay} from "date-fns"
 
 export declare type ConfigThemeSelectTs = {
   title: string
@@ -107,8 +108,8 @@ export const EditModal = () => {
             <FormLabel>
               有效日期-开始
             </FormLabel>
-            <KeyboardDateTimePicker
-                format={'yyyy/MM/dd HH:mm'}
+            <KeyboardDatePicker
+                format={'yyyy/MM/dd'}
                 value={state.modalData.startTime || null}
                 onChange={date => (actions.setModal)({
                   startTime: date,
@@ -121,11 +122,11 @@ export const EditModal = () => {
             <FormLabel>
               有效日期-结束
             </FormLabel>
-            <KeyboardDateTimePicker
-                format={'yyyy/MM/dd HH:mm'}
+            <KeyboardDatePicker
+                format={'yyyy/MM/dd'}
                 value={state.modalData.endTime || null}
                 onChange={date => (actions.setModal)({
-                  endTime: date,
+                  endTime: endOfDay(date ?? 0),
                 })}
             />
           </FormControl>

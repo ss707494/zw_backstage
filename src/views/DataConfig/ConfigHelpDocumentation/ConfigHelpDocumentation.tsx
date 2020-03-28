@@ -1,5 +1,4 @@
 import React, {useCallback, useEffect} from "react"
-import {HeaderAction} from "@/views/DataConfig/component/HeaderAction/HeaderAction"
 import {Tab, Tabs} from "@material-ui/core"
 import {AddCircleOutline} from "@material-ui/icons"
 import {fpMerge} from "@/common/utils"
@@ -10,11 +9,10 @@ import {grey} from "@material-ui/core/colors"
 import {CusButton} from "@/component/CusButton"
 import _ from "lodash"
 import {ProblemBox} from "@/views/DataConfig/ConfigHelpDocumentation/ProblemBox"
-import {
-  configHelpDocumentationModel,
-} from "@/views/DataConfig/ConfigHelpDocumentation/model"
+import {configHelpDocumentationModel} from "@/views/DataConfig/ConfigHelpDocumentation/model"
 import {useStoreModel, useStoreModelByType__Graphql} from "@/common/ModelAction/useStore"
 import {configDataModel} from '@/views/DataConfig/List/model'
+import {useParams} from 'react-router-dom'
 
 const Box = styled.div`
   display: grid;
@@ -30,20 +28,22 @@ const MainBox = styled.main`
 `
 
 export const ConfigHelpDocumentation = () => {
+  const routerParams = useParams<any>()
+  const activeCode = routerParams?.dictType
   const {state: configState, actions: configActions} = useStoreModelByType__Graphql(configDataModel)
   const {dataConfig} = configState
 
   const addTypeModalState = useCommonModalState()
   const {state, actions} = useStoreModel(configHelpDocumentationModel)
-  const configData = state
-  const {actType} = configData
+  const {actType} = state
   const setActType = useCallback((actions.setActType), [])
   const setConfigData = configActions.setDataConfig
+
   useEffect(() => {
-    if (dataConfig?.value?.typeList?.length) {
+    if (dataConfig?.value?.typeList?.length && !actType.code) {
       setActType(dataConfig?.value?.typeList?.[0])
     }
-  }, [dataConfig.value, setActType])
+  }, [actType.code, dataConfig.value.typeList, setActType])
 
   const tabsChange = (item: DictType) => () => {
     setActType(item)
@@ -53,15 +53,17 @@ export const ConfigHelpDocumentation = () => {
       isEdit: false,
     })()
   }
-  const addTypeListAction = (modalData: any) => {
+  const addTypeListAction = async (modalData: any) => {
     setConfigData(fpMerge(dataConfig?.value, {
       typeList: [
-        ...configData?.typeList ?? [],
+        ...dataConfig?.value?.typeList ?? [],
         _.pick(modalData, ['name', 'code', 'sort']),
       ],
     }))
+    await configActions.saveDataConfig()
+    await configActions.getDataConfig(activeCode)
   }
-  const editTypeAction = (modalData: any) => {
+  const editTypeAction = async (modalData: any) => {
     setConfigData(fpMerge(dataConfig?.value, {
       typeList: [
         ...dataConfig?.value?.typeList.map((v: any) => {
@@ -71,11 +73,11 @@ export const ConfigHelpDocumentation = () => {
       ],
     }))
     setActType(modalData)
+    await configActions.saveDataConfig()
+    await configActions.getDataConfig(activeCode)
   }
   return (
       <Box>
-        <HeaderAction
-        />
         <TabsBox
             value={actType?.code || 'add'}
         >
@@ -99,12 +101,10 @@ export const ConfigHelpDocumentation = () => {
                 onClick={addTypeModalState.openClick({
                   ...actType,
                   isEdit: true,
-                })
-                }
+                })}
             >编辑类型</CusButton>
           </header>
-          <ProblemBox
-          />
+          <ProblemBox/>
         </>
         }</MainBox>
         <AddType

@@ -80,6 +80,13 @@ export const List = () => {
                 variant={"outlined"}
                 onClick={() => actions.getList()}
             >搜索</SButton>
+            <SButton
+                variant={"outlined"}
+                onClick={() => {
+                  actions.clearSearch()
+                  actions.getList()
+                }}
+            >重置</SButton>
           </SearchBox>
         </header>
         <main>

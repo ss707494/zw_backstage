@@ -59,6 +59,7 @@ const useTypeObj = () => {
       setTypeHelpObj(pre => ({
         ...pre,
         typeTwo: '',
+        typeThree: '',
         res: '',
       }))
       getTypeOptionTwo({
@@ -72,6 +73,8 @@ const useTypeObj = () => {
       })
       setTypeHelpObj(pre => ({
         ...pre,
+        typeTwo: '',
+        typeThree: '',
         res: typeHelpObj.typeOne,
       }))
     }
@@ -101,6 +104,7 @@ const useTypeObj = () => {
       })
       setTypeHelpObj(pre => ({
         ...pre,
+        typeThree: '',
         res: typeHelpObj.typeTwo,
       }))
     }
@@ -385,7 +389,7 @@ export const Product = ({ theme, match }) => {
               : <S.Table theme={theme}>
                 <TableHead>
                   <TableRow>
-                    {['商品编号', '中文名称', '图片', '上架类型', '库存', '进货价格', '市场价格', '售卖价格', '重量', '单位']
+                    {['商品编号', '中文名称', '图片', '上架类型', '库存', '包装单位', '进货价格', '市场价格', '售卖价格', '重量', '单位']
                         .map(e => <TableCell key={`TableHead${e}`}>
                           {e}
                         </TableCell>)
@@ -428,6 +432,9 @@ export const Product = ({ theme, match }) => {
                     </TableCell>
                     <TableCell>
                       {e?.stock}
+                    </TableCell>
+                    <TableCell>
+                      {state.packingUnitList?.find(v => v.code === e?.packingUnit)?.name}
                     </TableCell>
                     <TableCell>{e?.price_in}</TableCell>
                     <TableCell>{e?.price_out}</TableCell>
