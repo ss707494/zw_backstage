@@ -43,7 +43,7 @@ export const ConfigHelpDocumentation = () => {
     if (dataConfig?.value?.typeList?.length && !actType.code) {
       setActType(dataConfig?.value?.typeList?.[0])
     }
-  }, [actType.code, dataConfig.value.typeList, setActType])
+  }, [actType.code, dataConfig.value, setActType])
 
   const tabsChange = (item: DictType) => () => {
     setActType(item)

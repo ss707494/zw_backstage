@@ -233,7 +233,7 @@ export const Category = ({ theme }) => {
                     }</TableCell>
                     <TableCell>{e?.name}</TableCell>
                     <TableCell>{e?.name}</TableCell>
-                    <TableCell>{e?.p2_name ?? ''}{e?.p3_name ? `-${e?.p3_name}` : ''}</TableCell>
+                    <TableCell>{e?.p3_name ? `${e?.p3_name}-` : ''}{e?.p2_name ? `${e?.p2_name}` : ''}</TableCell>
                     <TableCell>
                       <S.ActionTableCell>
                         <Button

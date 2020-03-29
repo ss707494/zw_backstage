@@ -80,6 +80,7 @@ type OrderInfo {
     addressId: String
     couponDiscount: Float
     createTime: Timestamp
+    currentUserLevel: String
     deductCoin: Float
     discountProductTotal: Float
     finishTime: Timestamp
@@ -95,6 +96,7 @@ type OrderInfo {
     rOrderProduct: [ROrderProduct!]
     rOrderUser: ROrderUser
     saleTax: Float
+    selfAddressId: String
     state: Float
     subtotal: Float
     transportationCosts: Float
@@ -145,6 +147,28 @@ type Product {
     weight: Float
 }
 
+type PromoCode {
+    code: String
+    createTime: Timestamp
+    discountAmount: Float
+    discountCondition: String
+    discountConditionAmount: Float
+    discountType: String
+    effectiveDateEnd: Timestamp
+    effectiveDateStart: Timestamp
+    id: String
+    imgUrl: String
+    isDelete: Float
+    isDisable: Float
+    name: String
+    productCategory: String
+    promoCodeType: String
+    remark: String
+    reuseTimes: Float
+    title: String
+    updateTime: Timestamp
+}
+
 type Query {
     getCategory(categoryInput: CategoryInput): Category
     getCategoryList(categoryInput: CategoryInput): CategoryPage
@@ -153,6 +177,7 @@ type Query {
     getDictTypeList: [DictTypeFirst]
     orderList(orderInput: OrderInput): OrderPage
     orderListTotal(orderInput: OrderInput): Float
+    promoCodeList(promoCodeItemInput: PromoCodeItemInput): [PromoCode]
     userInfo: User
     userList(userListInput: UserListInput): UserPage
 }
@@ -338,6 +363,7 @@ input OrderInfoItemInput {
     addressId: String
     couponDiscount: Float
     createTime: Timestamp
+    currentUserLevel: String
     deductCoin: Float
     discountProductTotal: Float
     finishTime: Timestamp
@@ -353,6 +379,7 @@ input OrderInfoItemInput {
     rOrderProduct: [ROrderProductItemInput!]
     rOrderUser: ROrderUserItemInput
     saleTax: Float
+    selfAddressId: String
     state: Float
     subtotal: Float
     transportationCosts: Float
@@ -414,6 +441,28 @@ input ProductItemInput {
     unit: String
     updateTime: Timestamp
     weight: Float
+}
+
+input PromoCodeItemInput {
+    code: String
+    createTime: Timestamp
+    discountAmount: Float
+    discountCondition: String
+    discountConditionAmount: Float
+    discountType: String
+    effectiveDateEnd: Timestamp
+    effectiveDateStart: Timestamp
+    id: String
+    imgUrl: String
+    isDelete: Float
+    isDisable: Float
+    name: String
+    productCategory: String
+    promoCodeType: String
+    remark: String
+    reuseTimes: Float
+    title: String
+    updateTime: Timestamp
 }
 
 input ROrderProductItemInput {

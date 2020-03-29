@@ -6,7 +6,7 @@ module.exports = function(app) {
     // target: 'http://rap2api.taobao.org/app/mock/222495',
     // target: 'http://128.14.236.90:4433/mock/5d347e552b71b967c8c62b82/api/',
     // target: 'http://www.marketpayless.com',
-    target: 'http://47.52.230.148:4464',
+    target: 'http://47.75.157.220:4464',
     changeOrigin: true,
     pathRewrite: {
     }
@@ -43,7 +43,7 @@ module.exports = function(app) {
     // target: 'http://rap2api.taobao.org/app/mock/222495',
     // target: 'http://128.14.236.90:4433/mock/5d347e552b71b967c8c62b82/api/',
     // target: 'http://www.marketpayless.com',
-    target: 'http://47.52.230.148:4464',
+    target: 'http://47.75.157.220:4464',
     changeOrigin: true,
     pathRewrite: {
     }

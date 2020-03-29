@@ -3,7 +3,6 @@ import React from 'react'
 import {mergeModel} from '@/common/ModelAction/modelUtil'
 import {modalModelFactory} from '@/common/model/modal'
 import {useStoreModelByType__Graphql} from '@/common/ModelAction/useStore'
-import {fpMerge} from '@/common/utils'
 import {CusButton} from '@/component/CusButton'
 import styled from 'styled-components'
 
@@ -87,20 +86,7 @@ export const AddressModalModel = mergeModel(modalModelFactory('address', {
   apartment: '', city: '',
   province: '', streetAddress: '',
 } as AddressInfoDialog), 'addressModal', {
-  resolve: (() => {
-  }) as ResolverFun,
 }, {
-  openClickPromise: (value, option) => {
-    return new Promise(resolve => {
-      option.setData(preData => fpMerge(preData, {
-        open: true,
-        modalData: value,
-        isEdit: -1,
-        resolve: resolve,
-      }))
-    })
-  },
-
 })
 
 export const AddressModal = () => {
@@ -163,7 +149,7 @@ export const AddressModal = () => {
                 fullWidth
                 variant={"contained"}
                 onClick={async () => {
-                  await state.resolve(modalData)
+                  await state.openResolve(modalData)
                 }}
             >保存</CusButton>
           </footer>

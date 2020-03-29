@@ -60,9 +60,10 @@ export const OrderProductModal = () => {
   const theme = useTheme()
   const listModel = useStoreModelByType__Graphql(orderListModel)
   const {actions, state} = listModel
-  const {open, modalData, orderStateOption} = state
+  const {open, modalData, orderStateOption, selfAddressConfig} = state
   const handleClose = actions.onClose
   const {productList, orderDetail} = modalData
+  console.log(selfAddressConfig)
 
   return (
       <Dialog
@@ -110,13 +111,26 @@ export const OrderProductModal = () => {
               <aside>{'运送方式'}</aside>
               <main>{dictAllListState?.deliveryTypeList?.find(value => value.code === orderDetail?.pickUpType)?.name}</main>
               <aside>{'运送地址'}</aside>
-              <main>{orderDetail?.userAddress?.combineAddress}</main>
+              <main>
+                {(() => {
+                  if (orderDetail?.pickUpType === 'Delivery') {
+                    return <section>
+                      <header>{orderDetail?.userAddress?.name}</header>
+                      <main>{orderDetail?.userAddress?.address}</main>
+                      <footer>{orderDetail?.userAddress?.city} {orderDetail?.userAddress?.province} {orderDetail?.userAddress?.zip}</footer>
+                    </section>
+                  } else {
+                    const item = selfAddressConfig?.list?.find((v: any) => v.id === orderDetail?.selfAddressId) ?? {}
+                    return <section>
+                      <header>{item.fullName}</header>
+                      <main>{item.apartment} {item.streetAddress}</main>
+                      <footer>{item.city} {item.province} {item.zip}</footer>
+                    </section>
+                  }
+                })()}
+              </main>
               <aside>{'邮编'}</aside>
               <main>{orderDetail?.userAddress?.zip}</main>
-              <aside>{'电话'}</aside>
-              <main>{orderDetail?.user?.userInfo?.phone}</main>
-              <aside>{'邮件'}</aside>
-              <main>{orderDetail?.user?.userInfo?.email}</main>
             </SendInfo>
             <UserInfo>
               <aside>{'姓名'}</aside>
@@ -125,6 +139,10 @@ export const OrderProductModal = () => {
               <main>{'信用卡'}</main>
               <aside>{'支付信用卡'}</aside>
               <main>{orderDetail.userPayCard?.number}</main>
+              <aside>{'电话'}</aside>
+              <main>{orderDetail?.user?.userInfo?.phone}</main>
+              <aside>{'邮件'}</aside>
+              <main>{orderDetail?.user?.userInfo?.email}</main>
             </UserInfo>
           </DetailBox>
           <Table theme={theme}>
@@ -169,7 +187,7 @@ export const OrderProductModal = () => {
               <TableRow>
                 <TableCell colSpan={3}/>
                 <TableCell>运费</TableCell>
-                <TableCell>{dealMoney(orderDetail.transportationCosts, '-')}</TableCell>
+                <TableCell>{dealMoney(orderDetail.transportationCosts)}</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell colSpan={3}/>
@@ -179,7 +197,7 @@ export const OrderProductModal = () => {
               <TableRow>
                 <TableCell colSpan={3}/>
                 <TableCell>消费税</TableCell>
-                <TableCell>{dealMoney(orderDetail.saleTax, '-')}</TableCell>
+                <TableCell>{dealMoney(orderDetail.saleTax)}</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell colSpan={3}/>
@@ -190,7 +208,7 @@ export const OrderProductModal = () => {
                   style={{background: green[100]}}
               >
                 <TableCell colSpan={2}/>
-                <TableCell>{dictAllListState.userLevelList?.find(value => value.code === orderDetail.user?.userInfo?.userLevel)?.name}</TableCell>
+                <TableCell>{dictAllListState.userLevelList?.find(value => value.code === orderDetail.currentUserLevel)?.name}</TableCell>
                 <TableCell>获得达人币</TableCell>
                 <TableCell>{dealMoney(orderDetail.generateCoin)}</TableCell>
               </TableRow>

@@ -9,6 +9,7 @@ import {fileUploadAjax, fpMerge, fpRemove, fpSet} from '@/common/utils'
 import {AddressInfoDialog, AddressModal, AddressModalModel} from '@/views/DataConfig/ConfigSelfAddress/AddressModal'
 
 interface SelfAddress extends AddressInfoDialog {
+  id: string
   name: string
   imgUrl: string
   address: string
@@ -47,7 +48,9 @@ export const ConfigSelfAddress = () => {
     actions.setDataConfig(fpMerge(configValue, {
       list: [
         ...configValue.list ?? [],
-        {} as SelfAddress,
+        {
+          id: `${new Date().getTime()}`,
+        } as SelfAddress,
       ],
     }))
   }
@@ -94,7 +97,7 @@ export const ConfigSelfAddress = () => {
                   <CusButton
                       variant={'outlined'}
                       onClick={async () => {
-                        const res = await addressModalModelActions.openClickPromise({...item})
+                        const res = await addressModalModelActions.openClick({...item})
                         actions.setDataConfig(fpSet(configValue, ['list', index], preData => ({
                           ...preData,
                           ...res,

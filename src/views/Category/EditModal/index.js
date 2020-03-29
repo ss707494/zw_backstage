@@ -121,7 +121,7 @@ export const EditModal = (
       const uploadRes = await fileUploadAjax({},[imgFile], '/api/fileUpload')
       img_url = uploadRes?.data?.files?.[0]?.url ?? ''
     }
-    const parent_id = twoCode || oneCode || ''
+    const parent_id = twoCode || oneCode || 'root'
     const {
       save_category: {
         flag,

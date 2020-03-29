@@ -79,6 +79,14 @@ export const EditModal = ({
     if (open && modalData?.id) {
       let categoryIds: string[] = []
       let dealCategory = modalData?.category_data
+      if (!modalData?.category_data) {
+        setLinkData({
+          oneCode: 'nolimit',
+          twoCode: '',
+          threeCode: '',
+        })
+        return
+      }
       while (dealCategory?.id) {
         categoryIds = [dealCategory?.id, ...categoryIds]
         if (dealCategory?.parent_data?.id) {
@@ -237,7 +245,7 @@ export const EditModal = ({
                   })}
               >
                 <MenuItem
-                    value={''}
+                    value={'nolimit'}
                 >{'无限制'}</MenuItem>
                 {one?.map((e: any) => (
                     <MenuItem

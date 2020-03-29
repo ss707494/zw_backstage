@@ -86,6 +86,8 @@ export const getOrderListDoc = gql`
         pickUpType
         deductCoin
         generateCoin
+        selfAddressId
+        currentUserLevel
     }
     fragment ProductFields on Product {
         id
@@ -198,6 +200,14 @@ export const getOrderListDoc = gql`
             type
             value
         }
+        selfAddressConfig: getDataConfig (dataConfigInput: {
+            type: "SelfAddress"
+        }) {
+            id
+            name
+            type
+            value
+        }
     }
 `
 
@@ -299,3 +309,30 @@ export const saveDictTypeFirstDco = gql`
       }
   }
 `
+
+export const promoCodeListDoc = gql`
+    query($data: PromoCodeItemInput) {
+        promoCodeList(promoCodeItemInput: $data) {
+            id
+            name
+            createTime
+            updateTime
+            isDelete
+            remark
+            title
+            discountType
+            discountAmount
+            discountCondition
+            discountConditionAmount
+            productCategory
+            imgUrl
+            effectiveDateStart
+            effectiveDateEnd
+            promoCodeType
+            reuseTimes
+            code
+            isDisable
+        }
+    }
+`
+

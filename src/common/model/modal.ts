@@ -6,17 +6,24 @@ export interface ModalModel<T> {
   modalData: T
 }
 
+type ResolverFun = (value: any) => any
+
 export const modalModelFactory = <T>(name: string, initData: T) => modelFactory(`${name}_modalModelFactory`, {
   modalData: initData,
   open: false,
   isEdit: -1,
+  openResolve: (() => {
+  }) as ResolverFun,
 }, {
   openClick: (value, {setData}) => {
-    return setData(preData => fpMerge(preData, {
-      open: true,
-      modalData: value,
-      isEdit: -1,
-    }))
+    return new Promise(resolve => {
+      setData(preData => fpMerge(preData, {
+        open: true,
+        modalData: value,
+        isEdit: -1,
+        openResolve: resolve,
+      }))
+    })
   },
   openEditClick: (value: { data: any; index: number }, {setData}) => setData(pre => fpMerge(pre, {
     open: true,

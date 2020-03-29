@@ -10,6 +10,8 @@ const list = [
   ['热销排行', 'salesRank'],
   ['主题甄选', 'themeSelection'],
   ['猜你喜欢', 'mayLike'],
+]
+const groupList = [
   ['冲线排行', 'lineRanking'],
   ['热门排行', 'topRanking'],
 ]
@@ -22,6 +24,7 @@ export const ConfigAppModule = () => {
       <div>
         <HeaderAction/>
         <main>
+          <h3>首页</h3>
           {list.map(item => <FormControlLabel
               key={`ConfigApp_${item[1]}`}
               label={item[0]}
@@ -33,7 +36,18 @@ export const ConfigAppModule = () => {
                   name="checkedA"
               />}
           />)}
-
+          <h3>团购</h3>
+          {groupList.map(item => <FormControlLabel
+              key={`ConfigApp_${item[1]}`}
+              label={item[0]}
+              control={<Checkbox
+                  checked={value?.[item[1]] ?? false}
+                  onChange={(e) => {
+                    actions.setDataConfig(fpSet(value, [item[1]], preData => !preData))
+                  }}
+                  name="checkedA"
+              />}
+          />)}
         </main>
       </div>
   )

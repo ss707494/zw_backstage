@@ -28,7 +28,7 @@ export declare type ConfigThemeSelectTs = {
   isDisabled: number
 }
 
-const FullTextField:React.ComponentType<TextFieldProps> = (props) => <TextField
+const FullTextField: React.ComponentType<TextFieldProps> = (props) => <TextField
     fullWidth
     color={"secondary"}
     {...props}
@@ -54,11 +54,12 @@ const updateOne = async (value: { configThemeSelect: ConfigThemeSelectTs; imgFil
   } else {
     return fpMerge(pre, {
       list: [
-        ...pre?.list,
+        ...pre?.list ?? [],
         {
+          id: `${new Date().getTime()}`,
           ...value.configThemeSelect,
           imgUrl: uploadRes,
-        }
+        },
       ],
     })
   }

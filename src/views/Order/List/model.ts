@@ -31,6 +31,7 @@ export const orderListModel = mergeModel(mergeThreeModel(modalModelFactory('orde
   total: 0,
   orderStateOption: {} as HelpObj<string>,
   orderStateSelected: '',
+  selfAddressConfig: {} as HelpObj,
 }, {
   getList: async (value, option) => {
     const res = await option.query(getOrderListDoc, {
@@ -41,6 +42,7 @@ export const orderListModel = mergeModel(mergeThreeModel(modalModelFactory('orde
     option.setData(fpMergePre({
       ...res?.orderList,
       orderStateOption: res?.getDataConfig?.value,
+      selfAddressConfig: res?.selfAddressConfig?.value,
     }))
   },
   clearSearch: (value, option) => option.setData(fpSetPre('searchParams', initSearch)),
