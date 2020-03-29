@@ -1,5 +1,5 @@
 import {modelFactory} from '@/common/ModelAction/modelUtil'
-import {fpMergePre} from '@/common/utils'
+import {fpMergePre, fpSetPre} from '@/common/utils'
 import {getDataConfigDoc, saveDataConfig} from '@/common/graphqlTypes/graphql/doc'
 import {DataConfig, DataConfigItemInput} from '@/common/graphqlTypes/types'
 
@@ -16,6 +16,7 @@ export const configDataModel = modelFactory('configDataModel', {
       originDataConfig: res?.getDataConfig ?? {},
     }))
   },
+  cleanDataConfig: (value, option) => option.setData(fpSetPre(['dataConfig', 'value'], {})),
   setDataConfig: (value: DataConfig, option) => {
     option.setData(fpMergePre({
       dataConfig: {

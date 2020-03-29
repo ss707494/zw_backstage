@@ -56,6 +56,7 @@ export const ConfigHomeCarousel = () => {
                         actions.setDataConfig(fpSet(value, ['list', index], { ...res }))
                         await actions.saveDataConfig()
                         await actions.getDataConfig(activeCode)
+                        configHomeCarouselModalModelActions.onClose()
                       }}
                   >
                     编辑
@@ -116,6 +117,7 @@ export const ConfigHomeCarousel = () => {
                   }))
                   await actions.saveDataConfig()
                   await actions.getDataConfig(activeCode)
+                  configHomeCarouselModalModelActions.onClose()
                 }}
             >新增</CusButton>
           </footer>

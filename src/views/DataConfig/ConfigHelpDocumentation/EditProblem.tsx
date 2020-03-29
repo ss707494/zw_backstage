@@ -1,13 +1,13 @@
 import {Dialog, DialogActions, DialogContent, TextField} from "@material-ui/core"
-import React from "react";
+import React from "react"
 import {fpSet, parseFloatForInput} from "@/common/utils"
-import {CusButton} from "@/component/CusButton";
+import {CusButton} from "@/component/CusButton"
 import {modalModelFactory} from "@/common/model/modal"
 import {configHelpDocumentationModel} from "@/views/DataConfig/ConfigHelpDocumentation/model"
 import {useStoreModel, useStoreModelByType__Graphql} from "@/common/ModelAction/useStore"
 import _ from 'lodash'
 import {configDataModel} from '@/views/DataConfig/List/model'
-import { useParams } from "react-router-dom";
+import {useParams} from "react-router-dom"
 import {saveDataConfig} from '@/common/graphqlTypes/graphql/doc'
 
 export const editProblemModel = modalModelFactory('editProblem', {
@@ -18,11 +18,11 @@ export const editProblemModel = modalModelFactory('editProblem', {
 })
 
 const editProblem = (pre: any, modalData: any, actType: any) => {
-  return fpSet(pre, ['problemListData', actType.code, modalData?.index], _.pick(modalData, ['answer', 'sort', 'problem']))
+  return fpSet(pre, ['problemListData', actType.id, modalData?.index], _.pick(modalData, ['answer', 'sort', 'problem']))
 }
-const addProblem = (pre: any, modalData: any, actType: any) => fpSet(pre, ['problemListData', actType.code], preData  => [
+const addProblem = (pre: any, modalData: any, actType: any) => fpSet(pre, ['problemListData', actType.id], preData => [
   ...preData ?? [],
-  modalData
+  {...modalData, id: `${new Date().getTime()}`},
 ])
 
 export const EditProblem = () => {
@@ -31,7 +31,7 @@ export const EditProblem = () => {
 
   const {state: configState, actions: configActions, getLoad} = useStoreModelByType__Graphql(configDataModel)
 
-  const {state} = useStoreModel(configHelpDocumentationModel)
+  const {state} = useStoreModelByType__Graphql(configHelpDocumentationModel)
   const {state: editState, actions: editActions} = useStoreModel(editProblemModel)
   const modalData = editState.modalData
   const setModalData = (editActions.setModal)

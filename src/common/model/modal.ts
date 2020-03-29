@@ -30,10 +30,13 @@ export const modalModelFactory = <T>(name: string, initData: T) => modelFactory(
     modalData: value.data,
     isEdit: value.index,
   })),
-  onClose: (value, {setData}) => setData(pre => fpMerge(fpSet(pre, 'modalData', {}), {
-    modalData: initData,
-    open: false,
-  })),
+  onClose: (value, {data, setData}) => {
+    data.openResolve(false)
+    setData(pre => fpMerge(fpSet(pre, 'modalData', {}), {
+      modalData: initData,
+      open: false,
+    }))
+  },
   setModal: (value: T | any, {setData}) => setData(data => fpMerge(data, {
     modalData: value,
   })),

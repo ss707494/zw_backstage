@@ -8,13 +8,13 @@ import {useStoreModel, useStoreModelByType__Graphql} from "@/common/ModelAction/
 import {configDataModel} from '@/views/DataConfig/List/model'
 import {fpRemove, fpSet} from '@/common/utils'
 import {showConfirm} from '@/component/ConfirmDialog'
-import { useParams } from "react-router-dom"
+import {useParams} from "react-router-dom"
+import {MenuItem, TextField} from '@material-ui/core'
 
 const ProblemBoxStyle = styled.div`
   display: grid;
   margin-top: 15px;
   padding: 10px;
-  border: 1px solid ${grey[200]};
   grid-template-columns: max-content repeat(4, minmax(120px, 520px));
   > * {
     padding: 8px;
@@ -37,8 +37,12 @@ const ProblemBoxStyle = styled.div`
       overflow: hidden;
     }
   }
-  > footer {
+  > header {
     border: 0;
+    grid-column: 1 / 6;
+    justify-self: start;
+    grid-template-columns: repeat(2, 140px);
+    grid-gap: 20px;
   }
 
 `
@@ -50,11 +54,11 @@ export const ProblemBox = () => {
   const {state: configState, actions: configActions} = useStoreModelByType__Graphql(configDataModel)
   const {dataConfig} = configState
 
-  const {state} = useStoreModel(configHelpDocumentationModel)
+  const {state, actions: configHelpDocumentationModelActions} = useStoreModelByType__Graphql(configHelpDocumentationModel)
   const actType = state.actType
   const {actions} = useStoreModel(editProblemModel)
 
-  const problemList: Problem[] = dataConfig.value?.problemListData?.[actType.code] ?? []
+  const problemList: Problem[] = dataConfig.value?.problemListData?.[actType.id] ?? []
 
   const addOne = () => {
     actions.openClick({})
@@ -67,17 +71,17 @@ export const ProblemBox = () => {
       message: `确定删除吗?`,
       callBack: async (res) => {
         if (!res) return
-        configActions.setDataConfig(fpSet(dataConfig.value, ['problemListData', actType.code], preData => fpRemove(preData, index)))
+        configActions.setDataConfig(fpSet(dataConfig.value, ['problemListData', actType.id], preData => fpRemove(preData, index)))
         await configActions.saveDataConfig()
         await configActions.getDataConfig(activeCode)
       }
     })
   }
   const changeSort = async ({index, type}: { index: number, type: number }) => {
-    const curData = dataConfig.value?.problemListData?.[actType.code]?.[index]
-    const changeData = dataConfig.value?.problemListData?.[actType.code]?.[index + type]
+    const curData = dataConfig.value?.problemListData?.[actType.id]?.[index]
+    const changeData = dataConfig.value?.problemListData?.[actType.id]?.[index + type]
     if (curData && changeData) {
-      configActions.setDataConfig(fpSet(dataConfig.value, ['problemListData', actType.code], preData => fpSet(fpSet(preData, [index + type], {
+      configActions.setDataConfig(fpSet(dataConfig.value, ['problemListData', actType.id], preData => fpSet(fpSet(preData, [index + type], {
         ...changeData,
         sort: curData.sort,
       }), [index], {
@@ -91,6 +95,28 @@ export const ProblemBox = () => {
 
   return (
       <ProblemBoxStyle>
+        <header>
+          <TextField
+              select
+              label={'分类'}
+              value={actType?.id || ''}
+              onChange={(e) => {
+                const item = state?.typeList?.find((v: any) => v.id === e.target.value)
+                configHelpDocumentationModelActions.setActType(item)
+              }}
+          >
+            {state?.typeList?.map((item: DictType) => (
+                <MenuItem
+                    key={`configData?.typeList${item.code}`}
+                    value={item.id}
+                >{item.name}</MenuItem>
+            )) ?? <MenuItem/>}
+          </TextField>
+          <CusButton
+              variant={"outlined"}
+              onClick={addOne}
+          >添加问题</CusButton>
+        </header>
         {['操作', '问题', '答案', '序号', '排序'].map(value => <div
             key={`${value}`}
             style={{textAlign: 'center'}}
@@ -119,12 +145,6 @@ export const ProblemBox = () => {
             >下移</CusButton>
           </section>
         </React.Fragment>))}
-        <footer>
-          <CusButton
-              variant={"outlined"}
-              onClick={addOne}
-          >添加问题</CusButton>
-        </footer>
         <EditProblem
         />
       </ProblemBoxStyle>

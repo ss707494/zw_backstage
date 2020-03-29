@@ -14,6 +14,7 @@ declare interface CommonModalState {
 }
 
 declare interface DictType {
+  id?: string
   name: string
   code: string
   sort?: number

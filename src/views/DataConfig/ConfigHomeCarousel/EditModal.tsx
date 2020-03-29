@@ -1,7 +1,7 @@
 import {Dialog, DialogContent, FormControl, FormLabel, MenuItem, TextField} from '@material-ui/core'
 import {mergeModel} from '@/common/ModelAction/modelUtil'
 import {modalModelFactory} from '@/common/model/modal'
-import React from 'react'
+import React, {useEffect} from 'react'
 import {useStoreModelByType__Graphql} from '@/common/ModelAction/useStore'
 import styled from 'styled-components'
 import {CusButton} from '@/component/CusButton'
@@ -100,6 +100,13 @@ export const ConfigHomeCarouselModal = () => {
   const {state, actions} = useStoreModelByType__Graphql(configHomeCarouselModalModel)
   const {onClose, getRelatedObjIdOptions} = actions
   const {open, modalData, relatedObjIdOptions} = state
+
+  useEffect(() => {
+    if (open && modalData.relatedObjType) {
+      actions.getRelatedObjIdOptions({type: modalData.relatedObjType})
+    }
+  }, [actions, modalData.relatedObjType, open])
+
   return (
       <Dialog
           onClose={() => onClose()}

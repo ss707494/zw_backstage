@@ -17,6 +17,7 @@ import {ConfigSelfAddress} from '@/views/DataConfig/ConfigSelfAddress/ConfigSelf
 import {CusButton} from '@/component/CusButton'
 import {AddOneConfigModal, addOneConfigModalModel} from '@/views/DataConfig/List/AddOneConfigModal'
 import {ConfigAppModule} from '@/views/DataConfig/ConfigAppModule/ConfigAppModule'
+import ConfigHelpType from '@/views/DataConfig/ConfigHelpDocumentationType/ConfigHelpType'
 
 const leftMenu: DictType[] = [
   {
@@ -34,6 +35,10 @@ const leftMenu: DictType[] = [
   {
     name: '运费设置',
     code: DictTypeEnum.Freight,
+  },
+  {
+    name: '帮助文档分类设置',
+    code: DictTypeEnum.HelpDocumentationType,
   },
   {
     name: '帮助文档设置',
@@ -65,6 +70,7 @@ const configCom: { [key: string]: any } = {
   [DictTypeEnum.GroupPrecision]: ConfigGroup,
   [DictTypeEnum.UserLevel]: ConfigUserLevel,
   [DictTypeEnum.Freight]: ConfigFreight,
+  [DictTypeEnum.HelpDocumentationType]: ConfigHelpType,
   [DictTypeEnum.HelpDocumentation]: ConfigHelpDocumentation,
   [DictTypeEnum.PromotionThemeSelect]: ConfigThemeSelect,
   [DictTypeEnum.PromotionFlashSale]: ConfigThemeSelect,
@@ -91,9 +97,10 @@ export const DataConfig = () => {
 
   const changeActiveCode = useCallback((newCode: string) => () => {
     if (!loading) {
+      actions.cleanDataConfig()
       history.push(`/dataConfig/${newCode}`)
     }
-  }, [loading])
+  }, [actions, loading])
 
   return (
       <S.Box>

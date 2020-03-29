@@ -2,6 +2,7 @@ export enum DictTypeEnum {
   GroupPrecision = 'GroupPrecision',
   UserLevel = 'UserLevel',
   Freight = 'Freight',
+  HelpDocumentationType = 'HelpDocumentationType',
   HelpDocumentation = 'HelpDocumentation',
   PromotionThemeSelect = 'PromotionThemeSelect',
   PromotionFlashSale = 'PromotionFlashSale',
