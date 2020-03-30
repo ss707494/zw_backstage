@@ -188,6 +188,7 @@ export const getOrderListDoc = gql`
                     city
                     contact
                     isDefault
+                    expirationTime
                 }
             }
             total

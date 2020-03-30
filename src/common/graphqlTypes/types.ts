@@ -636,6 +636,7 @@ export type UserPayCard = {
   contact?: Maybe<Scalars['String']>;
   isDefault?: Maybe<Scalars['Float']>;
   orderInfo?: Maybe<Array<Maybe<OrderInfo>>>;
+  expirationTime?: Maybe<Scalars['Timestamp']>;
 };
 
 export type UserPayCardItemInput = {
@@ -654,5 +655,6 @@ export type UserPayCardItemInput = {
   contact?: Maybe<Scalars['String']>;
   isDefault?: Maybe<Scalars['Float']>;
   orderInfo?: Maybe<Array<Maybe<OrderInfoItemInput>>>;
+  expirationTime?: Maybe<Scalars['Timestamp']>;
 };
 

@@ -2,9 +2,8 @@ import React, {useEffect} from "react"
 import {useStoreModelByType__Graphql} from "@/common/ModelAction/useStore"
 import {configDataModel} from '@/views/DataConfig/List/model'
 import {fileUploadAjax, fpMerge, fpSet} from '@/common/utils'
-import {Box as CarouselBox, ImgBox} from "../ConfigThemeSelect/ConfigThemeSelect"
+import {Box} from "../ConfigThemeSelect/ConfigThemeSelect"
 import {CusButton} from '@/component/CusButton'
-import {dealImgUrl} from '@/component/ImgDealUrl/ImgDealUrl'
 import {useParams} from "react-router-dom"
 import {
   ConfigHomeCarouselModal,
@@ -12,6 +11,7 @@ import {
   RelatedObjTypeEnum,
   RelatedObjTypeEnumString,
 } from '@/views/DataConfig/ConfigHomeCarousel/EditModal'
+import styled from 'styled-components'
 
 export declare type ConfigHomeCarouselTs = {
   name: string
@@ -21,6 +21,10 @@ export declare type ConfigHomeCarouselTs = {
   imgFile: any
   isDisabled: number
 }
+
+const CarouselBox = styled(Box)`
+    grid-template-columns: minmax(150px, max-content) repeat(2, minmax(200px, 500px)) 240px;
+`
 
 const getUploadUrl = async (file: any) => {
   return (await fileUploadAjax({}, [file], '/api/fileUpload'))?.data?.files?.[0]?.url ?? ''
@@ -42,7 +46,7 @@ export const ConfigHomeCarousel = () => {
   return (
       <div>
         <CarouselBox>
-          {['操作', '名称', '关联对象类型', '关联对象', '图片'].map(v => (<header key={`header_${v}`}>{v}</header>))}
+          {['操作', '名称', '关联对象类型', '关联对象'].map(v => (<header key={`header_${v}`}>{v}</header>))}
           {value?.list?.map((v: ConfigHomeCarouselTs, index: number) => (
               <React.Fragment key={`configData.list_${v.name}_${index}`}>
                 <aside>
@@ -91,11 +95,11 @@ export const ConfigHomeCarousel = () => {
                   )?.find((value1: any) => value1.id === v.relatedObjId)?.name
                   }
                 </section>
-                <ImgBox>
-                  <img
-                      src={dealImgUrl(v.imgUrl)}
-                      alt=""/>
-                </ImgBox>
+                {/*<ImgBox>*/}
+                {/*  <img*/}
+                {/*      src={dealImgUrl(v.imgUrl)}*/}
+                {/*      alt=""/>*/}
+                {/*</ImgBox>*/}
               </React.Fragment>
           ))}
           <footer>

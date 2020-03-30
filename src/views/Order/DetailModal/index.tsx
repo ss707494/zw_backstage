@@ -129,8 +129,6 @@ export const OrderProductModal = () => {
                   }
                 })()}
               </main>
-              <aside>{'邮编'}</aside>
-              <main>{orderDetail?.userAddress?.zip}</main>
             </SendInfo>
             <UserInfo>
               <aside>{'姓名'}</aside>
@@ -138,7 +136,11 @@ export const OrderProductModal = () => {
               <aside>{'支付方式'}</aside>
               <main>{'信用卡'}</main>
               <aside>{'支付信用卡'}</aside>
-              <main>{orderDetail.userPayCard?.number}</main>
+              <main>
+                <header>{orderDetail?.userPayCard?.code}</header>
+                <main>{formatDate(new Date(orderDetail?.userPayCard?.expirationTime), 'MM/yy')}</main>
+                <footer>{orderDetail?.userPayCard?.userName}</footer>
+              </main>
               <aside>{'电话'}</aside>
               <main>{orderDetail?.user?.userInfo?.phone}</main>
               <aside>{'邮件'}</aside>

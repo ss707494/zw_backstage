@@ -1,4 +1,4 @@
-import {Dialog, DialogContent, FormControl, FormLabel, MenuItem, TextField} from '@material-ui/core'
+import {Dialog, DialogContent, MenuItem, TextField} from '@material-ui/core'
 import {mergeModel} from '@/common/ModelAction/modelUtil'
 import {modalModelFactory} from '@/common/model/modal'
 import React, {useEffect} from 'react'
@@ -6,7 +6,6 @@ import {useStoreModelByType__Graphql} from '@/common/ModelAction/useStore'
 import styled from 'styled-components'
 import {CusButton} from '@/component/CusButton'
 import {ConfigHomeCarouselTs} from '@/views/DataConfig/ConfigHomeCarousel/ConfigHomeCarousel'
-import {ImgUpload} from '@/component/ImgUpload'
 import {getDataConfigDoc, promoCodeListDoc, saveDataConfig} from '@/common/graphqlTypes/graphql/doc'
 import {fpMergePre} from '@/common/utils'
 import {configDataModel} from '@/views/DataConfig/List/model'
@@ -156,19 +155,19 @@ export const ConfigHomeCarouselModal = () => {
                   >{value.name}</MenuItem>
               ))}
             </TextField>
-            <FormControl
-                fullWidth
-            >
-              <FormLabel>
-                图片
-              </FormLabel>
-              <ImgUpload
-                  initSrc={modalData.imgUrl}
-                  onChange={(file: any) => {
-                    actions.setModal({imgFile: file})
-                  }}
-              />
-            </FormControl>
+            {/*<FormControl*/}
+            {/*    fullWidth*/}
+            {/*>*/}
+            {/*  <FormLabel>*/}
+            {/*    图片*/}
+            {/*  </FormLabel>*/}
+            {/*  <ImgUpload*/}
+            {/*      initSrc={modalData.imgUrl}*/}
+            {/*      onChange={(file: any) => {*/}
+            {/*        actions.setModal({imgFile: file})*/}
+            {/*      }}*/}
+            {/*  />*/}
+            {/*</FormControl>*/}
           </main>
           <footer>
             <CusButton

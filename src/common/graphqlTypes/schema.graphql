@@ -267,6 +267,7 @@ type UserPayCard {
     code: String
     contact: String
     createTime: Timestamp
+    expirationTime: Timestamp
     id: String
     isDefault: Float
     isDelete: Float
@@ -554,6 +555,7 @@ input UserPayCardItemInput {
     code: String
     contact: String
     createTime: Timestamp
+    expirationTime: Timestamp
     id: String
     isDefault: Float
     isDelete: Float
