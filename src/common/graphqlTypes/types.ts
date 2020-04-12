@@ -30,13 +30,6 @@ export type Category = {
   categoryParent?: Maybe<Category>;
 };
 
-export type CategoryInput = {
-  rows_per_page?: Maybe<Scalars['Float']>;
-  page?: Maybe<Scalars['Float']>;
-  orderByObject?: Maybe<Array<Maybe<Array<Maybe<Scalars['String']>>>>>;
-  categoryId?: Maybe<Scalars['String']>;
-};
-
 export type CategoryItemInput = {
   id?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
@@ -54,6 +47,12 @@ export type CategoryItemInput = {
   parentCategory?: Maybe<CategoryItemInput>;
   childCategories?: Maybe<Array<Maybe<CategoryItemInput>>>;
   categoryParent?: Maybe<CategoryItemInput>;
+};
+
+export type CategoryListInput = {
+  category?: Maybe<CategoryItemInput>;
+  pageInput?: Maybe<PageInput>;
+  orderByInput?: Maybe<OrderByInput>;
 };
 
 export type CategoryPage = {
@@ -405,8 +404,8 @@ export type Query = {
   getDataConfig?: Maybe<DataConfig>;
   getDictTypeList?: Maybe<Array<Maybe<DictTypeFirst>>>;
   getDictList?: Maybe<Array<Maybe<Dict>>>;
-  getCategoryList?: Maybe<CategoryPage>;
-  getCategory?: Maybe<Category>;
+  categoryList?: Maybe<CategoryPage>;
+  oneCategory?: Maybe<Category>;
   promoCodeList?: Maybe<Array<Maybe<PromoCode>>>;
 };
 
@@ -436,13 +435,13 @@ export type QueryGetDictListArgs = {
 };
 
 
-export type QueryGetCategoryListArgs = {
-  categoryInput?: Maybe<CategoryInput>;
+export type QueryCategoryListArgs = {
+  data?: Maybe<CategoryListInput>;
 };
 
 
-export type QueryGetCategoryArgs = {
-  categoryInput?: Maybe<CategoryInput>;
+export type QueryOneCategoryArgs = {
+  data?: Maybe<CategoryItemInput>;
 };
 
 
