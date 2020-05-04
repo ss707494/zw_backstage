@@ -56,10 +56,10 @@ export const ConfigHomeCarousel = () => {
                         const res = await configHomeCarouselModalModelActions.openClick(v)
                         if (res?.imgFile?.size) {
                           res.imgUrl = await getUploadUrl(res?.imgFile)
+                          actions.setDataConfig(fpSet(value, ['list', index], { ...res }))
+                          await actions.saveDataConfig()
+                          await actions.getDataConfig(activeCode)
                         }
-                        actions.setDataConfig(fpSet(value, ['list', index], { ...res }))
-                        await actions.saveDataConfig()
-                        await actions.getDataConfig(activeCode)
                         configHomeCarouselModalModelActions.onClose()
                       }}
                   >

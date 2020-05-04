@@ -1,5 +1,5 @@
 
-schema: http://localhost:4464/type__graphql/graphql
+schema: http://localhost:4464/type__graphql/api
 generates:
 #  src/common/graphqlTypes/types.fragment.ts:
 #    plugins:
