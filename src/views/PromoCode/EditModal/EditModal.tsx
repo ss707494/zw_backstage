@@ -4,7 +4,6 @@ import {CusTextField} from "@/component/CusTextField"
 import {useMutationSimpleData} from "@/component/ApolloQuery"
 import {save_promo_code} from "@/views/PromoCode/graphql"
 import {CusSelectField} from "@/component/CusSelectField"
-import {DiscountConditionEnum, DiscountTypeEnum, PromoCodeTypeEnum} from "ss_common/enum"
 import styled from "styled-components"
 import {useLinkage} from "@/views/Product/EditModal"
 import InputLabel from "@material-ui/core/InputLabel"
@@ -15,6 +14,7 @@ import {CusButton} from "@/component/CusButton"
 import {fileUploadAjax, parseFloatForInput} from "@/common/utils"
 import {showMessage} from "@/component/Message"
 import {endOfDay} from 'date-fns'
+import {DiscountConditionEnum, DiscountTypeEnum, PromoCodeTypeEnum} from "@/common/ss_common/enum"
 
 const FormBox = styled('form')`
   display: grid;

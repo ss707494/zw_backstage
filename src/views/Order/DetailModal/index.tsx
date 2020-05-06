@@ -10,13 +10,13 @@ import {useStoreModelByType__Graphql} from "@/common/ModelAction/useStore"
 import {orderListModel} from "@/views/Order/List/model"
 import styled from 'styled-components'
 import {dictAllListModel} from '@/views/Dictionary/dictAllListModel'
-import {OrderState} from 'ss_common/enum'
 import {green, grey} from '@material-ui/core/colors'
 import printJs from 'print-js'
 import {CusButton} from '@/component/CusButton'
 import {PrintRounded} from '@material-ui/icons'
 import html2canvas from 'html2canvas'
 import {dealMoney, formatDate} from '@/common/utils'
+import { OrderState } from "@/common/ss_common/enum"
 
 const OrderInfo = styled('div')`
   display: grid;

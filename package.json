@@ -84,7 +84,6 @@
     "sass-loader": "7.1.0",
     "semver": "6.0.0",
     "slick-carousel": "^1.8.1",
-    "ss_common": "../zw_server_api/my_modules/lib/common",
     "style-loader": "0.23.1",
     "styled-components": "^4.3.1",
     "styled-jsx": "^3.2.1",

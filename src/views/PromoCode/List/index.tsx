@@ -2,8 +2,8 @@ import React from "react";
 import {useParams} from "react-router-dom";
 import history from "@/common/history";
 import {contentWithLeftBox} from "@/common/style/contentWithLeftBox";
-import {PromoCodeTypeEnum} from "ss_common";
 import {PromoCodeTable} from "@/views/PromoCode/PromoCode/PromoCode";
+import { PromoCodeTypeEnum } from "@/common/ss_common/enum";
 
 const leftMenu: DictType[] = [
   {

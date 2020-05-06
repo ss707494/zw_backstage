@@ -3,8 +3,8 @@ import {modalModelFactory} from "@/common/model/modal"
 import {addProductGraphql} from "@/views/AddProduct/List/addProductGraphql"
 import {pick} from "lodash"
 import {showMessage} from "@/component/Message"
-import {ProductSupplement} from "ss_common/enum"
 import {fpMergePre} from "@/common/utils"
+import { ProductSupplement } from "@/common/ss_common/enum"
 
 export const waitListModel = mergeModel(modalModelFactory('wait', {
   id: '',

@@ -13,9 +13,9 @@ import {listModel} from "@/views/AddProduct/List/model"
 import {productSupplementListGraphql} from "@/views/AddProduct/List/addProductGraphql"
 import {waitListModel} from "@/views/AddProduct/WaitListModal/model"
 import {dealWaitItem, WaitListModal} from "@/views/AddProduct/WaitListModal"
-import {ProductSupplement, ProductSupplementString} from 'ss_common/enum'
 import {CusButton} from "@/component/CusButton"
 import {productGraphql} from "@/views/Product/List/productGraphql"
+import {ProductSupplement, ProductSupplementString} from '@/common/ss_common/enum'
 
 
 export const AddProduct = () => {

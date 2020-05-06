@@ -6,14 +6,13 @@ import TableHead from "@material-ui/core/TableHead"
 import {TableBody, TableRow} from "@material-ui/core"
 import {CusTableCell as TableCell} from "@/component/CusTableCell"
 import {StyleTableBox} from "@/common/style/tableBox"
-import {PromoCodeTypeEnum} from "ss_common"
 import {useMutationSimpleData, useQuerySimpleData} from "@/component/ApolloQuery"
 import {promo_code_list, save_promo_code} from "@/views/PromoCode/graphql"
 import {EditModal} from "@/views/PromoCode/EditModal/EditModal"
 import {useCommonModalState} from "@/common/useHooks"
 import {formatDate} from "@/common/utils"
 import styled from "styled-components"
-import {DiscountConditionEnum, DiscountTypeEnum} from 'ss_common/enum'
+import {DiscountConditionEnum, DiscountTypeEnum, PromoCodeTypeEnum} from "@/common/ss_common/enum"
 
 const ImgBox = styled.img`
   max-width: 90px;

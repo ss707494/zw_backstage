@@ -1,6 +1,6 @@
 import loadable from '@loadable/component'
 import {Redirect} from "react-router-dom";
-import {PromoCodeTypeEnum} from 'ss_common'
+import { PromoCodeTypeEnum } from '@/common/ss_common/enum';
 
 export default [{
   props: {
