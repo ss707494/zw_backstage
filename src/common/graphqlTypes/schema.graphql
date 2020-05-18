@@ -5,6 +5,11 @@ schema {
     mutation: Mutation
 }
 
+type AuthBody {
+    refreshtoken: String
+    token: String
+}
+
 type Category {
     categoryParent: Category
     childCategories: [Category]
@@ -68,6 +73,7 @@ type DictTypeFirst {
 }
 
 type Mutation {
+    registerUser(data: UserItemInput): UserInRegister
     saveCategory(categoryItemInput: CategoryItemInput): Category
     saveDataConfig(dataConfigInput: DataConfigItemInput): DataConfig
     saveDictTypeFirst(dictTypeFirstItemInput: [DictTypeFirstItemInput]): [DictTypeFirst]
@@ -170,15 +176,20 @@ type PromoCode {
 }
 
 type Query {
-    getCategory(categoryInput: CategoryInput): Category
-    getCategoryList(categoryInput: CategoryInput): CategoryPage
+    categoryList(data: CategoryListInput): CategoryPage
     getDataConfig(dataConfigInput: DataConfigItemInput): DataConfig
     getDictList(dictInput: DictInput): [Dict]
     getDictTypeList: [DictTypeFirst]
-    orderList(orderInput: OrderInput): OrderPage
+    homeCarouselImgs(dataConfigInput: DataConfigItemInput): DataConfig
+    login(user: UserItemInput): AuthBody
+    oneCategory(data: CategoryItemInput): Category
+    oneUser: User
+    orderList(fromUser: Boolean, orderInput: OrderInput): OrderPage
     orderListTotal(orderInput: OrderInput): Float
+    passwordCode(password: String): String
     promoCodeList(promoCodeItemInput: PromoCodeItemInput): [PromoCode]
-    userInfo: User
+    refreshToken(refreshtoken: String!): AuthBody
+    testLongApi: String
     userList(userListInput: UserListInput): UserPage
 }
 
@@ -243,6 +254,12 @@ type UserAddress {
     zip: String
 }
 
+type UserInRegister {
+    refreshtoken: String
+    token: String
+    user: User
+}
+
 type UserInfo {
     createTime: Timestamp
     email: String
@@ -280,13 +297,6 @@ type UserPayCard {
     zipCode: String
 }
 
-input CategoryInput {
-    categoryId: String
-    orderByObject: [[String]]
-    page: Float
-    rows_per_page: Float
-}
-
 input CategoryItemInput {
     categoryParent: CategoryItemInput
     childCategories: [CategoryItemInput]
@@ -304,6 +314,12 @@ input CategoryItemInput {
     sort: Float
     updateTime: Timestamp
     userId: String
+}
+
+input CategoryListInput {
+    category: CategoryItemInput
+    orderByInput: OrderByInput
+    pageInput: PageInput
 }
 
 input DataConfigItemInput {
@@ -405,6 +421,7 @@ input OrderInput {
     rows_per_page: Float
     startTime: Timestamp
     state: Float
+    userId: String
     userName: String
     zip: String
 }

@@ -296,19 +296,19 @@ export const saveOrderListDoc = gql`
 `
 
 export const saveDictTypeFirstDco = gql`
-  mutation($data: [DictTypeFirstItemInput]) {
-      saveDictTypeFirst(dictTypeFirstItemInput: $data) {
-          id
-          name
-          createTime
-          updateTime
-          isDelete
-          parentCode
-          code
-          sort
-          remark
-      }
-  }
+    mutation($data: [DictTypeFirstItemInput]) {
+        saveDictTypeFirst(dictTypeFirstItemInput: $data) {
+            id
+            name
+            createTime
+            updateTime
+            isDelete
+            parentCode
+            code
+            sort
+            remark
+        }
+    }
 `
 
 export const promoCodeListDoc = gql`
@@ -333,6 +333,15 @@ export const promoCodeListDoc = gql`
             reuseTimes
             code
             isDisable
+        }
+    }
+`
+
+export const refreshTokenDoc = gql`
+    query refreshToken($data: String!) {
+        refreshToken(refreshtoken: $data) {
+            refreshtoken
+            token
         }
     }
 `

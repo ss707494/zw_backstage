@@ -60,6 +60,14 @@ export enum RelatedObjTypeEnum {
   PromotionThemeSelect = 'PromotionThemeSelect',
 }
 
+export enum AppFootBar {
+  home = 'home',
+  group = 'group',
+  card = 'card',
+  cart = 'cart',
+  me = 'me'
+}
+
 export enum AppModuleTypeEnum {
   categorySelection = 'categorySelection',
   limitTime = 'limitTime',
@@ -70,4 +78,6 @@ export enum AppModuleTypeEnum {
   topRanking = 'topRanking',
 }
 
-export const orderStateKeys: string[] = Object.values(OrderState).filter(value => typeof (value) === 'string') as string[]
+export const CategoryRootName = 'root'
+
+export const orderStateKeys: string[] = Object.values(OrderState) as string[]

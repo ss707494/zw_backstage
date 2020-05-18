@@ -10,6 +10,12 @@ export type Scalars = {
   JSON: any;
 };
 
+export type AuthBody = {
+   __typename?: 'AuthBody';
+  token?: Maybe<Scalars['String']>;
+  refreshtoken?: Maybe<Scalars['String']>;
+};
+
 export type Category = {
    __typename?: 'Category';
   id?: Maybe<Scalars['String']>;
@@ -149,6 +155,7 @@ export type DictTypeFirstItemInput = {
 export type Mutation = {
    __typename?: 'Mutation';
   saveUserList?: Maybe<Array<Maybe<User>>>;
+  registerUser?: Maybe<UserInRegister>;
   saveOrderList?: Maybe<Array<Maybe<OrderInfo>>>;
   saveDataConfig?: Maybe<DataConfig>;
   saveDictTypeFirst?: Maybe<Array<Maybe<DictTypeFirst>>>;
@@ -158,6 +165,11 @@ export type Mutation = {
 
 export type MutationSaveUserListArgs = {
   userItemInput?: Maybe<Array<Maybe<UserItemInput>>>;
+};
+
+
+export type MutationRegisterUserArgs = {
+  data?: Maybe<UserItemInput>;
 };
 
 
@@ -264,6 +276,7 @@ export type OrderInput = {
   state?: Maybe<Scalars['Float']>;
   userName?: Maybe<Scalars['String']>;
   registerName?: Maybe<Scalars['String']>;
+  userId?: Maybe<Scalars['String']>;
   zip?: Maybe<Scalars['String']>;
   province?: Maybe<Scalars['String']>;
   city?: Maybe<Scalars['String']>;
@@ -397,16 +410,21 @@ export type PromoCodeItemInput = {
 
 export type Query = {
    __typename?: 'Query';
+  testLongApi?: Maybe<Scalars['String']>;
   userList?: Maybe<UserPage>;
-  userInfo?: Maybe<User>;
+  oneUser?: Maybe<User>;
   orderList?: Maybe<OrderPage>;
   orderListTotal?: Maybe<Scalars['Float']>;
   getDataConfig?: Maybe<DataConfig>;
+  homeCarouselImgs?: Maybe<DataConfig>;
   getDictTypeList?: Maybe<Array<Maybe<DictTypeFirst>>>;
   getDictList?: Maybe<Array<Maybe<Dict>>>;
   categoryList?: Maybe<CategoryPage>;
   oneCategory?: Maybe<Category>;
   promoCodeList?: Maybe<Array<Maybe<PromoCode>>>;
+  login?: Maybe<AuthBody>;
+  refreshToken?: Maybe<AuthBody>;
+  passwordCode?: Maybe<Scalars['String']>;
 };
 
 
@@ -416,6 +434,7 @@ export type QueryUserListArgs = {
 
 
 export type QueryOrderListArgs = {
+  fromUser?: Maybe<Scalars['Boolean']>;
   orderInput?: Maybe<OrderInput>;
 };
 
@@ -426,6 +445,11 @@ export type QueryOrderListTotalArgs = {
 
 
 export type QueryGetDataConfigArgs = {
+  dataConfigInput?: Maybe<DataConfigItemInput>;
+};
+
+
+export type QueryHomeCarouselImgsArgs = {
   dataConfigInput?: Maybe<DataConfigItemInput>;
 };
 
@@ -447,6 +471,21 @@ export type QueryOneCategoryArgs = {
 
 export type QueryPromoCodeListArgs = {
   promoCodeItemInput?: Maybe<PromoCodeItemInput>;
+};
+
+
+export type QueryLoginArgs = {
+  user?: Maybe<UserItemInput>;
+};
+
+
+export type QueryRefreshTokenArgs = {
+  refreshtoken: Scalars['String'];
+};
+
+
+export type QueryPasswordCodeArgs = {
+  password?: Maybe<Scalars['String']>;
 };
 
 export type ROrderProduct = {
@@ -585,6 +624,13 @@ export type UserInfoItemInput = {
   email?: Maybe<Scalars['String']>;
   userLevel?: Maybe<Scalars['String']>;
   user?: Maybe<UserItemInput>;
+};
+
+export type UserInRegister = {
+   __typename?: 'UserInRegister';
+  token?: Maybe<Scalars['String']>;
+  refreshtoken?: Maybe<Scalars['String']>;
+  user?: Maybe<User>;
 };
 
 export type UserItemInput = {
