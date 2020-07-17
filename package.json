@@ -57,7 +57,7 @@
     "jest-watch-typeahead": "0.3.0",
     "jss": "^10.0.4",
     "jss-plugin-template": "^10.0.4",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.19",
     "mini-css-extract-plugin": "0.5.0",
     "node-sass": "^4.12.0",
     "optimize-css-assets-webpack-plugin": "5.0.1",
