@@ -32,10 +32,12 @@ export const orderListModel = mergeModel(mergeThreeModel(modalModelFactory('orde
   orderStateOption: {} as HelpObj<string>,
   orderStateSelected: '',
   selfAddressConfig: {} as HelpObj,
+  isGroup: 0,
 }, {
   getList: async (value, option) => {
     const res = await option.query(getOrderListDoc, {
       ...option.data.searchParams,
+      isGroup: option.data.isGroup,
       rows_per_page: option.data.rows_per_page,
       page: option.data.page,
     })
@@ -60,5 +62,10 @@ export const orderListModel = mergeModel(mergeThreeModel(modalModelFactory('orde
   },
   saveOneOrderState: async (value: { id: string, state: string }, option) => {
     return await option.mutate(saveOrderListDoc, [value])
+  },
+  updateIsGroup: (value, option) => {
+    option.setData(fpMergePre({
+      isGroup: value,
+    }))
   },
 })

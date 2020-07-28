@@ -58,6 +58,25 @@ export const OrderList = () => {
             <section>您可以进行管理</section>
             <main
             >
+              <TextField
+                  select
+                  fullWidth={true}
+                  label={'订单类型'}
+                  value={searchParams.state}
+                  onChange={(event) => {
+                    actions.updateIsGroup(event.target.value)
+                    actions.getList()
+                  }}
+              >
+                <MenuItem
+                    value={0}>
+                  普通商品
+                </MenuItem>
+                <MenuItem
+                    value={1}>
+                  拼团商品
+                </MenuItem>
+              </TextField>
             </main>
           </StyleTableBox.HeaderBox>
           <SearchBox>

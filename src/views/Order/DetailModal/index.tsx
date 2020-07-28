@@ -63,7 +63,6 @@ export const OrderProductModal = () => {
   const {open, modalData, orderStateOption, selfAddressConfig} = state
   const handleClose = actions.onClose
   const {productList, orderDetail} = modalData
-  console.log(selfAddressConfig)
 
   return (
       <Dialog

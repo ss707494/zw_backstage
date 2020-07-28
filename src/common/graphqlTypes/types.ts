@@ -33,7 +33,7 @@ export type Category = {
   imgUrl?: Maybe<Scalars['String']>;
   parentCategory?: Maybe<Category>;
   childCategories?: Maybe<Array<Maybe<Category>>>;
-  categoryParent?: Maybe<Category>;
+  product?: Maybe<Array<Maybe<Product>>>;
 };
 
 export type CategoryItemInput = {
@@ -52,7 +52,7 @@ export type CategoryItemInput = {
   imgUrl?: Maybe<Scalars['String']>;
   parentCategory?: Maybe<CategoryItemInput>;
   childCategories?: Maybe<Array<Maybe<CategoryItemInput>>>;
-  categoryParent?: Maybe<CategoryItemInput>;
+  product?: Maybe<Array<Maybe<ProductItemInput>>>;
 };
 
 export type CategoryListInput = {
@@ -151,15 +151,84 @@ export type DictTypeFirstItemInput = {
   dict?: Maybe<DictItemInput>;
 };
 
+export type GroupOrder = {
+   __typename?: 'GroupOrder';
+  id?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  createTime?: Maybe<Scalars['Timestamp']>;
+  updateTime?: Maybe<Scalars['Timestamp']>;
+  isDelete?: Maybe<Scalars['Float']>;
+  groupQueueId?: Maybe<Scalars['String']>;
+  userId?: Maybe<Scalars['String']>;
+  orderGroupAmount?: Maybe<Scalars['Float']>;
+  orderId?: Maybe<Scalars['String']>;
+  orderInfo?: Maybe<OrderInfo>;
+  groupQueue?: Maybe<GroupQueue>;
+  user?: Maybe<User>;
+};
+
+export type GroupOrderItemInput = {
+  id?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  createTime?: Maybe<Scalars['Timestamp']>;
+  updateTime?: Maybe<Scalars['Timestamp']>;
+  isDelete?: Maybe<Scalars['Float']>;
+  groupQueueId?: Maybe<Scalars['String']>;
+  userId?: Maybe<Scalars['String']>;
+  orderGroupAmount?: Maybe<Scalars['Float']>;
+  orderId?: Maybe<Scalars['String']>;
+  orderInfo?: Maybe<OrderInfoItemInput>;
+  groupQueue?: Maybe<GroupQueueItemInput>;
+  user?: Maybe<UserItemInput>;
+};
+
+export type GroupQueue = {
+   __typename?: 'GroupQueue';
+  id?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  createTime?: Maybe<Scalars['Timestamp']>;
+  updateTime?: Maybe<Scalars['Timestamp']>;
+  isDelete?: Maybe<Scalars['Float']>;
+  productId?: Maybe<Scalars['String']>;
+  fillAmount?: Maybe<Scalars['Float']>;
+  product?: Maybe<Product>;
+  groupOrder?: Maybe<Array<Maybe<GroupOrder>>>;
+  sumFillAmount?: Maybe<Scalars['Float']>;
+};
+
+export type GroupQueueItemInput = {
+  id?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  createTime?: Maybe<Scalars['Timestamp']>;
+  updateTime?: Maybe<Scalars['Timestamp']>;
+  isDelete?: Maybe<Scalars['Float']>;
+  productId?: Maybe<Scalars['String']>;
+  fillAmount?: Maybe<Scalars['Float']>;
+  product?: Maybe<ProductItemInput>;
+  groupOrder?: Maybe<Array<Maybe<GroupOrderItemInput>>>;
+  sumFillAmount?: Maybe<Scalars['Float']>;
+};
+
 
 export type Mutation = {
    __typename?: 'Mutation';
   saveUserList?: Maybe<Array<Maybe<User>>>;
   registerUser?: Maybe<UserInRegister>;
+  updatePassword?: Maybe<UpdatePasswordRes>;
+  updateUserInfo?: Maybe<UserInfo>;
   saveOrderList?: Maybe<Array<Maybe<OrderInfo>>>;
+  saveOrder?: Maybe<OrderInfo>;
+  updateOrder?: Maybe<OrderInfo>;
   saveDataConfig?: Maybe<DataConfig>;
   saveDictTypeFirst?: Maybe<Array<Maybe<DictTypeFirst>>>;
   saveCategory?: Maybe<Category>;
+  saveUserPayCard?: Maybe<UserPayCard>;
+  setUserPayCardDefault?: Maybe<UserPayCard>;
+  saveUserAddress?: Maybe<UserAddress>;
+  setUserAddressDefault?: Maybe<UserAddress>;
+  updateNumShopCart?: Maybe<ShopCart>;
+  updateShopCart?: Maybe<ShopCart>;
+  saveGroupOrder?: Maybe<OrderInfo>;
 };
 
 
@@ -173,8 +242,28 @@ export type MutationRegisterUserArgs = {
 };
 
 
+export type MutationUpdatePasswordArgs = {
+  data?: Maybe<UpdatePasswordInput>;
+};
+
+
+export type MutationUpdateUserInfoArgs = {
+  userInfo?: Maybe<UserInfoItemInput>;
+};
+
+
 export type MutationSaveOrderListArgs = {
   orderInfoItemInput?: Maybe<Array<Maybe<OrderInfoItemInput>>>;
+};
+
+
+export type MutationSaveOrderArgs = {
+  orderInfoItemInput?: Maybe<OrderInfoItemInput>;
+};
+
+
+export type MutationUpdateOrderArgs = {
+  orderInfoItemInput?: Maybe<OrderInfoItemInput>;
 };
 
 
@@ -190,6 +279,44 @@ export type MutationSaveDictTypeFirstArgs = {
 
 export type MutationSaveCategoryArgs = {
   categoryItemInput?: Maybe<CategoryItemInput>;
+};
+
+
+export type MutationSaveUserPayCardArgs = {
+  userPayCard?: Maybe<UserPayCardItemInput>;
+};
+
+
+export type MutationSetUserPayCardDefaultArgs = {
+  userPayCard?: Maybe<UserPayCardItemInput>;
+};
+
+
+export type MutationSaveUserAddressArgs = {
+  userAddress?: Maybe<UserAddressItemInput>;
+};
+
+
+export type MutationSetUserAddressDefaultArgs = {
+  userAddress?: Maybe<UserAddressItemInput>;
+};
+
+
+export type MutationUpdateNumShopCartArgs = {
+  updateNum?: Maybe<Scalars['Float']>;
+  shopCart?: Maybe<ShopCartItemInput>;
+};
+
+
+export type MutationUpdateShopCartArgs = {
+  shopCart?: Maybe<ShopCartItemInput>;
+};
+
+
+export type MutationSaveGroupOrderArgs = {
+  orderInfoItemInput?: Maybe<OrderInfoItemInput>;
+  groupQueueItemInput?: Maybe<GroupQueueItemInput>;
+  groupOrderItemInput?: Maybe<GroupOrderItemInput>;
 };
 
 export type OrderByAndPageInput = {
@@ -233,6 +360,7 @@ export type OrderInfo = {
   userPayCard?: Maybe<UserPayCard>;
   selfAddressId?: Maybe<Scalars['String']>;
   currentUserLevel?: Maybe<Scalars['String']>;
+  groupOrder?: Maybe<GroupOrder>;
 };
 
 export type OrderInfoItemInput = {
@@ -265,6 +393,7 @@ export type OrderInfoItemInput = {
   userPayCard?: Maybe<UserPayCardItemInput>;
   selfAddressId?: Maybe<Scalars['String']>;
   currentUserLevel?: Maybe<Scalars['String']>;
+  groupOrder?: Maybe<GroupOrderItemInput>;
 };
 
 export type OrderInput = {
@@ -331,6 +460,39 @@ export type Product = {
   groupRemark?: Maybe<Scalars['String']>;
   groupAmountUnit?: Maybe<Scalars['String']>;
   rOrderProduct?: Maybe<Array<ROrderProduct>>;
+  img?: Maybe<Array<Maybe<ProductImg>>>;
+  category?: Maybe<Category>;
+  shopCart?: Maybe<Array<Maybe<ShopCart>>>;
+  unitString?: Maybe<Scalars['String']>;
+  packingUnitString?: Maybe<Scalars['String']>;
+  groupAmountUnitString?: Maybe<Scalars['String']>;
+  groupPrecisionString?: Maybe<Scalars['String']>;
+  groupQueue?: Maybe<Array<Maybe<GroupQueue>>>;
+};
+
+export type ProductImg = {
+   __typename?: 'ProductImg';
+  id?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  createTime?: Maybe<Scalars['Timestamp']>;
+  updateTime?: Maybe<Scalars['Timestamp']>;
+  isDelete?: Maybe<Scalars['Float']>;
+  productId?: Maybe<Scalars['String']>;
+  number?: Maybe<Scalars['Float']>;
+  url?: Maybe<Scalars['String']>;
+  product?: Maybe<Product>;
+};
+
+export type ProductImgItemInput = {
+  id?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  createTime?: Maybe<Scalars['Timestamp']>;
+  updateTime?: Maybe<Scalars['Timestamp']>;
+  isDelete?: Maybe<Scalars['Float']>;
+  productId?: Maybe<Scalars['String']>;
+  number?: Maybe<Scalars['Float']>;
+  url?: Maybe<Scalars['String']>;
+  product?: Maybe<ProductItemInput>;
 };
 
 export type ProductItemInput = {
@@ -361,6 +523,20 @@ export type ProductItemInput = {
   groupRemark?: Maybe<Scalars['String']>;
   groupAmountUnit?: Maybe<Scalars['String']>;
   rOrderProduct?: Maybe<Array<ROrderProductItemInput>>;
+  img?: Maybe<Array<Maybe<ProductImgItemInput>>>;
+  category?: Maybe<CategoryItemInput>;
+  shopCart?: Maybe<Array<Maybe<ShopCartItemInput>>>;
+  unitString?: Maybe<Scalars['String']>;
+  packingUnitString?: Maybe<Scalars['String']>;
+  groupAmountUnitString?: Maybe<Scalars['String']>;
+  groupPrecisionString?: Maybe<Scalars['String']>;
+  groupQueue?: Maybe<Array<Maybe<GroupQueueItemInput>>>;
+};
+
+export type ProductPage = {
+   __typename?: 'ProductPage';
+  total?: Maybe<Scalars['Float']>;
+  list?: Maybe<Array<Maybe<Product>>>;
 };
 
 export type PromoCode = {
@@ -410,21 +586,48 @@ export type PromoCodeItemInput = {
 
 export type Query = {
    __typename?: 'Query';
+  login?: Maybe<AuthBody>;
+  refreshToken?: Maybe<AuthBody>;
+  passwordCode?: Maybe<Scalars['String']>;
   testLongApi?: Maybe<Scalars['String']>;
   userList?: Maybe<UserPage>;
   oneUser?: Maybe<User>;
   orderList?: Maybe<OrderPage>;
   orderListTotal?: Maybe<Scalars['Float']>;
+  orderDetail?: Maybe<OrderInfo>;
   getDataConfig?: Maybe<DataConfig>;
   homeCarouselImgs?: Maybe<DataConfig>;
   getDictTypeList?: Maybe<Array<Maybe<DictTypeFirst>>>;
   getDictList?: Maybe<Array<Maybe<Dict>>>;
+  productList?: Maybe<ProductPage>;
+  productListByIds?: Maybe<ProductPage>;
   categoryList?: Maybe<CategoryPage>;
   oneCategory?: Maybe<Category>;
+  productsInCategory?: Maybe<Array<Maybe<Product>>>;
+  categoryLevel?: Maybe<Scalars['Float']>;
+  categoryRootParent?: Maybe<Category>;
   promoCodeList?: Maybe<Array<Maybe<PromoCode>>>;
-  login?: Maybe<AuthBody>;
-  refreshToken?: Maybe<AuthBody>;
-  passwordCode?: Maybe<Scalars['String']>;
+  payCardListOneUser?: Maybe<Array<Maybe<UserPayCard>>>;
+  userPayCard?: Maybe<UserPayCard>;
+  userAddressListOneUser?: Maybe<Array<Maybe<UserAddress>>>;
+  userAddress?: Maybe<UserAddress>;
+  shopCartList?: Maybe<Array<Maybe<ShopCart>>>;
+  groupQueueList?: Maybe<Array<Maybe<GroupQueue>>>;
+};
+
+
+export type QueryLoginArgs = {
+  user?: Maybe<UserItemInput>;
+};
+
+
+export type QueryRefreshTokenArgs = {
+  refreshtoken: Scalars['String'];
+};
+
+
+export type QueryPasswordCodeArgs = {
+  password?: Maybe<Scalars['String']>;
 };
 
 
@@ -444,6 +647,11 @@ export type QueryOrderListTotalArgs = {
 };
 
 
+export type QueryOrderDetailArgs = {
+  id?: Maybe<Scalars['String']>;
+};
+
+
 export type QueryGetDataConfigArgs = {
   dataConfigInput?: Maybe<DataConfigItemInput>;
 };
@@ -459,6 +667,17 @@ export type QueryGetDictListArgs = {
 };
 
 
+export type QueryProductListArgs = {
+  orderByInput?: Maybe<OrderByInput>;
+  productInput?: Maybe<ProductItemInput>;
+};
+
+
+export type QueryProductListByIdsArgs = {
+  ids?: Maybe<Array<Maybe<Scalars['String']>>>;
+};
+
+
 export type QueryCategoryListArgs = {
   data?: Maybe<CategoryListInput>;
 };
@@ -469,23 +688,39 @@ export type QueryOneCategoryArgs = {
 };
 
 
+export type QueryProductsInCategoryArgs = {
+  productItemInput?: Maybe<ProductItemInput>;
+  categoryItemInput?: Maybe<CategoryItemInput>;
+};
+
+
+export type QueryCategoryLevelArgs = {
+  categoryItemInput?: Maybe<CategoryItemInput>;
+};
+
+
+export type QueryCategoryRootParentArgs = {
+  categoryItemInput?: Maybe<CategoryItemInput>;
+};
+
+
 export type QueryPromoCodeListArgs = {
   promoCodeItemInput?: Maybe<PromoCodeItemInput>;
 };
 
 
-export type QueryLoginArgs = {
-  user?: Maybe<UserItemInput>;
+export type QueryUserPayCardArgs = {
+  userPayCard?: Maybe<UserPayCardItemInput>;
 };
 
 
-export type QueryRefreshTokenArgs = {
-  refreshtoken: Scalars['String'];
+export type QueryUserAddressArgs = {
+  userAddress?: Maybe<UserAddressItemInput>;
 };
 
 
-export type QueryPasswordCodeArgs = {
-  password?: Maybe<Scalars['String']>;
+export type QueryGroupQueueListArgs = {
+  groupQueueItemInput?: Maybe<GroupQueueItemInput>;
 };
 
 export type ROrderProduct = {
@@ -542,6 +777,47 @@ export type ROrderUserItemInput = {
   user?: Maybe<UserItemInput>;
 };
 
+export type ShopCart = {
+   __typename?: 'ShopCart';
+  id?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  createTime?: Maybe<Scalars['Timestamp']>;
+  updateTime?: Maybe<Scalars['Timestamp']>;
+  isDelete?: Maybe<Scalars['Float']>;
+  userId?: Maybe<Scalars['String']>;
+  productId?: Maybe<Scalars['String']>;
+  number?: Maybe<Scalars['Float']>;
+  isNext?: Maybe<Scalars['Float']>;
+  user?: Maybe<User>;
+  product?: Maybe<Product>;
+};
+
+export type ShopCartItemInput = {
+  id?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  createTime?: Maybe<Scalars['Timestamp']>;
+  updateTime?: Maybe<Scalars['Timestamp']>;
+  isDelete?: Maybe<Scalars['Float']>;
+  userId?: Maybe<Scalars['String']>;
+  productId?: Maybe<Scalars['String']>;
+  number?: Maybe<Scalars['Float']>;
+  isNext?: Maybe<Scalars['Float']>;
+  user?: Maybe<UserItemInput>;
+  product?: Maybe<ProductItemInput>;
+};
+
+
+export type UpdatePasswordInput = {
+  oldPassword?: Maybe<Scalars['String']>;
+  newPassword?: Maybe<Scalars['String']>;
+  confirmPassword?: Maybe<Scalars['String']>;
+};
+
+export type UpdatePasswordRes = {
+   __typename?: 'UpdatePasswordRes';
+  authBody?: Maybe<AuthBody>;
+  user?: Maybe<User>;
+};
 
 export type User = {
    __typename?: 'User';
@@ -555,9 +831,13 @@ export type User = {
   userInfo?: Maybe<UserInfo>;
   rOrderUser?: Maybe<Array<ROrderUser>>;
   orderInfo?: Maybe<Array<OrderInfo>>;
+  userPayCard?: Maybe<Array<Maybe<UserPayCard>>>;
+  userAddress?: Maybe<Array<Maybe<UserAddress>>>;
   orderCoinNextMonth?: Maybe<Scalars['Float']>;
   orderCoinCurrentMonth?: Maybe<Scalars['Float']>;
   orderAmountCurrentYear?: Maybe<Scalars['Float']>;
+  shopCart?: Maybe<Array<Maybe<ShopCart>>>;
+  groupOrder?: Maybe<GroupOrder>;
 };
 
 export type UserAddress = {
@@ -578,6 +858,7 @@ export type UserAddress = {
   contactUserName?: Maybe<Scalars['String']>;
   orderInfo?: Maybe<Array<Maybe<OrderInfo>>>;
   combineAddress?: Maybe<Scalars['String']>;
+  user?: Maybe<User>;
 };
 
 export type UserAddressItemInput = {
@@ -597,6 +878,7 @@ export type UserAddressItemInput = {
   contactUserName?: Maybe<Scalars['String']>;
   orderInfo?: Maybe<Array<Maybe<OrderInfoItemInput>>>;
   combineAddress?: Maybe<Scalars['String']>;
+  user?: Maybe<UserItemInput>;
 };
 
 export type UserInfo = {
@@ -611,6 +893,7 @@ export type UserInfo = {
   email?: Maybe<Scalars['String']>;
   userLevel?: Maybe<Scalars['String']>;
   user?: Maybe<User>;
+  pickupAddressId?: Maybe<Scalars['String']>;
 };
 
 export type UserInfoItemInput = {
@@ -624,6 +907,7 @@ export type UserInfoItemInput = {
   email?: Maybe<Scalars['String']>;
   userLevel?: Maybe<Scalars['String']>;
   user?: Maybe<UserItemInput>;
+  pickupAddressId?: Maybe<Scalars['String']>;
 };
 
 export type UserInRegister = {
@@ -644,9 +928,13 @@ export type UserItemInput = {
   userInfo?: Maybe<UserInfoItemInput>;
   rOrderUser?: Maybe<Array<ROrderUserItemInput>>;
   orderInfo?: Maybe<Array<OrderInfoItemInput>>;
+  userPayCard?: Maybe<Array<Maybe<UserPayCardItemInput>>>;
+  userAddress?: Maybe<Array<Maybe<UserAddressItemInput>>>;
   orderCoinNextMonth?: Maybe<Scalars['Float']>;
   orderCoinCurrentMonth?: Maybe<Scalars['Float']>;
   orderAmountCurrentYear?: Maybe<Scalars['Float']>;
+  shopCart?: Maybe<Array<Maybe<ShopCartItemInput>>>;
+  groupOrder?: Maybe<GroupOrderItemInput>;
 };
 
 export type UserListInput = {
@@ -682,6 +970,7 @@ export type UserPayCard = {
   isDefault?: Maybe<Scalars['Float']>;
   orderInfo?: Maybe<Array<Maybe<OrderInfo>>>;
   expirationTime?: Maybe<Scalars['Timestamp']>;
+  user?: Maybe<User>;
 };
 
 export type UserPayCardItemInput = {
@@ -701,5 +990,6 @@ export type UserPayCardItemInput = {
   isDefault?: Maybe<Scalars['Float']>;
   orderInfo?: Maybe<Array<Maybe<OrderInfoItemInput>>>;
   expirationTime?: Maybe<Scalars['Timestamp']>;
+  user?: Maybe<UserItemInput>;
 };
 
