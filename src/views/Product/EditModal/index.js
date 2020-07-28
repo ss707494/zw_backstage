@@ -431,7 +431,7 @@ export const EditModal = (
                       value={(editData.group_precision)}
                       onChange={e => setEditData({
                         ...editData,
-                        group_precision: (e.target.value),
+                        group_precision: parseFloatForInput(e.target.value),
                       })}
                   >
                     {state.groupPrecisionList?.map(e => (

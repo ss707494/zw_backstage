@@ -25,14 +25,16 @@ S.Add = styled('section')`&&& {
 }
 `
 S.ImgBox = styled('section')`
-  width: 100%;
-  height: 100%;
+  width: 120px;
+  height: 90px;
   display: grid;
   justify-items: center;
   align-items: center;
   > img {
-    max-width: 100%;
-    max-height: 100%;
+    max-width: 120px;
+    max-height: 90px;
+    //max-width: 100%;
+    //max-height: 100%;
   }
   > svg {
     display: none;
