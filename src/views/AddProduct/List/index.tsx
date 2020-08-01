@@ -18,7 +18,7 @@ import {productGraphql} from "@/views/Product/List/productGraphql"
 import {ProductSupplement, ProductSupplementString} from '@/common/ss_common/enum'
 
 
-export const AddProduct = () => {
+export const AddProduct = ({match}: any) => {
   const theme = useTheme()
   const model = useStoreModel(listModel)
   const {state, actions, getLoad} = model
@@ -28,12 +28,12 @@ export const AddProduct = () => {
   const {actions: waitActions} = useStoreModel(waitListModel)
 
   useEffect(() => {
-    waitActions.setRefreshCall(actions.getList)
-  }, [actions.getList, waitActions])
+    waitActions.setRefreshCall(() => actions.getList({isGroup: ~~match.params?.is_group}))
+  }, [actions, actions.getList, match.params.is_group, waitActions])
 
   useEffect(() => {
-    actions.getList({})
-  }, [actions])
+    actions.getList({isGroup: ~~match.params?.is_group})
+  }, [actions, match.params.is_group])
 
   return (
       <StyleTableBox.Box>
@@ -47,15 +47,17 @@ export const AddProduct = () => {
                   color="primary"
                   loading={getLoad(productGraphql.getList)}
                   onClick={async () => {
-                    const waitList = await actions.getAddProductList({})
-                    waitActions.openEditClick({
-                      data: {
-                        waitList: waitList.map((v: any) => ({
-                          ...v,
-                          lastOutAmount: v.price_out,
-                        })),
-                      }
-                    })
+                    const waitList = await actions.getAddProductList({is_group: ~~match.params?.is_group})
+                    if (waitList?.length) {
+                      waitActions.openEditClick({
+                        data: {
+                          waitList: waitList.map((v: any) => ({
+                            ...v,
+                            lastOutAmount: v.price_out,
+                          })),
+                        },
+                      })
+                    }
                   }}
               >
                 生成补货单
@@ -89,7 +91,7 @@ export const AddProduct = () => {
                                 data: {
                                   ...e,
                                   waitList: e?.addItemList.map(dealWaitItem),
-                                }
+                                },
                               })
                             }}
                             variant="contained"
@@ -109,7 +111,7 @@ export const AddProduct = () => {
           }
           <PaginationByModel pageModel={model}/>
         </main>
-        <WaitListModal/>
+        <WaitListModal isGroup={~~match.params?.is_group}/>
       </StyleTableBox.Box>
   )
 }

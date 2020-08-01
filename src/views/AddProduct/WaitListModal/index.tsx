@@ -22,14 +22,14 @@ export const dealWaitItem = (item: any) => ({
   product_id: item.product?.id,
 })
 
-export const WaitListModal = () => {
+export const WaitListModal = ({isGroup}: any) => {
   const theme = useTheme()
   const {state, actions} = useStoreModel(waitListModel)
   const setEditData = actions.setModal
   const editData = state.modalData
   const saveLoading = state.fetchLoad[addProductGraphql.save_product_supplement]
 
-  const handleSave = async (value: { state?: number }) => {
+  const handleSave = async (value: { state?: number, isGroup?: number }) => {
     if (await actions.addOneProductSupplement(value)) {
       actions.onClose({})
     }
@@ -144,7 +144,7 @@ export const WaitListModal = () => {
                   color="primary"
                   variant="contained"
                   fullWidth
-                  onClick={() => handleSave({})}
+                  onClick={() => handleSave({isGroup})}
               >
                 更新数量
               </CusButton>
@@ -153,7 +153,7 @@ export const WaitListModal = () => {
                   color="primary"
                   variant="contained"
                   fullWidth
-                  onClick={() => handleSave({state: actions.isFinish() ? 1 : 2})}
+                  onClick={() => handleSave({state: actions.isFinish() ? 1 : 2, isGroup})}
               >
                 {actions.isFinish() ? '撤销补货' : '确定补货完成'}
               </CusButton>
@@ -162,7 +162,7 @@ export const WaitListModal = () => {
                 color="primary"
                 variant="contained"
                 fullWidth
-                onClick={() => handleSave({})}
+                onClick={() => handleSave({isGroup})}
             >
               保存
             </CusButton>}

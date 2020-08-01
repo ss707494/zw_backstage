@@ -411,7 +411,6 @@ export const EditModal = (
                     />
                     <CusSelectField
                         label="拆包单位"
-                        type="number"
                         value={editData.groupAmountUnit}
                         onChange={e => setEditData({
                           ...editData,

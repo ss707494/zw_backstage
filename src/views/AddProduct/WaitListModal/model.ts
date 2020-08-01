@@ -16,7 +16,7 @@ export const waitListModel = mergeModel(modalModelFactory('wait', {
   setRefreshCall: (value, {setData}) => setData(fpMergePre({
     refreshData: value,
   })),
-  addOneProductSupplement: async (value: { state: number }, {data, mutate}) => {
+  addOneProductSupplement: async (value: { state: number, isGroup: number }, {data, mutate}) => {
     const res = await mutate(addProductGraphql.save_product_supplement, {
       addList: data.modalData.waitList.map((v: any) => ({
         ...pick(v, ['addRemark', 'addNumber', 'addPrice', 'addSupplier']),
@@ -29,6 +29,7 @@ export const waitListModel = mergeModel(modalModelFactory('wait', {
       })),
       id: data.modalData.id,
       state: value.state ?? 1,
+      isGroup: value.isGroup ?? 0,
     })
     if (res.save_product_supplement?.flag) {
       showMessage({
