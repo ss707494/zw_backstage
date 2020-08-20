@@ -162,3 +162,10 @@ export const PickUpTypeEnum = {
   Self: 'Self',
   Delivery: 'Delivery',
 }
+// 热销排行
+export const SaleRankTypeEnum = {
+  OneDay: 'OneDay',
+  OneWeek: 'OneWeek',
+  OneMonth: 'OneMonth',
+}
+

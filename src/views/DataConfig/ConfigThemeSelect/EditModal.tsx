@@ -6,17 +6,17 @@ import {
   FormLabel,
   TextField,
   TextFieldProps,
-} from "@material-ui/core"
-import React from "react"
-import {editThemeModel} from "@/views/DataConfig/ConfigThemeSelect/model/editTheme"
-import {CusButton} from "@/component/CusButton"
-import {ImgUpload} from "@/component/ImgUpload"
-import styled from "styled-components"
-import {KeyboardDatePicker} from "@material-ui/pickers"
-import {useStoreModel, useStoreModelByType__Graphql} from "@/common/ModelAction/useStore"
+} from '@material-ui/core'
+import React from 'react'
+import {editThemeModel} from '@/views/DataConfig/ConfigThemeSelect/model/editTheme'
+import {CusButton} from '@/component/CusButton'
+import {ImgUpload} from '@/component/ImgUpload'
+import styled from 'styled-components'
+import {DateTimePicker} from '@material-ui/pickers'
+import {useStoreModel, useStoreModelByType__Graphql} from '@/common/ModelAction/useStore'
 import {fileUploadAjax, fpMerge, fpSet} from '@/common/utils'
 import {configDataModel} from '@/views/DataConfig/List/model'
-import {endOfDay} from "date-fns"
+import {endOfDay} from 'date-fns'
 
 export declare type ConfigThemeSelectTs = {
   title: string
@@ -109,8 +109,8 @@ export const EditModal = () => {
             <FormLabel>
               有效日期-开始
             </FormLabel>
-            <KeyboardDatePicker
-                format={'yyyy/MM/dd'}
+            <DateTimePicker
+                format={'yyyy/MM/dd HH:mm'}
                 value={state.modalData.startTime || null}
                 onChange={date => (actions.setModal)({
                   startTime: date,
@@ -123,8 +123,8 @@ export const EditModal = () => {
             <FormLabel>
               有效日期-结束
             </FormLabel>
-            <KeyboardDatePicker
-                format={'yyyy/MM/dd'}
+            <DateTimePicker
+                format={'yyyy/MM/dd HH:mm'}
                 value={state.modalData.endTime || null}
                 onChange={date => (actions.setModal)({
                   endTime: endOfDay(date ?? 0),

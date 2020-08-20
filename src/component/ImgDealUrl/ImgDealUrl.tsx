@@ -14,5 +14,6 @@ export const ImgDealUrl = (props: ImgHTMLAttributes<any>) => {
           src={REACT_APP_PRE_IMG_DOMAIN + props.src}
           alt={props.alt || ''}
       />
+
   )
 }
