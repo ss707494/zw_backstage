@@ -106,7 +106,7 @@ export const ConfigThemeSelect = () => {
                       src={dealImgUrl(v.imgUrl)}
                       alt=""/>
                 </ImgBox>
-                <section>{`${formatDate(v.startTime, 'yyyy/MM/dd')}`}-{`${formatDate(v.endTime, 'yyyy/MM/dd')}`}</section>
+                <section>{`${formatDate(v.startTime, 'yyyy/MM/dd HH:mm')}`}-{`${formatDate(v.endTime, 'yyyy/MM/dd HH:mm')}`}</section>
               </React.Fragment>
           ))}
           <footer>
