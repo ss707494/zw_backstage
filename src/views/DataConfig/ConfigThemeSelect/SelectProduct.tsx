@@ -33,7 +33,7 @@ export const selectProductModel = modelFactory('selectProductModel', {
     const {product_list} = (await query(productGraphql.getList, {
       page: 0,
       rows_per_page: 10000,
-      is_group: -1,
+      is_group: 0,
     })) ?? {}
     setData(pre => fpMerge(pre, {
       list: product_list,
