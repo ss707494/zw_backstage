@@ -1,10 +1,10 @@
-import React, {useEffect} from "react"
-import {useStoreModelByType__Graphql} from "@/common/ModelAction/useStore"
+import React, {useEffect} from 'react'
+import {useStoreModelByType__Graphql} from '@/common/ModelAction/useStore'
 import {configDataModel} from '@/views/DataConfig/List/model'
 import {fileUploadAjax, fpMerge, fpSet} from '@/common/utils'
-import {Box} from "../ConfigThemeSelect/ConfigThemeSelect"
+import {Box} from '../ConfigThemeSelect/ConfigThemeSelect'
 import {CusButton} from '@/component/CusButton'
-import {useParams} from "react-router-dom"
+import {useParams} from 'react-router-dom'
 import {
   ConfigHomeCarouselModal,
   configHomeCarouselModalModel,
@@ -51,12 +51,14 @@ export const ConfigHomeCarousel = () => {
               <React.Fragment key={`configData.list_${v.name}_${index}`}>
                 <aside>
                   <CusButton
-                      variant={"outlined"}
+                      variant={'outlined'}
                       onClick={async () => {
                         const res = await configHomeCarouselModalModelActions.openClick(v)
-                        if (res?.imgFile?.size) {
-                          res.imgUrl = await getUploadUrl(res?.imgFile)
-                          actions.setDataConfig(fpSet(value, ['list', index], { ...res }))
+                        if (res?.relatedObjId) {
+                          if (res?.imgFile?.size) {
+                            res.imgUrl = await getUploadUrl(res?.imgFile)
+                          }
+                          actions.setDataConfig(fpSet(value, ['list', index], {...res}))
                           await actions.saveDataConfig()
                           await actions.getDataConfig(activeCode)
                         }
@@ -76,7 +78,7 @@ export const ConfigHomeCarousel = () => {
                   {/*  删除*/}
                   {/*</CusButton>*/}
                   <CusButton
-                      variant={"outlined"}
+                      variant={'outlined'}
                       color={v.isDisabled ? 'secondary' : 'primary'}
                       onClick={async () => {
                         actions.setDataConfig(fpSet(value, ['list', index, 'isDisabled'], preData => preData ? 0 : 1))
@@ -103,8 +105,8 @@ export const ConfigHomeCarousel = () => {
               </React.Fragment>
           ))}
           <footer>
-            <CusButton
-                variant={"outlined"}
+            {value?.list?.length < 8 && <CusButton
+                variant={'outlined'}
                 onClick={async () => {
                   const res = await configHomeCarouselModalModelActions.openClick({})
                   if (res?.imgFile?.size) {
@@ -123,7 +125,7 @@ export const ConfigHomeCarousel = () => {
                   await actions.getDataConfig(activeCode)
                   configHomeCarouselModalModelActions.onClose()
                 }}
-            >新增</CusButton>
+            >新增</CusButton>}
           </footer>
         </CarouselBox>
         <ConfigHomeCarouselModal/>
