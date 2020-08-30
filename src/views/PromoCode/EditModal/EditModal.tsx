@@ -1,20 +1,22 @@
-import React, {useEffect, useState} from "react"
-import {Dialog, DialogContent, DialogTitle, FormControl, InputAdornment, MenuItem} from "@material-ui/core"
-import {CusTextField} from "@/component/CusTextField"
-import {useMutationSimpleData} from "@/component/ApolloQuery"
-import {save_promo_code} from "@/views/PromoCode/graphql"
-import {CusSelectField} from "@/component/CusSelectField"
-import styled from "styled-components"
-import {useLinkage} from "@/views/Product/EditModal"
-import InputLabel from "@material-ui/core/InputLabel"
-import {ImgUpload} from "@/component/ImgUpload"
-import {S as SText} from "@/component/CusTextField/style"
-import {KeyboardDatePicker} from "@material-ui/pickers"
-import {CusButton} from "@/component/CusButton"
-import {fileUploadAjax, parseFloatForInput} from "@/common/utils"
-import {showMessage} from "@/component/Message"
+import React, {useEffect, useState} from 'react'
+import {Dialog, DialogContent, DialogTitle, FormControl, InputAdornment, MenuItem} from '@material-ui/core'
+import {CusTextField} from '@/component/CusTextField'
+import {useMutationSimpleData} from '@/component/ApolloQuery'
+import {save_promo_code} from '@/views/PromoCode/graphql'
+import {CusSelectField} from '@/component/CusSelectField'
+import styled from 'styled-components'
+import {useLinkage} from '@/views/Product/EditModal'
+import InputLabel from '@material-ui/core/InputLabel'
+import {ImgUpload} from '@/component/ImgUpload'
+import {S as SText} from '@/component/CusTextField/style'
+import {KeyboardDatePicker} from '@material-ui/pickers'
+import {CusButton} from '@/component/CusButton'
+import {fileUploadAjax, parseFloatForInput} from '@/common/utils'
+import {showMessage} from '@/component/Message'
 import {endOfDay} from 'date-fns'
-import {DiscountConditionEnum, DiscountTypeEnum, PromoCodeTypeEnum} from "@/common/ss_common/enum"
+import {DiscountConditionEnum, DiscountTypeEnum, PromoCodeTypeEnum} from '@/common/ss_common/enum'
+import {useStoreModelByType__Graphql} from '@/common/ModelAction/useStore'
+import {dictAllListModel} from '@/views/Dictionary/dictAllListModel'
 
 const FormBox = styled('form')`
   display: grid;
@@ -43,7 +45,11 @@ export const EditModal = ({
                             setModalData,
                             refresh,
                           }: CommonModalState) => {
-  const [savePromoCode, , ] = useMutationSimpleData(save_promo_code)
+  const {actions: dictAllListAction, state: statedictAllList} = useStoreModelByType__Graphql(dictAllListModel)
+  useEffect(() => {
+    dictAllListAction.getDictList()
+  }, [dictAllListAction])
+  const [savePromoCode, ] = useMutationSimpleData(save_promo_code)
   const [imgFile, setImgFile] = useState()
   const [linkageData, setLinkData, {getOne}]: any[] = useLinkage()
   const _setLinkData = (changeString: string, reset: object) => (e: any) => {
@@ -54,7 +60,7 @@ export const EditModal = ({
     }))
     setModalData({
       ...modalData,
-      product_category: (e.target.value)
+      product_category: (e.target.value),
     })
   }
   const {oneCode, twoCode, threeCode, one, two, three} = linkageData
@@ -72,7 +78,7 @@ export const EditModal = ({
   }
   useEffect(() => {
     getOne({
-      parent_id: 'root'
+      parent_id: 'root',
     })
   }, [getOne])
   useEffect(() => {
@@ -99,11 +105,11 @@ export const EditModal = ({
       setLinkData(categoryIds.reduce((pre, val, index) => {
         return {
           ...pre,
-          [_helpKeys[index]]: val
+          [_helpKeys[index]]: val,
         }
       }, {}))
     }
-  }, [modalData.category_data, modalData.id, open, setLinkData]);
+  }, [modalData.category_data, modalData.id, open, setLinkData])
   const handleSubmit = async () => {
     if (imgFile?.size) {
       const uploadRes = await fileUploadAjax({}, [imgFile], '/api/fileUpload')
@@ -130,7 +136,7 @@ export const EditModal = ({
       <Dialog
           open={open}
           onClose={handleClose}
-          maxWidth={"lg"}
+          maxWidth={'lg'}
       >
         <DialogTitle>编辑优惠码</DialogTitle>
         <DialogContent>
@@ -140,7 +146,7 @@ export const EditModal = ({
                 value={modalData?.title}
                 onChange={(e: any) => setModalData({
                   ...modalData,
-                  title: (e.target.value)
+                  title: (e.target.value),
                 })}
             />
             <CusTextField
@@ -148,24 +154,24 @@ export const EditModal = ({
                 value={modalData?.remark}
                 onChange={(e: any) => setModalData({
                   ...modalData,
-                  remark: (e.target.value)
+                  remark: (e.target.value),
                 })}
             />
             {promoCodeType === PromoCodeTypeEnum.PromoCode ?
                 <CusTextField
-                label={'优惠码'}
-                value={modalData?.code}
-                onChange={(e: any) => setModalData({
-                  ...modalData,
-                  code: (e.target.value)
-                })}
-            />
-            : <CusTextField
+                    label={'优惠码'}
+                    value={modalData?.code}
+                    onChange={(e: any) => setModalData({
+                      ...modalData,
+                      code: (e.target.value),
+                    })}
+                />
+                : <CusTextField
                     label={'重复次数'}
                     value={modalData?.reuse_times}
                     onChange={(e: any) => setModalData({
                       ...modalData,
-                      reuse_times: parseFloatForInput(e.target.value)
+                      reuse_times: parseFloatForInput(e.target.value),
                     })}
                 />
             }
@@ -175,7 +181,7 @@ export const EditModal = ({
                   value={modalData?.discount_type}
                   onChange={(e: any) => setModalData({
                     ...modalData,
-                    discount_type: (e.target.value)
+                    discount_type: (e.target.value),
                   })}
               >
                 {[{
@@ -196,10 +202,11 @@ export const EditModal = ({
                   value={modalData?.discount_amount}
                   onChange={(e: any) => setModalData({
                     ...modalData,
-                    discount_amount: parseFloatForInput(e.target.value)
+                    discount_amount: parseFloatForInput(e.target.value),
                   })}
                   InputProps={{
-                    endAdornment: <InputAdornment position="end">{modalData?.discount_type === DiscountTypeEnum.Percentage ? '%' : '元'}</InputAdornment>,
+                    endAdornment:
+                        <InputAdornment position="end">{modalData?.discount_type === DiscountTypeEnum.Percentage ? '%' : '元'}</InputAdornment>,
                   }}
               />
             </OneRowBox>
@@ -209,7 +216,7 @@ export const EditModal = ({
                   value={modalData?.discount_condition}
                   onChange={(e: any) => setModalData({
                     ...modalData,
-                    discount_condition: (e.target.value)
+                    discount_condition: (e.target.value),
                   })}
               >
                 {[{
@@ -230,7 +237,7 @@ export const EditModal = ({
                   value={modalData?.discount_condition_amount}
                   onChange={(e: any) => setModalData({
                     ...modalData,
-                    discount_condition_amount: parseFloatForInput(e.target.value)
+                    discount_condition_amount: parseFloatForInput(e.target.value),
                   })}
               />}
             </OneRowBox>
@@ -300,7 +307,7 @@ export const EditModal = ({
                   value={modalData?.effective_date_start}
                   onChange={(date) => setModalData({
                     ...modalData,
-                    effective_date_start: date
+                    effective_date_start: date,
                   })}
               />
             </TextFieldBoxStyle>
@@ -312,13 +319,32 @@ export const EditModal = ({
                   value={modalData?.effective_date_end}
                   onChange={(date) => setModalData({
                     ...modalData,
-                    effective_date_end: endOfDay(date ?? 0)
+                    effective_date_end: endOfDay(date ?? 0),
                   })}
               />
             </TextFieldBoxStyle>
+            {promoCodeType === PromoCodeTypeEnum.DarenCard &&
+            <CusSelectField
+                label={'用户等级'}
+                placeholder="请选择"
+                value={modalData?.userLevelId}
+                onChange={(e: any) => setModalData({
+                  ...modalData,
+                  userLevelId: (e.target.value),
+                })}
+            >
+              {statedictAllList?.userLevelList?.map((e: any) => (
+                  <MenuItem
+                      key={`typeOptionThree${e.id}`}
+                      value={e.id}
+                  >{e.name}</MenuItem>
+              ))}
+            </CusSelectField>
+            }
+            <section/>
             <footer>
               <CusButton
-                  variant={"contained"}
+                  variant={'contained'}
                   onClick={() => {
                     handleSubmit()
                   }}

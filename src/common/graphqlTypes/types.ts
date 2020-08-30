@@ -103,6 +103,7 @@ export type Dict = {
   sort?: Maybe<Scalars['Float']>;
   remark?: Maybe<Scalars['String']>;
   dictTypeFirst?: Maybe<DictTypeFirst>;
+  promoCode?: Maybe<Array<Maybe<PromoCode>>>;
 };
 
 export type DictInput = {
@@ -122,6 +123,7 @@ export type DictItemInput = {
   sort?: Maybe<Scalars['Float']>;
   remark?: Maybe<Scalars['String']>;
   dictTypeFirst?: Maybe<DictTypeFirstItemInput>;
+  promoCode?: Maybe<Array<Maybe<PromoCodeItemInput>>>;
 };
 
 export type DictTypeFirst = {
@@ -413,6 +415,7 @@ export type OrderInput = {
   address?: Maybe<Scalars['String']>;
   pickUpTime?: Maybe<Scalars['Timestamp']>;
   pickUpType?: Maybe<Scalars['String']>;
+  isGroup?: Maybe<Scalars['Float']>;
 };
 
 export type OrderPage = {
@@ -468,6 +471,7 @@ export type Product = {
   groupAmountUnitString?: Maybe<Scalars['String']>;
   groupPrecisionString?: Maybe<Scalars['String']>;
   groupQueue?: Maybe<Array<Maybe<GroupQueue>>>;
+  sumOrder?: Maybe<Scalars['Float']>;
 };
 
 export type ProductImg = {
@@ -531,6 +535,7 @@ export type ProductItemInput = {
   groupAmountUnitString?: Maybe<Scalars['String']>;
   groupPrecisionString?: Maybe<Scalars['String']>;
   groupQueue?: Maybe<Array<Maybe<GroupQueueItemInput>>>;
+  sumOrder?: Maybe<Scalars['Float']>;
 };
 
 export type ProductPage = {
@@ -560,6 +565,7 @@ export type PromoCode = {
   reuseTimes?: Maybe<Scalars['Float']>;
   code?: Maybe<Scalars['String']>;
   isDisable?: Maybe<Scalars['Float']>;
+  userLevel?: Maybe<Dict>;
 };
 
 export type PromoCodeItemInput = {
@@ -582,6 +588,7 @@ export type PromoCodeItemInput = {
   reuseTimes?: Maybe<Scalars['Float']>;
   code?: Maybe<Scalars['String']>;
   isDisable?: Maybe<Scalars['Float']>;
+  userLevel?: Maybe<DictItemInput>;
 };
 
 export type Query = {
@@ -601,6 +608,7 @@ export type Query = {
   getDictList?: Maybe<Array<Maybe<Dict>>>;
   productList?: Maybe<ProductPage>;
   productListByIds?: Maybe<ProductPage>;
+  productListOrderByOrder?: Maybe<ProductPage>;
   categoryList?: Maybe<CategoryPage>;
   oneCategory?: Maybe<Category>;
   productsInCategory?: Maybe<Array<Maybe<Product>>>;
@@ -675,6 +683,12 @@ export type QueryProductListArgs = {
 
 export type QueryProductListByIdsArgs = {
   ids?: Maybe<Array<Maybe<Scalars['String']>>>;
+};
+
+
+export type QueryProductListOrderByOrderArgs = {
+  productInput?: Maybe<ProductItemInput>;
+  orderByType?: Maybe<Scalars['String']>;
 };
 
 

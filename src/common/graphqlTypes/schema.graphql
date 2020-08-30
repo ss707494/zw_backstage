@@ -195,6 +195,7 @@ type Product {
   shopCart: [ShopCart]
   sort: Float
   stock: Float
+  sumOrder: Float
   unit: String
   unitString: String
   updateTime: Timestamp
@@ -238,6 +239,7 @@ type PromoCode {
   reuseTimes: Float
   title: String
   updateTime: Timestamp
+  userLevel: Float
 }
 
 type Query {
@@ -259,6 +261,7 @@ type Query {
   payCardListOneUser: [UserPayCard]
   productList(orderByInput: OrderByInput, productInput: ProductItemInput): ProductPage
   productListByIds(ids: [String]): ProductPage
+  productListOrderByOrder(orderByType: String, productInput: ProductItemInput): ProductPage
   productsInCategory(categoryItemInput: CategoryItemInput, productItemInput: ProductItemInput): [Product]
   promoCodeList(promoCodeItemInput: PromoCodeItemInput): [PromoCode]
   refreshToken(refreshtoken: String!): AuthBody
@@ -544,6 +547,7 @@ input OrderInput {
   city: String
   district: String
   endTime: Timestamp
+  isGroup: Float
   number: String
   page: Float
   pickUpTime: Timestamp
@@ -607,6 +611,7 @@ input ProductItemInput {
   shopCart: [ShopCartItemInput]
   sort: Float
   stock: Float
+  sumOrder: Float
   unit: String
   unitString: String
   updateTime: Timestamp
@@ -633,6 +638,7 @@ input PromoCodeItemInput {
   reuseTimes: Float
   title: String
   updateTime: Timestamp
+  userLevel: Float
 }
 
 input ROrderProductItemInput {

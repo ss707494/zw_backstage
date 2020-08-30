@@ -1,714 +1,719 @@
 # This file was generated based on ".graphqlconfig". Do not edit manually.
 
 schema {
-    query: Query
-    mutation: Mutation
+  query: Query
+  mutation: Mutation
 }
 
 type AddHistory {
-    amount: Float
-    count: Float
-    create_time: Date
-    id: String
-    is_delete: Int
-    lastOutAmount: Float
-    name: String
-    number: String
-    product_id: String
-    state: Int
-    supplement_id: String
-    supplier: String
-    update_time: Date
+  amount: Float
+  count: Float
+  create_time: Date
+  id: String
+  is_delete: Int
+  lastOutAmount: Float
+  name: String
+  number: String
+  product_id: String
+  state: Int
+  supplement_id: String
+  supplier: String
+  update_time: Date
 }
 
 type AddItem {
-    amount: Float
-    count: Float
-    create_time: Date
-    id: String
-    is_delete: Int
-    lastOutAmount: Float
-    name: String
-    product: Product
-    product_id: String
-    remark: String
-    supplement_id: String
-    supplier: String
-    update_time: Date
+  amount: Float
+  count: Float
+  create_time: Date
+  id: String
+  is_delete: Int
+  lastOutAmount: Float
+  name: String
+  product: Product
+  product_id: String
+  remark: String
+  supplement_id: String
+  supplier: String
+  update_time: Date
 }
 
 type Address {
-    address: String
-    city: String
-    contact_information: String
-    contact_user_name: String
-    create_time: String
-    district: String
-    id: String
-    is_default: Int
-    is_delete: Int
-    name: String
-    province: String
-    update_time: Date
-    user_id: String
-    zip: String
+  address: String
+  city: String
+  contact_information: String
+  contact_user_name: String
+  create_time: String
+  district: String
+  id: String
+  is_default: Int
+  is_delete: Int
+  name: String
+  province: String
+  update_time: Date
+  user_id: String
+  zip: String
 }
 
 type Category {
-    c2_id: String
-    c2_name: String
-    c2_number: String
-    c3_id: String
-    c3_name: String
-    c3_number: String
-    create_time: Date
-    full_parent_id: String
-    id: String
-    img_url: String
-    is_delete: Int
-    is_enable: Int
-    name: String
-    number: Int
-    p2_id: String
-    p2_name: String
-    p2_num: String
-    p3_id: String
-    p3_name: String
-    p3_num: String
-    parent_data: Category
-    parent_id: String
-    remark: String
-    sort: Int
-    update_time: Date
+  c2_id: String
+  c2_name: String
+  c2_number: String
+  c3_id: String
+  c3_name: String
+  c3_number: String
+  create_time: Date
+  full_parent_id: String
+  id: String
+  img_url: String
+  is_delete: Int
+  is_enable: Int
+  name: String
+  number: Int
+  p2_id: String
+  p2_name: String
+  p2_num: String
+  p3_id: String
+  p3_name: String
+  p3_num: String
+  parent_data: Category
+  parent_id: String
+  remark: String
+  sort: Int
+  update_time: Date
 }
 
 type DataConfig {
-    create_time: Date
-    id: String
-    is_delete: Int
-    name: String
-    remark: String
-    type: String
-    update_time: Date
-    value: JSON
+  create_time: Date
+  id: String
+  is_delete: Int
+  name: String
+  remark: String
+  type: String
+  update_time: Date
+  value: JSON
 }
 
 type Dictionary {
-    code: String
-    create_time: Date
-    dict_type_code: String
-    id: String
-    is_delete: Int
-    is_disable: Int
-    name: String
-    parent_code: String
-    remark: String
-    sort: Int
-    update_time: Date
+  code: String
+  create_time: Date
+  dict_type_code: String
+  id: String
+  is_delete: Int
+  is_disable: Int
+  name: String
+  parent_code: String
+  remark: String
+  sort: Int
+  update_time: Date
 }
 
 type DictionaryType {
-    code: String
-    create_time: Date
-    id: String
-    is_delete: Int
-    name: String
-    parent_code: String
-    remark: String
-    sort: Int
-    update_time: Date
+  code: String
+  create_time: Date
+  id: String
+  is_delete: Int
+  name: String
+  parent_code: String
+  remark: String
+  sort: Int
+  update_time: Date
 }
 
 type GroupInfo {
-    doing: Int
-    finish: Int
+  doing: Int
+  finish: Int
 }
 
 type GroupQueue {
-    create_time: String
-    fill_amount: Int
-    id: String
-    is_delete: Int
-    name: String
-    product: Product
-    product_id: String
-    update_time: Date
+  create_time: String
+  fill_amount: Int
+  id: String
+  is_delete: Int
+  name: String
+  product: Product
+  product_id: String
+  update_time: Date
 }
 
 type Mutation {
-    addToShopCart(ShopCartInput: ShopCartInput): result
-    changePassword(data: ChangePassword!): String
-    deleteOneUser(id: String!): String
-    finish_order(saveOrderInput: SaveOrderInput): result
-    importAllUser(data: String!): String
-    remove_all_shop_cart(ids: [String!]!): result
-    remove_shop_cart(id: String!): result
-    save_address(editAddressInput: EditAddressInput): result
-    save_category(Category: CategoryInput): result
-    save_dict_item(dictionaryInput: DictionaryInput): result
-    save_group_order(saveGroupOrderInput: SaveGroupOrderInput, saveOrderInput: SaveOrderInput): result
-    save_order(saveOrderInput: SaveOrderInput): result
-    save_pay_card(editPayCardInput: EditPayCardInput): result
-    save_product(ProductInput: ProductInput): result
-    save_product_supplement(productSupplementInput: ProductSupplementInput): result
-    save_promo_code(promoCodeInput: PromoCodeInput): result
-    save_shop_cart(SaveShopCartInput: SaveShopCartInput): result
-    set_data_config(dataConfigInput: DataConfigInput): result
-    set_default_address(defaultId: String!): result
-    set_default_pay_card(defaultId: String!): result
-    updateUser(data: UserInput!): User
-    updateUserAuth(auth: String!, id: String!): String
-    update_password(changePasswordInput: ChangePasswordInput!): result
-    update_user_info(updateUserInfo: UpdateUserInfoInput): result
+  addToShopCart(ShopCartInput: ShopCartInput): result
+  changePassword(data: ChangePassword!): String
+  deleteOneUser(id: String!): String
+  finish_order(saveOrderInput: SaveOrderInput): result
+  importAllUser(data: String!): String
+  remove_all_shop_cart(ids: [String!]!): result
+  remove_shop_cart(id: String!): result
+  save_address(editAddressInput: EditAddressInput): result
+  save_category(Category: CategoryInput): result
+  save_dict_item(dictionaryInput: DictionaryInput): result
+  save_group_order(saveGroupOrderInput: SaveGroupOrderInput, saveOrderInput: SaveOrderInput): result
+  save_order(saveOrderInput: SaveOrderInput): result
+  save_pay_card(editPayCardInput: EditPayCardInput): result
+  save_product(ProductInput: ProductInput): result
+  save_product_supplement(productSupplementInput: ProductSupplementInput): result
+  save_promo_code(promoCodeInput: PromoCodeInput): result
+  save_shop_cart(SaveShopCartInput: SaveShopCartInput): result
+  set_data_config(dataConfigInput: DataConfigInput): result
+  set_default_address(defaultId: String!): result
+  set_default_pay_card(defaultId: String!): result
+  updateUser(data: UserInput!): User
+  updateUserAuth(auth: String!, id: String!): String
+  update_password(changePasswordInput: ChangePasswordInput!): result
+  update_user_info(updateUserInfo: UpdateUserInfoInput): result
 }
 
 type Order {
-    actually_paid: Float
-    address: Address
-    address_id: String
-    coupon_discount: Float
-    create_time: Date
-    discount_product_total: Float
-    finish_time: Date
-    id: String
-    is_delete: Int
-    name: String
-    number: String
-    payment_method: PayCard
-    payment_method_card_id: String
-    product: [Product]
-    sale_tax: Float
-    state: Int
-    subtotal: Float
-    transportation_costs: Float
-    update_time: Date
-    user: User
-    user_id: String
-    vip_discount: Float
+  actually_paid: Float
+  address: Address
+  address_id: String
+  coupon_discount: Float
+  create_time: Date
+  discount_product_total: Float
+  finish_time: Date
+  id: String
+  is_delete: Int
+  name: String
+  number: String
+  payment_method: PayCard
+  payment_method_card_id: String
+  product: [Product]
+  sale_tax: Float
+  state: Int
+  subtotal: Float
+  transportation_costs: Float
+  update_time: Date
+  user: User
+  user_id: String
+  vip_discount: Float
 }
 
 type PayCard {
-    address_detail: String
-    city: String
-    code: String
-    contact: String
-    create_time: String
-    id: String
-    is_default: Int
-    is_delete: Int
-    name: String
-    number: String
-    update_time: Date
-    user_id: String
-    user_name: String
-    zip_code: String
+  address_detail: String
+  city: String
+  code: String
+  contact: String
+  create_time: String
+  id: String
+  is_default: Int
+  is_delete: Int
+  name: String
+  number: String
+  update_time: Date
+  user_id: String
+  user_name: String
+  zip_code: String
 }
 
 type Product {
-    brand: String
-    c1_id: String
-    c1_name: String
-    c1_number: String
-    c2_id: String
-    c2_name: String
-    c2_number: String
-    c3_id: String
-    c3_name: String
-    c3_number: String
-    category_id: String
-    count: Int
-    create_time: Date
-    groupAmountUnit: String
-    group_amount: Int
-    group_info: GroupInfo
-    group_precision: Int
-    group_remark: String
-    id: String
-    imgs: [ProductImg]
-    is_delete: Int
-    is_enable: Int
-    is_group: Int
-    is_hot: Int
-    is_new: Int
-    name: String
-    number: Int
-    oneImgUrl: String
-    packingUnit: String
-    price_in: Float
-    price_market: Float
-    price_out: Float
-    remark: String
-    shelvesTypes: String
-    sort: Int
-    stock: Float
-    unit: String
-    update_time: Date
-    weight: Float
+  brand: String
+  c1_id: String
+  c1_name: String
+  c1_number: String
+  c2_id: String
+  c2_name: String
+  c2_number: String
+  c3_id: String
+  c3_name: String
+  c3_number: String
+  category_id: String
+  count: Int
+  create_time: Date
+  groupAmountUnit: String
+  group_amount: Int
+  group_info: GroupInfo
+  group_precision: Int
+  group_remark: String
+  id: String
+  imgs: [ProductImg]
+  is_delete: Int
+  is_enable: Int
+  is_group: Int
+  is_hot: Int
+  is_new: Int
+  name: String
+  number: Int
+  oneImgUrl: String
+  packingUnit: String
+  price_in: Float
+  price_market: Float
+  price_out: Float
+  remark: String
+  shelvesTypes: String
+  sort: Int
+  stock: Float
+  unit: String
+  update_time: Date
+  weight: Float
 }
 
 type ProductImg {
-    id: String
-    name: String
-    number: Int
-    product_id: String
-    url: String
+  id: String
+  name: String
+  number: Int
+  product_id: String
+  url: String
 }
 
 type ProductSupplement {
-    addItemList: [AddItem]
-    amount: Float
-    code: String
-    create_time: Date
-    id: String
-    is_delete: Int
-    name: String
-    number: String
-    state: Int
-    supplier: String
-    update_time: Date
-    user_id: String
+  addItemList: [AddItem]
+  amount: Float
+  code: String
+  create_time: Date
+  id: String
+  is_delete: Int
+  name: String
+  number: String
+  state: Int
+  supplier: String
+  update_time: Date
+  user_id: String
 }
 
 type PromoCode {
-    category_data: Category
-    code: String
-    create_time: Date
-    discount_amount: Float
-    discount_condition: String
-    discount_condition_amount: Float
-    discount_type: String
-    effective_date_end: Date
-    effective_date_start: Date
-    id: String
-    img_url: String
-    isDisable: Int
-    is_delete: Int
-    name: String
-    product_category: String
-    promo_code_type: String
-    remark: String
-    reuse_times: Int
-    title: String
-    update_time: Date
+  category_data: Category
+  code: String
+  create_time: Date
+  discount_amount: Float
+  discount_condition: String
+  discount_condition_amount: Float
+  discount_type: String
+  effective_date_end: Date
+  effective_date_start: Date
+  id: String
+  img_url: String
+  isDisable: Int
+  is_delete: Int
+  name: String
+  product_category: String
+  promo_code_type: String
+  remark: String
+  reuse_times: Int
+  title: String
+  update_time: Date
+  userLevelId: String
 }
 
 type Query {
-    add_history_list_by_product(addHistoryInput: AddHistoryInput): [AddHistory]
-    add_history_list_total(addHistoryInput: AddHistoryInput): Int
-    address_list(addressInput: AddressInput): [Address]
-    allDataUser: String
-    allUser(data: UserInput): [User]
-    all_order_list(allOrderListInput: AllOrderListInput): [Order]
-    all_order_list_total(allOrderListInput: AllOrderListInput): Int
-    category_list(CategoryInput: CategoryInput): [Category]
-    category_origin(id: String): Category
-    category_total(CategoryInput: CategoryInput): Int
-    data_config(dataConfigInput: DataConfigInput): DataConfig
-    dict_item_list(dictionaryInput: DictionaryInput): [Dictionary]
-    dict_type_list(dictionaryInput: DictionaryInput): [DictionaryType]
-    getPassCode(pass: String!): String
-    group_order_list(id: String): [Order]
-    group_queue_list(groupQueueListInput: GroupQueueListInput): [GroupQueue]
-    oneUser(id: String!): User
-    order_detail(id: String!, isGroup: Int): Order
-    order_list(id: String): [Order]
-    pay_card_list(payCardInput: PayCardInput): [PayCard]
-    product_list(ListInput: ProductInput): [Product]
-    product_supplement_list(productSupplementListInput: ProductSupplementListInput): [ProductSupplement]
-    product_supplement_list_total(productSupplementListInput: ProductSupplementListInput): Int
-    product_total(ListInput: ProductInput): Int
-    promo_code_list(PromoCodeInput: PromoCodeInput): [PromoCode]
-    shop_cart_list(ShopCartInput: ShopCartInput): [ShopCart]
-    test: String
-    totalUser(data: UserInput): Int
-    user: [User]
-    user_coin: UserCoin
-    user_info: User
+  add_history_list_by_product(addHistoryInput: AddHistoryInput): [AddHistory]
+  add_history_list_total(addHistoryInput: AddHistoryInput): Int
+  address_list(addressInput: AddressInput): [Address]
+  allDataUser: String
+  allUser(data: UserInput): [User]
+  all_order_list(allOrderListInput: AllOrderListInput): [Order]
+  all_order_list_total(allOrderListInput: AllOrderListInput): Int
+  category_list(CategoryInput: CategoryInput): [Category]
+  category_origin(id: String): Category
+  category_total(CategoryInput: CategoryInput): Int
+  data_config(dataConfigInput: DataConfigInput): DataConfig
+  dict_item_list(dictionaryInput: DictionaryInput): [Dictionary]
+  dict_type_list(dictionaryInput: DictionaryInput): [DictionaryType]
+  getPassCode(pass: String!): String
+  group_order_list(id: String): [Order]
+  group_queue_list(groupQueueListInput: GroupQueueListInput): [GroupQueue]
+  oneUser(id: String!): User
+  order_detail(id: String!, isGroup: Int): Order
+  order_list(id: String): [Order]
+  pay_card_list(payCardInput: PayCardInput): [PayCard]
+  product_list(ListInput: ProductInput): [Product]
+  product_supplement_list(productSupplementListInput: ProductSupplementListInput): [ProductSupplement]
+  product_supplement_list_total(productSupplementListInput: ProductSupplementListInput): Int
+  product_total(ListInput: ProductInput): Int
+  promo_code_list(PromoCodeInput: PromoCodeInput): [PromoCode]
+  shop_cart_list(ShopCartInput: ShopCartInput): [ShopCart]
+  test: String
+  testttt: String
+  totalUser(data: UserInput): Int
+  user: [User]
+  user_coin: UserCoin
+  user_info: User
 }
 
 type ShopCart {
-    create_time: Date
-    id: String
-    is_next: Int
-    name: String
-    number: Int
-    product: Product
-    product_id: String
-    update_time: Date
+  create_time: Date
+  id: String
+  is_next: Int
+  name: String
+  number: Int
+  product: Product
+  product_id: String
+  update_time: Date
 }
 
 type User {
-    address: Address
-    create_time: Date
-    email: String
-    id: String
-    name: String
-    phone: String
-    type: String
-    update_time: Date
-    user_name: String
+  address: Address
+  create_time: Date
+  email: String
+  id: String
+  name: String
+  phone: String
+  type: String
+  update_time: Date
+  user_name: String
 }
 
 type UserCoin {
-    card_number: Int
-    current_mouth_icons: Float
-    next_mouth_icons: Float
+  card_number: Int
+  current_mouth_icons: Float
+  next_mouth_icons: Float
 }
 
 type result {
-    address: Address
-    category: Category
-    dataConfig: DataConfig
-    dictionary: Dictionary
-    flag: Int
-    msg: String
-    order: Order
-    payCard: PayCard
-    product: Product
-    promoCode: PromoCode
-    shopCart: ShopCart
-    token: token
-    user: User
+  address: Address
+  category: Category
+  dataConfig: DataConfig
+  dictionary: Dictionary
+  flag: Int
+  msg: String
+  order: Order
+  payCard: PayCard
+  product: Product
+  promoCode: PromoCode
+  shopCart: ShopCart
+  token: token
+  user: User
 }
 
 type token {
-    refreshtoken: String
-    token: String
+  refreshtoken: String
+  token: String
 }
 
 input AddHistoryInput {
-    create_time: Date
-    id: String
-    is_delete: Int
-    name: String
-    page: Int
-    product_id: String
-    rows_per_page: Int
-    update_time: Date
+  create_time: Date
+  id: String
+  is_delete: Int
+  name: String
+  page: Int
+  product_id: String
+  rows_per_page: Int
+  update_time: Date
 }
 
 input AddItemInput {
-    addNumber: Float
-    addPrice: Float
-    addRemark: String
-    addSupplier: String
-    id: String
-    product_id: String
+  addNumber: Float
+  addPrice: Float
+  addRemark: String
+  addSupplier: String
+  id: String
+  product_id: String
 }
 
 input AddressInput {
-    address: String
-    city: String
-    contact_information: String
-    contact_user_name: String
-    create_time: String
-    district: String
-    id: String
-    is_default: Int
-    is_delete: Int
-    name: String
-    province: String
-    update_time: Date
-    user_id: String
-    zip: String
+  address: String
+  city: String
+  contact_information: String
+  contact_user_name: String
+  create_time: String
+  district: String
+  id: String
+  is_default: Int
+  is_delete: Int
+  name: String
+  province: String
+  update_time: Date
+  user_id: String
+  zip: String
 }
 
 input AllOrderListInput {
-    page: Int
-    rows_per_page: Int
-    sort_type: String
+  page: Int
+  rows_per_page: Int
+  sort_type: String
 }
 
 input CategoryInput {
-    create_time: Date
-    full_parent_id: String
-    id: String
-    img_url: String
-    is_delete: Boolean
-    is_enable: Int
-    name: String
-    number: Int
-    origin_category_id: String
-    page: Int
-    parent_id: String
-    remark: String
-    rows_per_page: Int
-    sort: Int
-    sort_type: String
-    update_time: Date
-    user_id: String
+  create_time: Date
+  full_parent_id: String
+  id: String
+  img_url: String
+  is_delete: Boolean
+  is_enable: Int
+  name: String
+  number: Int
+  origin_category_id: String
+  page: Int
+  parent_id: String
+  remark: String
+  rows_per_page: Int
+  sort: Int
+  sort_type: String
+  update_time: Date
+  user_id: String
 }
 
 input ChangePassword {
-    id: String
-    newPass: String
-    verification: String
+  id: String
+  newPass: String
+  verification: String
 }
 
 input ChangePasswordInput {
-    confirmation_password: String
-    new_password: String!
-    old_password: String!
+  confirmation_password: String
+  new_password: String!
+  old_password: String!
 }
 
 input DataConfigInput {
-    create_time: Date
-    id: String
-    is_delete: Int
-    name: String
-    remark: String
-    type: String
-    update_time: Date
-    value: JSON
+  create_time: Date
+  id: String
+  is_delete: Int
+  name: String
+  remark: String
+  type: String
+  update_time: Date
+  value: JSON
 }
 
 input DictionaryInput {
-    code: String
-    create_time: Date
-    dict_type_code: String
-    id: String
-    is_delete: Int
-    is_disable: Int
-    name: String
-    parent_code: String
-    remark: String
-    sort: Int
-    update_time: Date
+  code: String
+  create_time: Date
+  dict_type_code: String
+  id: String
+  is_delete: Int
+  is_disable: Int
+  name: String
+  parent_code: String
+  remark: String
+  sort: Int
+  update_time: Date
 }
 
 input EditAddressInput {
-    address: String
-    city: String
-    contact_information: String
-    contact_user_name: String
-    create_time: String
-    district: String
-    id: String
-    is_default: Int
-    is_delete: Int
-    name: String
-    province: String
-    update_time: Date
-    user_id: String
-    zip: String
+  address: String
+  city: String
+  contact_information: String
+  contact_user_name: String
+  create_time: String
+  district: String
+  id: String
+  is_default: Int
+  is_delete: Int
+  name: String
+  province: String
+  update_time: Date
+  user_id: String
+  zip: String
 }
 
 input EditPayCardInput {
-    address_detail: String
-    city: String
-    code: String
-    contact: String
-    create_time: String
-    id: String
-    is_default: Int
-    is_delete: Int
-    name: String
-    number: String
-    update_time: Date
-    user_id: String
-    user_name: String
-    zip_code: String
+  address_detail: String
+  city: String
+  code: String
+  contact: String
+  create_time: String
+  id: String
+  is_default: Int
+  is_delete: Int
+  name: String
+  number: String
+  update_time: Date
+  user_id: String
+  user_name: String
+  zip_code: String
 }
 
 input GroupQueueListInput {
-    create_time: String
-    fill_amount: Int
-    id: String
-    is_delete: Int
-    name: String
-    product_id: String
-    update_time: Date
+  create_time: String
+  fill_amount: Int
+  id: String
+  is_delete: Int
+  name: String
+  product_id: String
+  update_time: Date
 }
 
 input OrderProductInput {
-    count: Float
-    create_time: Date
-    id: String
-    is_delete: Int
-    name: String
-    order_id: String
-    product_id: String
-    update_time: Date
+  count: Float
+  create_time: Date
+  id: String
+  is_delete: Int
+  name: String
+  order_id: String
+  product_id: String
+  update_time: Date
 }
 
 input OrderUser {
-    create_time: Date
-    id: String
-    is_delete: Int
-    name: String
-    order_id: String
-    update_time: Date
-    user_id: String
+  create_time: Date
+  id: String
+  is_delete: Int
+  name: String
+  order_id: String
+  update_time: Date
+  user_id: String
 }
 
 input PayCardInput {
-    address_detail: String
-    city: String
-    code: String
-    contact: String
-    create_time: String
-    id: String
-    is_default: Int
-    is_delete: Int
-    name: String
-    number: String
-    update_time: Date
-    user_id: String
-    user_name: String
-    zip_code: String
+  address_detail: String
+  city: String
+  code: String
+  contact: String
+  create_time: String
+  id: String
+  is_default: Int
+  is_delete: Int
+  name: String
+  number: String
+  update_time: Date
+  user_id: String
+  user_name: String
+  zip_code: String
 }
 
 input ProductImgInput {
-    id: String
-    name: String
-    number: Int
-    url: String
+  id: String
+  name: String
+  number: Int
+  url: String
 }
 
 input ProductInput {
-    brand: String
-    category_id: String
-    create_time: Date
-    groupAmountUnit: String
-    group_amount: Int
-    group_precision: Int
-    group_remark: String
-    id: String
-    imgs: [ProductImgInput]
-    is_delete: Boolean
-    is_enable: Int
-    is_group: Int
-    is_hot: Int
-    is_new: Int
-    name: String
-    number: Int
-    origin_category_id: String
-    packingUnit: String
-    page: Int
-    price_in: Float
-    price_market: Float
-    price_out: Float
-    remark: String
-    rows_per_page: Int
-    shelvesTypes: String
-    sort: Int
-    sort_type: String
-    stock: Float
-    unit: String
-    update_time: Date
-    user_id: String
-    weight: Float
+  brand: String
+  category_id: String
+  create_time: Date
+  groupAmountUnit: String
+  group_amount: Int
+  group_precision: Int
+  group_remark: String
+  id: String
+  imgs: [ProductImgInput]
+  is_delete: Boolean
+  is_enable: Int
+  is_group: Int
+  is_hot: Int
+  is_new: Int
+  name: String
+  number: Int
+  origin_category_id: String
+  packingUnit: String
+  page: Int
+  price_in: Float
+  price_market: Float
+  price_out: Float
+  remark: String
+  rows_per_page: Int
+  shelvesTypes: String
+  sort: Int
+  sort_type: String
+  stock: Float
+  unit: String
+  update_time: Date
+  user_id: String
+  weight: Float
 }
 
 input ProductSupplementInput {
-    addList: [AddItemInput]
-    id: String
-    state: Int
+  addList: [AddItemInput]
+  id: String
+  isGroup: Int
+  state: Int
 }
 
 input ProductSupplementListInput {
-    amount: Float
-    code: String
-    create_time: Date
-    id: String
-    is_delete: Int
-    name: String
-    number: String
-    page: Int
-    rows_per_page: Int
-    state: Int
-    supplier: String
-    update_time: Date
-    user_id: String
+  amount: Float
+  code: String
+  create_time: Date
+  id: String
+  isGroup: Int
+  is_delete: Int
+  name: String
+  number: String
+  page: Int
+  rows_per_page: Int
+  state: Int
+  supplier: String
+  update_time: Date
+  user_id: String
 }
 
 input PromoCodeInput {
-    code: String
-    create_time: Date
-    discount_amount: Float
-    discount_condition: String
-    discount_condition_amount: Float
-    discount_type: String
-    effective_date_end: Date
-    effective_date_start: Date
-    id: String
-    img_url: String
-    isDisable: Int
-    is_delete: Int
-    name: String
-    product_category: String
-    promo_code_type: String
-    remark: String
-    reuse_times: Int
-    title: String
-    update_time: Date
+  code: String
+  create_time: Date
+  discount_amount: Float
+  discount_condition: String
+  discount_condition_amount: Float
+  discount_type: String
+  effective_date_end: Date
+  effective_date_start: Date
+  id: String
+  img_url: String
+  isDisable: Int
+  is_delete: Int
+  name: String
+  product_category: String
+  promo_code_type: String
+  remark: String
+  reuse_times: Int
+  title: String
+  update_time: Date
+  userLevelId: String
 }
 
 input SaveGroupOrderInput {
-    group_queue_id: String
-    id: String
-    order_group_amount: Int
-    origin_group_amount: Int
-    product_id: String
+  group_queue_id: String
+  id: String
+  order_group_amount: Int
+  origin_group_amount: Int
+  product_id: String
 }
 
 input SaveOrderInput {
-    actually_paid: Float
-    address_id: String
-    coupon_discount: Float
-    create_time: Date
-    discount_product_total: Float
-    finish_time: Date
-    id: String
-    is_delete: Int
-    name: String
-    number: String
-    order_id: String
-    payment_method_card_id: String
-    product: [OrderProductInput]
-    sale_tax: Float
-    state: Int
-    subtotal: Float
-    transportation_costs: Float
-    update_time: Date
-    user: [OrderUser]
-    vip_discount: Float
+  actually_paid: Float
+  address_id: String
+  coupon_discount: Float
+  create_time: Date
+  discount_product_total: Float
+  finish_time: Date
+  id: String
+  is_delete: Int
+  name: String
+  number: String
+  order_id: String
+  payment_method_card_id: String
+  product: [OrderProductInput]
+  sale_tax: Float
+  state: Int
+  subtotal: Float
+  transportation_costs: Float
+  update_time: Date
+  user: [OrderUser]
+  vip_discount: Float
 }
 
 input SaveShopCartInput {
-    id: String!
-    is_next: Int!
-    number: Int!
-    product_id: String
+  id: String!
+  is_next: Int!
+  number: Int!
+  product_id: String
 }
 
 input ShopCartInput {
-    id: String
-    is_next: Int
-    number: Int
-    product_id: String
+  id: String
+  is_next: Int
+  number: Int
+  product_id: String
 }
 
 input UpdateUserInfoInput {
-    email: String
-    id: String
-    name: String
-    phone: String
-    user_name: String
+  email: String
+  id: String
+  name: String
+  phone: String
+  user_name: String
 }
 
 input UserInput {
-    auth: String
-    id: String
-    message: String
-    name: String
-    page: Int
-    rowsPerPage: Int
-    sortData: UserSortInput
+  auth: String
+  id: String
+  message: String
+  name: String
+  page: Int
+  rowsPerPage: Int
+  sortData: UserSortInput
 }
 
 input UserSortInput {
-    code: Int
+  code: Int
 }
 
 
