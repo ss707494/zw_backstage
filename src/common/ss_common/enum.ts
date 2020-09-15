@@ -168,4 +168,9 @@ export const SaleRankTypeEnum = {
   OneWeek: 'OneWeek',
   OneMonth: 'OneMonth',
 }
+// 信用卡地址输入方式
+export const CreditAddressInputTypeEnum = {
+  Select: 'Select',
+  Input: 'Input',
+}
 

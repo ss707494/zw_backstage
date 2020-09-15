@@ -2,5 +2,6 @@
 <project version="4">
   <component name="GraphQLSettings">
     <option name="enableIntrospectionDefaultValues" value="false" />
+    <option name="enableRelayModernFrameworkSupport" value="true" />
   </component>
 </project>

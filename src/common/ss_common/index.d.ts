@@ -47,6 +47,7 @@ declare interface PromoCode {
   reuse_times: number,
   code: string,
   isDisable: number,
+  userLevelId: string,
 
   category_data?: {
     id: string,
