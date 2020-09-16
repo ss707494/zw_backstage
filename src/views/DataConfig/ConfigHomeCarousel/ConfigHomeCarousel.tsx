@@ -12,6 +12,7 @@ import {
   RelatedObjTypeEnumString,
 } from '@/views/DataConfig/ConfigHomeCarousel/EditModal'
 import styled from 'styled-components'
+import {showMessage} from '@/component/Message'
 
 export declare type ConfigHomeCarouselTs = {
   name: string
@@ -105,9 +106,13 @@ export const ConfigHomeCarousel = () => {
               </React.Fragment>
           ))}
           <footer>
-            {value?.list?.length < 8 && <CusButton
+            <CusButton
                 variant={'outlined'}
                 onClick={async () => {
+                  if (value?.list?.length >= 8) {
+                    showMessage({ message: '最多保存8个轮播图记录' })
+                    return
+                  }
                   const res = await configHomeCarouselModalModelActions.openClick({})
                   if (res?.imgFile?.size) {
                     res.imgUrl = await getUploadUrl(res?.imgFile)
@@ -125,7 +130,7 @@ export const ConfigHomeCarousel = () => {
                   await actions.getDataConfig(activeCode)
                   configHomeCarouselModalModelActions.onClose()
                 }}
-            >新增</CusButton>}
+            >新增</CusButton>
           </footer>
         </CarouselBox>
         <ConfigHomeCarouselModal/>
