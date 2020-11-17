@@ -60,7 +60,10 @@ export const ConfigSelfAddress = () => {
     }))
   }
   const setEditData = (index: number) => (key: string) => (value: string | boolean) => {
-    actions.setDataConfig(fpSet(configValue, ['list', index, key], value))
+    actions.setDataConfig(fpSet(configValue, ['list', index, key], value => ({
+      ...value,
+      updateTime: new Date().getTime(),
+    })))
   }
 
   return (
@@ -101,6 +104,7 @@ export const ConfigSelfAddress = () => {
                         actions.setDataConfig(fpSet(configValue, ['list', index], preData => ({
                           ...preData,
                           ...res,
+                          updateTime: new Date().getTime(),
                         })))
                         addressModalModelActions.onClose()
                       }}
