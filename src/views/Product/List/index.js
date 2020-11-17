@@ -394,7 +394,7 @@ export const Product = ({ theme, match }) => {
                           {e}
                         </TableCell>)
                     }
-                    <TableCell width={240}>操作ss</TableCell>
+                    <TableCell width={240}>操作</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
