@@ -60,8 +60,9 @@ export const ConfigSelfAddress = () => {
     }))
   }
   const setEditData = (index: number) => (key: string) => (value: string | boolean) => {
-    actions.setDataConfig(fpSet(configValue, ['list', index, key], value => ({
-      ...value,
+    actions.setDataConfig(fpSet(configValue, ['list', index], oldValue => ({
+      ...oldValue,
+      [key]: value,
       updateTime: new Date().getTime(),
     })))
   }
