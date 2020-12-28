@@ -14,6 +14,7 @@ export const Login = () => {
   const submit = async () => {
     const {data: res} = await axios.post('/api/login', {
       ...data,
+      type: 9,
     })
     if (res.data) {
       setToken(res.token)
